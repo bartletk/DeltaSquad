@@ -1,0 +1,11 @@
+name = Nursing
+description = Custom calendar/dynamic scheduling system created by Delta Squad - Dr. Smith's 4060 course.
+core = 7.x
+dependencies[] = views
+dependencies[] = date_api
+dependencies[] = date_views
+dependencies[] = token
+dependencies[] = entityreference
+dependencies[] = field
+dependencies[] = date    
+dependencies[] = date_popup
