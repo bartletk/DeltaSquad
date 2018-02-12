@@ -1,5 +1,21 @@
 <?php
-
+/**
+ * Implements hook_help().
+ *
+ * Displays help and module information. Which we don't have. So update later.
+ *
+ * @param path 
+ *   Which path of the site we're using to display help
+ * @param arg 
+ *   Array that holds the current path as returned from arg() function
+ */
+function nursing_help($path, $arg) {
+  switch ($path) {
+    case "admin/help#nursing":
+      return t("You weren't supposed to look here. I can't help you."); 
+      break; 
+  }
+}
 
 
 // DO

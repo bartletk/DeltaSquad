@@ -1,0 +1,43 @@
+<?php
+/**
+* This is to add taxonomy - roles. 
+* Current status: Don't know if it works.
+*/
+function nursing_install(){
+$new_vocab = (object) array(
+    'name' => 'Roles',
+    'description' => 'This is the roles that a user can have.',
+    'machine_name' => 'roles',
+ );  
+taxonomy_vocabulary_save($new_vocab);
+
+$vocab = taxonomy_vocabulary_machine_name_load('roles');
+ 
+$term1 = (object) array(
+ 'name' => 'Admin',
+ 'description' => 'Full-site administrator. Able to approve and deny requests from anyone. Able to view all calendars.',
+ 'vid' => $vocab->vid,
+);
+ 
+taxonomy_term_save($term1);
+
+$vocab = taxonomy_vocabulary_machine_name_load('roles');
+ 
+$term2 = (object) array(
+ 'name' => 'Instructor',
+ 'description' => 'Able to create/edit/request/delete own classes. Conflicts are sent to administrator. Able to view own calendar and global calendar.',
+ 'vid' => $vocab->vid,
+);
+ 
+taxonomy_term_save($term2);
+
+$vocab = taxonomy_vocabulary_machine_name_load('roles');
+ 
+$term3 = (object) array(
+ 'name' => 'Student',
+ 'description' => 'Only able to view own calendar.',
+ 'vid' => $vocab->vid,
+);
+ 
+taxonomy_term_save($term3);
+}

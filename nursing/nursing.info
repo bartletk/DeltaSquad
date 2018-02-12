@@ -9,3 +9,7 @@ dependencies[] = entityreference
 dependencies[] = field
 dependencies[] = date    
 dependencies[] = date_popup
+
+;scripts[] = somescript.js - will put the script on every page
+;files[] = tests/example.test - not sure
+;stylesheets[all][] = node.css - stylesheets to be put on every page
