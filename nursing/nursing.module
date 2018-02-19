@@ -17,18 +17,115 @@ function nursing_help($path, $arg) {
   }
 }
 
+/*
+This adds a menu link for the form defined below.
+*/
+function nursing_menu() {
+  $items = array();
 
-// DO
-// NOT
-// PUT
-// A
-// FUCKING
-// CLOSING
-// BRACKET
-// OR
-// YOU
-// OWE
-// ME
-// YOUR
-// SOUL
-// ?> <<< DO NOT UNCOMMENT.
+  $items['nursing/add'] = array( //this creates a URL that will call this form at "examples/form-example"
+    'title' => 'Add an event', //page title
+    'description' => 'This is the form that you will add an event or request one.',
+    'page callback' => 'drupal_get_form', //this is the function that will be called when the page is accessed.  for a form, use drupal_get_form
+    'page arguments' => array('nursing_form'), //put the name of the form here
+    'access callback' => TRUE
+  );
+
+  return $items;
+}
+/*
+This creates the form.
+NOTE! For the two select boxes you MUST define fields with these names exactly.
+To do this, go to some random bullcrap content type that you don't use (make one if you have to)
+Click manage fields
+On the Add New Field line, select "Term Reference" and then name each one the name of the field (courses, class_type)
+Hit save and on the next popup, select "Course" or "Class Type " 
+*/
+function nursing_form($form, &$form_state) {
+  
+ $form['type'] = array(
+    '#type' => 'select', //you can find a list of available types in the form api
+    '#title' => 'What type of event is this?',
+	'#options' => taxonomy_allowed_values(field_info_field('field_class_type')), // fill with term reference
+    '#required' => TRUE, //make this field required 
+  );
+
+   $form['course'] = array(
+    '#type' => 'select', 
+    '#title' => 'For what course is this event?',
+	'#options' => taxonomy_allowed_values(field_info_field('field_courses')),
+    '#required' => TRUE, 
+  );
+
+   $form['capacity'] = array(
+    '#type' => 'textfield', 
+    '#title' => 'How many seats do you need?',
+    '#size' => 5,
+    '#maxlength' => 5,
+    '#required' => TRUE, 
+  );
+
+  
+   $form['notes'] = array(
+    '#type' => 'textarea', 
+    '#title' => 'Any additional notes?',
+    '#required' => TRUE, 
+  );
+
+  $form['submit_button'] = array(
+    '#type' => 'submit',
+    '#value' => t('Select room'),
+  );
+  
+  return $form;
+}
+
+/*
+attempt at second form
+*/
+function nursing_second_form($form, &$form_state) {
+  
+  
+   $form['test'] = array(
+    '#type' => 'textarea', 
+    '#title' => 'Did this work?',
+    '#required' => TRUE, 
+  );
+
+  $form['submit_button'] = array(
+    '#type' => 'submit',
+    '#value' => t('Submit request'),
+  );
+  
+  return $form;
+}
+
+/*
+Put validations in here
+*/
+function nursing_form_validate($form, &$form_state) {
+
+}
+/*
+submit form action
+*/
+function nursing_form_submit($form, &$form_state) {
+	
+	drupal_get_form('nursing_second_form');
+}
+
+
+/*
+Note for future, making second form
+
+function tudakozo_page_callback() {
+  $build = array();
+
+  // Render your two forms here.
+  $build['form_one'] = drupal_get_form('tudakozo_nevszerint_form');
+  $build['form_two'] = drupal_get_form('tudakozo_second_form');
+
+  return $build;
+}
+
+*/
