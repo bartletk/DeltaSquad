@@ -30,7 +30,13 @@ function nursing_menu() {
     'page arguments' => array('nursing_form'), //put the name of the form here
     'access callback' => TRUE
   );
-
+  $items['nursing/selectroom'] = array( 
+    'title' => 'Pick your room', //page title
+    'description' => 'You will select a room on this page.',
+    'page callback' => 'drupal_get_form', //this is the function that will be called when the page is accessed.  for a form, use drupal_get_form
+    'page arguments' => array('nursing_second_form'), //put the name of the form here
+    'access callback' => TRUE
+  );
   return $items;
 }
 /*
@@ -42,34 +48,51 @@ On the Add New Field line, select "Term Reference" and then name each one the na
 Hit save and on the next popup, select "Course" or "Class Type " 
 */
 function nursing_form($form, &$form_state) {
+     $form['title'] = array(
+    '#type' => 'textfield', 
+    '#title' => 'Title:',
+    '#required' => TRUE, 
+  );
   
  $form['type'] = array(
-    '#type' => 'select', //you can find a list of available types in the form api
+    '#type' => 'select', 
     '#title' => 'What type of event is this?',
-	'#options' => taxonomy_allowed_values(field_info_field('field_class_type')), // fill with term reference
-    '#required' => TRUE, //make this field required 
+	'#options' => taxonomy_allowed_values(field_info_field('field_class_type')), 
+    '#required' => TRUE, 
+  );
+  
+   $form['date'] = array(
+    '#type' => 'date', 
+    '#title' => 'When? Note: If you are entering a course that will repeat weekly, please enter the first day. You will be able to pick repeat options later.',
+    '#required' => TRUE, 
   );
 
    $form['course'] = array(
     '#type' => 'select', 
-    '#title' => 'For what course is this event?',
+    '#title' => 'For what course is this event? (Optional)',
 	'#options' => taxonomy_allowed_values(field_info_field('field_courses')),
-    '#required' => TRUE, 
+    '#required' => FALSE, 
+  );
+   $form['crn'] = array(
+    '#type' => 'select', 
+    '#title' => 'For what course is this event? (Optional)',
+	'#options' => 'to be added later',
+    '#required' => FALSE, 
   );
 
    $form['capacity'] = array(
     '#type' => 'textfield', 
-    '#title' => 'How many seats do you need?',
+    '#title' => 'How many seats do you need? (Optional)',
     '#size' => 5,
     '#maxlength' => 5,
-    '#required' => TRUE, 
+    '#required' => FALSE, 
   );
 
   
    $form['notes'] = array(
     '#type' => 'textarea', 
-    '#title' => 'Any additional notes?',
-    '#required' => TRUE, 
+    '#title' => 'Notes: (Optional)',
+    '#required' => FALSE, 
   );
 
   $form['submit_button'] = array(
@@ -79,6 +102,38 @@ function nursing_form($form, &$form_state) {
   
   return $form;
 }
+function nursing_form_validate($form, &$form_state) {
+
+}
+/*
+submit form action
+*/
+function nursing_form_submit($form, &$form_state) {
+	
+	$type = $form_state['values']['type'];
+	$course = $form_state['values']['course'];
+	$capacity = $form_state['values']['capacity'];
+	$notes = $form_state['values']['notes'];
+	$date = $form_state['values']['date'];
+
+    $url = 'nursing/selectroom';
+
+    $options = array(
+      'query' => array(
+        'type' => $type,
+		'course' => $course,
+		'capacity' => $capacity,
+		'notes' => $notes,
+		'date' => $date,
+      ),
+    );
+
+
+    $form_state['redirect'] = array(
+      $url,
+      $options,
+    );
+}
 
 /*
 attempt at second form
@@ -86,11 +141,8 @@ attempt at second form
 function nursing_second_form($form, &$form_state) {
   
   
-   $form['test'] = array(
-    '#type' => 'textarea', 
-    '#title' => 'Did this work?',
-    '#required' => TRUE, 
-  );
+echo $_GET['type'];
+//print_r(module_invoke('room_reservations', 'room_reservations', 2, 21));
 
   $form['submit_button'] = array(
     '#type' => 'submit',
@@ -100,32 +152,8 @@ function nursing_second_form($form, &$form_state) {
   return $form;
 }
 
-/*
-Put validations in here
-*/
-function nursing_form_validate($form, &$form_state) {
 
-}
-/*
-submit form action
-*/
-function nursing_form_submit($form, &$form_state) {
+
+function nursing_second_form_submit($form, &$form_state) {
 	
-	drupal_get_form('nursing_second_form');
 }
-
-
-/*
-Note for future, making second form
-
-function tudakozo_page_callback() {
-  $build = array();
-
-  // Render your two forms here.
-  $build['form_one'] = drupal_get_form('tudakozo_nevszerint_form');
-  $build['form_two'] = drupal_get_form('tudakozo_second_form');
-
-  return $build;
-}
-
-*/
