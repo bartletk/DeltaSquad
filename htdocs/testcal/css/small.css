@@ -1,0 +1,12 @@
+.top h4, .nav, .bottom {
+	display: none;
+}
+.top h1 {
+	font-size: 12pt;
+	padding: 0em;
+	margin: 0em;
+}
+form {
+	padding: 0em;
+	margin: 0em;
+}
