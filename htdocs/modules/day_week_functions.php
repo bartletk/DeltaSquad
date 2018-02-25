@@ -22,7 +22,7 @@ For further information visit:
 http://supercali.inforest.com/
 */
 function showGrid($date) {
-	global $title, $niceday, $start_time, $end_time, $venue, $city, $state, $cat, $color, $background, $ed, $usr, $o, $c, $m, $a, $y, $w, $lang,$scale,$ap,$status, $day_week_start_hour, $day_week_end_hour;
+	global $title, $niceday, $start_time, $end_time, $venue, $city, $state, $cat, $color, $background, $ed, $usr, $o, $c, $m, $a, $y, $w,$scale,$ap,$status, $day_week_start_hour, $day_week_end_hour;
 	$threshold_hour = $day_week_start_hour ? $day_week_start_hour : 0;
 	$threshold_min = $day_week_start_hour ? 0 : 30;
 	$txi = ($threshold_hour * 60) + $threshold_min;
@@ -158,8 +158,8 @@ function showGrid($date) {
 				echo "</span>\n";
 				if ($ed[$start_event[$r][$k]]==true) {
 					echo "&nbsp;&nbsp;<span class=\"edit\">";
-					if (($ap[$start_event[$r][$k]]==true) && (($status[$start_event[$r][$k]] == 2) || ($status[$start_event[$r][$k]] == 3))) echo "[<a href=\"admin_actions.php?id=".$start_event[$r][$k]."&o=".$o."&c=".$c."&m=".$m."&a=".$a."&y=".$y."&w=".$w."&mode=".approve."\">".$lang["approve"]."</a>]&nbsp;&nbsp;";
-					echo "[<a href=\"edit_event.php?id=".$start_event[$r][$k]."&o=".$o."&c=".$c."&m=".$m."&a=".$a."&y=".$y."&w=".$w."\" onClick=\"openPic('edit_event.php?id=".$start_event[$r][$k]."&size=small','pop','650','600'); window.newWindow.focus(); return false\">".$lang["edit"]."</a>]&nbsp;&nbsp;[<a href=\"delete_event.php?id=".$start_event[$r][$k]."&o=".$o."&c=".$c."&m=".$m."&a=".$a."&y=".$y."&w=".$w."\">".$lang["delete"]."</a>]</span>\n";
+					if (($ap[$start_event[$r][$k]]==true) && (($status[$start_event[$r][$k]] == 2) || ($status[$start_event[$r][$k]] == 3))) echo "[<a href=\"admin_actions.php?id=".$start_event[$r][$k]."&o=".$o."&c=".$c."&m=".$m."&a=".$a."&y=".$y."&w=".$w."&mode=".approve."\">Approve</a>]&nbsp;&nbsp;";
+					echo "[<a href=\"edit_event.php?id=".$start_event[$r][$k]."&o=".$o."&c=".$c."&m=".$m."&a=".$a."&y=".$y."&w=".$w."\" onClick=\"openPic('edit_event.php?id=".$start_event[$r][$k]."&size=small','pop','650','600'); window.newWindow.focus(); return false\">Edit</a>]&nbsp;&nbsp;[<a href=\"delete_event.php?id=".$start_event[$r][$k]."&o=".$o."&c=".$c."&m=".$m."&a=".$a."&y=".$y."&w=".$w."\">Delete</a>]</span>\n";
 				}
 				echo "</div></div></div>\n";
 			}

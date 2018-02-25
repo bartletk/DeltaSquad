@@ -65,7 +65,7 @@ function grabDates($start,$end,$category_array) {
 			if (($row[5] == "12:00 AM") && ($row[6] == "11:59 PM")) {
 				$start_time[$row[0]][$row[12]][$row[2]]=$lang["all_day"];
 			} elseif (($row[5] == "12:00 AM") && ($row[6] == "12:00 AM")) {
-				$start_time[$row[0]][$row[12]][$row[2]]=$lang["tba"];
+				$start_time[$row[0]][$row[12]][$row[2]]="TBA";
 			} else {	
 				$start_time[$row[0]][$row[12]][$row[2]]=$row[5];
 				if ($row[6]) $end_time[$row[0]][$row[12]][$row[2]]=$row[6];
