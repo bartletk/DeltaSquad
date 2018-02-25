@@ -46,7 +46,7 @@ if (mysql_num_rows($query) < 1) {
 			$ur = $calendar_url."index.php?c=".$category_id."&w=".$group_id."&y=".$srow[3]."&m=".$srow[4]."&a=".$srow[5];
 		
 			if (($srow[1] == " - 12:00 AM") && ($srow[2] == " - 11:59 PM")) $nicedate[] = $srow[0]." - ".$lang["all_day"]."\n".$ur;
-			elseif (($srow[1] == " - 12:00 AM") && ($srow[2] == " - 12:00 AM")) $nicedate[] = $srow[0]." - ".$lang["tba"]."\n".$ur;
+			elseif (($srow[1] == " - 12:00 AM") && ($srow[2] == " - 12:00 AM")) $nicedate[] = $srow[0]." - "."TBA"."\n".$ur;
 			elseif ($srow[2]) $nicedate[] = $srow[0].$srow[1].$srow[2]."\n".$ur;
 			else $nicedate[] = $srow[0].$srow[1]."\n".$ur;
 			
@@ -61,14 +61,14 @@ $use = mysql_result(mysql_query("select email from users where user_id = ".$row[
 $status = $lang["status"][$row["status_id"]];
 $message = $lang["notify_intro"];
 $message .= $use." has ".$status.": ".$page_title." on ".$row["stamp_date"]."\n\n";
-$message .= $lang["title"].": ".$page_title."\n";
+$message .= "Title".": ".$page_title."\n";
 $message .= $lang["group"].": ".$grou."\n";
-$message .= $lang["category"].": ".$cate."\n";
+$message .= "Category".": ".$cate."\n";
 if ($venue_id != 1) {
 	$q = "select url, company, description, address1, address2, city, state, zip, phone, fax  FROM links where link_id = ".$row["venue_id"];
 	$lq = mysql_query($q);
 	
-	$message .= $lang["venue"].": ";
+	$message .= "Venue/Location".": ";
 	$li = mysql_fetch_row($lq);
 	$message.= $li[1];
 	if ($li[3]) $message.= ", ".$li[3];
@@ -82,7 +82,7 @@ if ($contact_id != 1) {
 	$q = "select url, company, description, address1, address2, city, state, zip, phone, fax  FROM links where link_id = ".$row["contact_id"];
 	$lq = mysql_query($q);
 	
-	$message .= $lang["contact_sponsor"].": ";
+	$message .= "Contact/Sponsor".": ";
 	$li = mysql_fetch_row($lq);
 	$message.= $li[1];
 	if ($li[3]) $message.= ", ".$li[3];
@@ -93,13 +93,13 @@ if ($contact_id != 1) {
 	$message.= "\n";
 }
 if ($nicedate[1]) {
-	$message.= $lang["dates"].":\n";
+	$message.= "Dates".":\n";
 	while (list($k,$v) = each($nicedate)) {
 		$message.= $v."\n\n";
 	}
 	$message.= "\n\n";
 } elseif ($nicedate[0]) {
-	$message.= $lang["date"].": ".$nicedate[0]."\n\n";
+	$message.= "Date".": ".$nicedate[0]."\n\n";
 }
 
 $message.= "Description:\n".$description."\n\n";

@@ -213,9 +213,9 @@ group_table(0);
 <?php group_tree(0,1); ?></select></td></tr>
 <tr><td><?php echo $lang["default_category"]; ?>:</td><td><select name="category" id="category" size="1">
 <?php category_tree(0,1); ?></select></td></tr>
-<tr><td><?php echo $lang["default_venue"]; ?>:</td><td><select name="venue" id="venue" size="1"><option value="1"><?php echo $lang["in_main_description"]; ?></option>
+<tr><td><?php echo $lang["default_venue"]; ?>:</td><td><select name="venue" id="venue" size="1"><option value="1"><?php echo "In Main Description"; ?></option>
 <?php select_place(1); ?></select></td></tr>
-<tr><td><?php echo $lang["default_contact"]; ?>:</td><td><select name="contact" id="contact" size="1"><option value="1"><?php echo $lang["none"]; ?></option>
+<tr><td><?php echo $lang["default_contact"]; ?>:</td><td><select name="contact" id="contact" size="1"><option value="1"><?php echo "None"; ?></option>
 <?php select_place(1); ?></select></td></tr>
 </table>
 <input type="submit" NAME="mode" VALUE="<?php echo $lang["upload_csv_file"]; ?>">
@@ -236,7 +236,7 @@ fgetcsv($fp, 10000, $_POST["separator"])  //dump first line headers
 <h3><?php echo $lang["verify_event_listings_title"]; ?></h3>
 <?php echo $lang["verify_event_listings"]; ?>
 <table>
-<tr><th><?php echo $lang["title"]; ?></th><th><?php echo $lang["venue"]; ?></th><th><?php echo $lang["contact_sponsor"]; ?></th><th><?php echo $lang["category"]; ?></th><th><?php echo $lang["group"]; ?></th><th><?php echo $lang["date"]; ?></th><th><?php echo $lang["start_time"]; ?></th><th><?php echo $lang["end_time"]; ?></th><th><?php echo $lang["description"]; ?></th></tr>
+<tr><th><?php echo "Title"; ?></th><th><?php echo "Venue/Location"; ?></th><th><?php echo "Contact/Sponsor"; ?></th><th><?php echo "Category"; ?></th><th><?php echo $lang["group"]; ?></th><th><?php echo "Date"; ?></th><th><?php echo "Start Time"; ?></th><th><?php echo "End Time"; ?></th><th><?php echo "Description"; ?></th></tr>
 <?php
 
 
@@ -252,10 +252,10 @@ while (($data = fgetcsv($fp, 10000, $_POST["separator"])) !== FALSE) {
 	$sgroup = $data[3] ? $data[4] : $_REQUEST["group"];
 	echo "<tr>\n";
 	echo "<td><input type=\"text\" size=\"20\" id=\"title[]\" name=\"title[]\" value=\"".$data[0]."\"></td>\n";
-	echo "<td><select name=\"venue[]\" id=\"venue[]\" size=\"1\"><option value=\"1\">".$lang["in_main_description"]."</option>\n";
+	echo "<td><select name=\"venue[]\" id=\"venue[]\" size=\"1\"><option value=\"1\">"."In Main Description"."</option>\n";
 	select_place($venue);
 	echo "</select></td>\n";
-	echo "<td><select name=\"contact[]\" id=\"contact[]\" size=\"1\"><option value=\"1\">".$lang["none"]."</option>\n";
+	echo "<td><select name=\"contact[]\" id=\"contact[]\" size=\"1\"><option value=\"1\">"."None"."</option>\n";
 	select_place($contact);
 	echo "</select></td>\n";
 	echo "<td><select name=\"category[]\" id=\"category[]\" size=\"1\">\n";
@@ -320,7 +320,7 @@ if ($verify) {
 <h3><?php echo $lang["verify_event_listings_title"]; ?></h3>
 <p><?php echo $lang["errors_in_listings"]; ?> <?php echo $verify; ?></p>
 <table>
-<tr><th><?php echo $lang["title"]; ?></th><th><?php echo $lang["venue"]; ?></th><th><?php echo $lang["contact_sponsor"]; ?></th><th><?php echo $lang["category"]; ?></th><th><?php echo $lang["group"]; ?></th><th><?php echo $lang["date"]; ?></th><th><?php echo $lang["start_time"]; ?></th><th<?php echo $lang["end_time"]; ?></th><th><?php echo $lang["description"]; ?></th></tr>
+<tr><th><?php echo "Title"; ?></th><th><?php echo "Venue/Location"; ?></th><th><?php echo "Contact/Sponsor"; ?></th><th><?php echo "Category"; ?></th><th><?php echo $lang["group"]; ?></th><th><?php echo "Date"; ?></th><th><?php echo "Start Time"; ?></th><th<?php echo "End Time"; ?></th><th><?php echo "Description"; ?></th></tr>
 <?php
 	while (list($k,$v) = each($start)) {
 		$dstart = preg_replace("/([0-9]{1,2}:[0-9]{2}):[0-9]{2}([ ]?[a|p]m)/i","\\1\\2",$v);
@@ -333,10 +333,10 @@ if ($verify) {
 		if (($dend)&&(!preg_match("/([0-9]{1,2}):([0-9]{2})[ ]?([a|p]m)/i",$dend))) $ec = " class=\"error\"";
 		echo "<tr>\n";
 		echo "<td><input type=\"text\" size=\"20\" id=\"title[]\" name=\"title[]\" value=\"".$title[$k]."\"></td>\n";
-		echo "<td><select name=\"venue[]\" id=\"venue[]\" size=\"1\"><option value=\"1\">".$lang["in_main_description"]."</option>\n";
+		echo "<td><select name=\"venue[]\" id=\"venue[]\" size=\"1\"><option value=\"1\">"."In Main Description"."</option>\n";
 		select_place($venue[$k]);
 		echo "</select></td>\n";
-		echo "<td><select name=\"contact[]\" id=\"contact[]\" size=\"1\"><option value=\"1\">".$lang["none"]."</option>\n";
+		echo "<td><select name=\"contact[]\" id=\"contact[]\" size=\"1\"><option value=\"1\">"."None"."</option>\n";
 		select_place($contact[$k]);
 		echo "</select></td>\n";
 		echo "<td><select name=\"category[]\" id=\"category[]\" size=\"1\">\n";

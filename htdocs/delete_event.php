@@ -50,7 +50,7 @@ if (!$_SESSION["user_id"]) {
 			$mod = mysql_result(mysql_query($q),0,0);
 			if ($mod < 2) {
 				mysql_close($link);
-				header("Location: ".$path."index.php?msg=".$lang["not_authorized_events_category"]);
+				header("Location: ".$path."index.php?msg=Not Authorized to Edit Events in this Category]);
 			}
 		}
 	}

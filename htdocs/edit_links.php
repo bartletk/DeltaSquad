@@ -38,7 +38,7 @@ function showLinks() {
 			echo "<li>";
 			if ($row[1]) echo $row[1]." : ";
 			if ($row[2]) echo $row[2]." : ";
-			echo $row[3]."&nbsp;&nbsp;[<a href=\"".$PHP_SELF."?mode=edit_link&id=".$row[0]."&".$common_get."\">".$lang["edit"]."</a>]&nbsp;&nbsp;[<a href=\"".$PHP_SELF."?mode=delete_link&id=".$row[0]."&".$common_get."\">".$lang["delete"]."</a>]</li>\n";
+			echo $row[3]."&nbsp;&nbsp;[<a href=\"".$PHP_SELF."?mode=edit_link&id=".$row[0]."&".$common_get."\">".$lang["edit"]."</a>]&nbsp;&nbsp;[<a href=\"".$PHP_SELF."?mode=delete_link&id=".$row[0]."&".$common_get."\">Delete</a>]</li>\n";
 			
 			
 		}
@@ -95,7 +95,7 @@ function editLink($id) {
 	<tr><td><?php echo $lang["email"]; ?>:</td><td><input type="text" name="email" value="<?php echo $cat["email"]; ?>"></td></tr>
 	<tr><td><?php echo $lang["web_site"]; ?>:</td><td><input type="text" name="url" value="<?php echo $cat["url"]; ?>"></td></tr>
 	<tr>
-		<td colspan="2"><?php echo $lang["description"]; ?>:<br />
+		<td colspan="2"><?php echo "Description"; ?>:<br />
 		<?php if ($fck_editor_path) {
 	include($fck_editor_path."fckeditor.php") ;
 	$oFCKeditor = new FCKeditor('description') ;
