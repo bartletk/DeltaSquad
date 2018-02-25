@@ -33,22 +33,16 @@ include("include/session.php");
 			}
 		});
 	</script>
-<link rel='stylesheet' href='css/fullcalendar.css' />
-<script src='js/jquery.min.js'></script>
-<script src='js/moment.min.js'></script>
-<script src='js/fullcalendar.js'></script>
-<script type="text/javascript">
-$(document).ready(function() {
+<link rel="stylesheet" type="text/css" href="/css/calendar.css">
+<?php if ($_REQUEST["size"] == "small") echo "<link rel=\"stylesheet\" type=\"text/css\" href=\"/css/calendar-small.css\">\n"; ?>
+<?php if ($css) echo $css; ?>
 
-    // page is now ready, initialize the calendar...
 
-    $('#calendar').fullCalendar({
-        weekends: false
-		
-    })
-
-});
-</script>
+<script language="JavaScript" src="/js/CalendarPopup.js"></script>
+<script language="JavaScript">document.write(getCalendarStyles());</script>
+<script language="JavaScript" src="/js/ColorPicker2.js"></script>
+<script language="JavaScript" src="/js/miscfunctions.js"></script>
+<?php if ($javascript) echo $javascript; ?>
 </head>
 <body>
 
@@ -79,4 +73,7 @@ if($session->logged_in){
    echo "[<a href=\"process.php\">Logout</a>]";?></p><?php
 }
 ?>
+</div>
+<div class="nav">
+<?php include "includes/nav.php"; ?>
 </div>
