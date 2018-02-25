@@ -30,5 +30,5 @@ showDay($y,$m,$a,"Events");
 echo "</td>";
 echo "</tr></table></td></tr></table>";
 echo "</div>\n";
-include "includes/footer.php";
+
 ?>

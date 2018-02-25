@@ -21,7 +21,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 For further information visit:
 http://supercali.inforest.com/
 */
-include "includes/start.php";
+include "include/start.php";
 $page_title = $lang["title_edit_links"];
 $id = $_REQUEST["id"];
 $edit=false;
@@ -38,7 +38,7 @@ function showLinks() {
 			echo "<li>";
 			if ($row[1]) echo $row[1]." : ";
 			if ($row[2]) echo $row[2]." : ";
-			echo $row[3]."&nbsp;&nbsp;[<a href=\"".$PHP_SELF."?mode=edit_link&id=".$row[0]."&".$common_get."\">".$lang["edit"]."</a>]&nbsp;&nbsp;[<a href=\"".$PHP_SELF."?mode=delete_link&id=".$row[0]."&".$common_get."\">".$lang["delete"]."</a>]</li>\n";
+			echo $row[3]."&nbsp;&nbsp;[<a href=\"".$PHP_SELF."?mode=edit_link&id=".$row[0]."&".$common_get."\">".$lang["edit"]."</a>]&nbsp;&nbsp;[<a href=\"".$PHP_SELF."?mode=delete_link&id=".$row[0]."&".$common_get."\">Delete</a>]</li>\n";
 			
 			
 		}
@@ -60,7 +60,7 @@ function deleteLink($id) {
 <h3><?php echo $lang["delete"]; ?>: <?php echo $cat["company"]; ?>?</h3>
 <p class="warning"><?php echo $lang["sure_delete_link"]; ?></p>
 <form action="admin_actions.php" method="post">
-<?php include "includes/hidden_fields.php"; ?>
+<?php include "include/hidden_fields.php"; ?>
 <input type="hidden" name="id" id="id" value="<?php echo $cat["link_id"]; ?>">
 
 <p><input type="submit" name="mode" value="<?php echo $lang["delete_link"]; ?>"></p>
@@ -95,7 +95,7 @@ function editLink($id) {
 	<tr><td><?php echo $lang["email"]; ?>:</td><td><input type="text" name="email" value="<?php echo $cat["email"]; ?>"></td></tr>
 	<tr><td><?php echo $lang["web_site"]; ?>:</td><td><input type="text" name="url" value="<?php echo $cat["url"]; ?>"></td></tr>
 	<tr>
-		<td colspan="2"><?php echo $lang["description"]; ?>:<br />
+		<td colspan="2"><?php echo "Description"; ?>:<br />
 		<?php if ($fck_editor_path) {
 	include($fck_editor_path."fckeditor.php") ;
 	$oFCKeditor = new FCKeditor('description') ;
@@ -151,5 +151,5 @@ if ($edit) {
 
 
 }
-include "includes/footer.php";
+
 ?>

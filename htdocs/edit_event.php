@@ -92,8 +92,8 @@ function turn_off(whichLayer) {
 	}
 }
 </script>';
-include "includes/start.php";
-$page_title = $lang["title_edit_event"];
+include "include/start.php";
+$page_title = Edit Event;
 
 
 
@@ -189,7 +189,7 @@ if (!$superview) {
 	header("Location: ".$path."login.php?return_to=".$PHP_SELF);
 } elseif (!$superpost) {
 		include "header.php";
-	echo "<p class=\"warning\">".$lang["not_authorized_events"]."</p>\n";
+	echo "<p class=\"warning\">Not Authorized to Edit Events in this Category</p>\n";
 } else {
 	$q = "SELECT * from events where event_id =".$_REQUEST["id"];
 	$query = mysql_query($q);
@@ -203,7 +203,7 @@ if (!$superview) {
 			$mod = mysql_result(mysql_query($q),0,0);
 			if ($mod < 2) {
 				mysql_close($link);
-				header("Location: ".$path."index.php?msg=".$lang["not_authorized_events_group"]);
+				header("Location: ".$path."index.php?msg=Not Authorized to Add or Edit Events in Group"]);
 			}
 		}
 	}
@@ -213,7 +213,7 @@ if (!$superview) {
 			$mod = mysql_result(mysql_query($q),0,0);
 			if ($mod < 2) {
 				mysql_close($link);
-				header("Location: ".$path."index.php?msg=".$lang["not_authorized_events_category"]);
+				header("Location: ".$path."index.php?msg=Not Authorized to Edit Events in this Category]);
 			}
 		}
 	}
@@ -414,7 +414,7 @@ if (!$superview) {
 				}
 			}
 			if ($_POST["notify"]) {
-				include "includes/notify.php";
+				include "include/notify.php";
 				notify_group($_POST["id"]);
 			}
 			$msg .= $lang["event_updated"];
@@ -435,12 +435,12 @@ if ($msg) echo "<p class=\"warning\">".$msg."</p>\n";
 ?>
 
 <form action="edit_event.php" id="event" name="event" method="post">
-<?php include "includes/hidden_fields.php"; ?>
+<?php include "include/hidden_fields.php"; ?>
 <input type="hidden" name="id" value="<?php echo $_REQUEST["id"]; ?>">
 <input type="hidden" name="size" value="<?php echo $_REQUEST["size"]; ?>">
 <table>
 	<tr>
-		<td><?php echo $lang["title"];?>:</td>
+		<td><?php echo "Title";?>:</td>
 		<td><input type="text" name="title" id="title" value="<?php echo $_POST["title"]; ?>" size="40"></td>
 	</tr>
 	<tr>
@@ -448,12 +448,12 @@ if ($msg) echo "<p class=\"warning\">".$msg."</p>\n";
 		<td>
 			<select name="group" id="group">
 				<?php group_tree(0); ?>
-			</select> <select name="propose" id="propose"><option value="post"<?php if ($_POST["propose"] == "post") echo " selected"; ?>><?php echo $lang["post"];?></option><option value="propose"<?php if ($_POST["propose"] == "propose") echo " selected"; ?>><?php echo $lang["propose"];?></option></select>
-			<input type="checkbox" name="notify" value="1"<?php if ($_POST["notify"]) echo " checked"; ?>> <?php echo $lang["notify subscribers"];?>
+			</select> <select name="propose" id="propose"><option value="post"<?php if ($_POST["propose"] == "post") echo " selected"; ?>><?php echo "Post";?></option><option value="propose"<?php if ($_POST["propose"] == "propose") echo " selected"; ?>><?php echo "Propose";?></option></select>
+			<input type="checkbox" name="notify" value="1"<?php if ($_POST["notify"]) echo " checked"; ?>> <?php echo "Notify Subscribers";?>
 		</td>
 	</tr>
 	<tr>
-		<td><?php echo $lang["category"];?>:</td>
+		<td><?php echo "Category";?>:</td>
 		<td>
 			<select name="category" id="category">
 				<?php category_tree(0); ?>
@@ -461,30 +461,30 @@ if ($msg) echo "<p class=\"warning\">".$msg."</p>\n";
 		</td>
 	</tr>
 	<tr>
-		<td><?php echo $lang["venue"];?>:</td>
+		<td><?php echo "Venue/Location";?>:</td>
 		<td>
 			<select name="venue" id="venue" size="1">
-				<option value="1"><?php echo $lang["in_main_description"];?></option>
+				<option value="1"><?php echo "In Main Description";?></option>
 				<?php select_place($_POST["venue"]); ?>
 			</select>
 		</td>
 	</tr>
 	<tr>
-		<td><?php echo $lang["contact_sponsor"];?>:</td>
+		<td><?php echo "Contact/Sponsor";?>:</td>
 		<td>
 			<select name="contact" id="contact" size="1">
-				<option value="1"><?php echo $lang["none"];?></option>
+				<option value="1"><?php echo "None";?></option>
 				<?php select_place($_POST["contact"]); ?>
 			</select>
 		</td>
 	</tr>
 </table>
-<?php echo $lang["dates"];?>:
+<?php echo "Dates";?>:
 <table>
 	<tr>
-		<th><?php echo $lang["delete?"];?></th>
-		<th><?php echo $lang["date"];?></th><th><?php echo $lang["all_day"];?> / <?php echo $lang["tba"];?> / <?php echo $lang["enter_time"];?></th><th><?php echo $lang["start_time"];?></th>
-		<th><?php echo $lang["end_time"];?></th>
+		<th><?php echo "Delete?";?></th>
+		<th><?php echo "Date";?></th><th><?php echo $lang["all_day"];?> / <?php echo "TBA";?> / <?php echo $lang["enter_time"];?></th><th><?php echo "Start Time";?></th>
+		<th><?php echo "End Time";?></th>
 		
 	</tr>
 <?php
@@ -596,7 +596,7 @@ if ($_POST["date_add"]) {
 ?>
 	
 	<tr>
-		<td><?php echo $lang["add"];?> =>></td>
+		<td><?php echo "Add";?> =>></td>
 		<td>
 			<input type="text" name="date_add" id="date_add" size="10"> <a href="#" onclick="cal.select(document.event.date_add,this.name,'MM/dd/yyyy'); return false;" NAME="anchor_date_add" ID="anchor_date_add"><img src="images/calendar.png" border="add" /></a></td>
 		<td><input type="radio" onClick="null_out(this,'add');" name="all_day_add" id="all_day_add" value="all" /> / <input type="radio" onClick="null_out(this,'add');" name="all_day_add" id="all_day_add" value="tba" /> / <input type="radio" onClick="null_out(this,'add');" name="all_day_add" id="all_day_add" value="" checked /></td>
@@ -608,11 +608,11 @@ if ($_POST["date_add"]) {
 		
 	</tr>
 	<tr>
-		<td colspan="4"><?php echo $lang["recurring"];?> <input type="text" name="recurring" size="3"> X <select name="interval"><option value="1">1</option><option value="7">7</option></select> <?php echo $lang["days"];?></td>
+		<td colspan="4"><?php echo "Recurring:";?> <input type="text" name="recurring" size="3"> X <select name="interval"><option value="1">1</option><option value="7">7</option></select> <?php echo "Days";?></td>
 	</tr>
 </table>
-<p><input type="submit" name="mode" id="mode" value="<?php echo $lang["add_edit_dates"];?>"></p>
-<p><?php echo $lang["description"];?>:<br />
+<p><input type="submit" name="mode" id="mode" value="<?php echo "Add/Edit Dates";?>"></p>
+<p><?php echo "Description";?>:<br />
 <?php if ($fck_editor_path) {
 	include($fck_editor_path."fckeditor.php") ;
 	$oFCKeditor = new FCKeditor('description') ;
@@ -680,6 +680,6 @@ if ($_POST["date_add"]) {
 <DIV ID="testdiv1" STYLE="position:absolute;visibility:hidden;background-color:white;layer-background-color:white;"></DIV>
 <?php
 }
-include ("includes/footer.php");
+include ("include/footer.php");
 ?>
 

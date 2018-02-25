@@ -135,5 +135,5 @@ function showYear ($calyear) {
 grab($y."-01-01",$y."-12-31",$c);
 showYear($y);
 
-include "includes/footer.php";
+
 ?>

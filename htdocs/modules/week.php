@@ -33,5 +33,5 @@ for ($we=0;$we<7;$we++) {
 }
 echo "</tr></table></td></tr></table>";
 echo "</div>\n";
-include "includes/footer.php";
+
 ?>

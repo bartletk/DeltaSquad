@@ -21,7 +21,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 For further information visit:
 http://supercali.inforest.com/
 */
-include "includes/start.php";
+include "include/start.php";
 $page_title = $lang["title_edit_groups"];
 $id = $_REQUEST["id"];
 $edit=false;
@@ -45,7 +45,7 @@ function group_tree_edit($group_id) {
 			echo "<ul>\n";
 			while ($row=mysql_fetch_row($query)) {
 				echo "<li>".$row[1]." [<a href=\"".$PHP_SELF."?mode=edit_group&id=".$row[0]."&".$common_get."\">".$lang["edit"]."</a>]";
-				if ($row[0] != 1) echo "&nbsp;&nbsp;[<a href=\"".$PHP_SELF."?mode=delete_group&id=".$row[0]."&".$common_get."\">".$lang["delete"]."</a>]\n";
+				if ($row[0] != 1) echo "&nbsp;&nbsp;[<a href=\"".$PHP_SELF."?mode=delete_group&id=".$row[0]."&".$common_get."\">Delete</a>]\n";
 				group_tree_edit($row[0]);
 				echo "</li>\n";
 			}
@@ -87,7 +87,7 @@ function deleteGroup($id) {
 <h3>Delete: <?php echo $cat["name"]; ?>?</h3>
 <p class="warning"><?php echo $lang["sure_delete_group"]; ?></p>
 <form action="admin_actions.php" method="post">
-<?php include "includes/hidden_fields.php"; ?>
+<?php include "include/hidden_fields.php"; ?>
 <input type="hidden" name="size" value="<?php echo $_REQUEST["size"]; ?>">
 <input type="hidden" name="id" id="id" value="<?php echo $cat["group_id"]; ?>">
 <p><?php echo $lang["move_existing_events_group"]; ?>:
@@ -165,5 +165,5 @@ if ($edit) {
 
 
 }
-include "includes/footer.php";
+
 ?>

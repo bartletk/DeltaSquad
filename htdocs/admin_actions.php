@@ -22,7 +22,7 @@ For further information visit:
 http://supercali.inforest.com/
 */
 
-include "includes/start.php";
+include "include/start.php";
 if(get_magic_quotes_gpc()) {
   	$id = mysql_real_escape_string(stripslashes($_REQUEST["id"]));
 	$dir = mysql_real_escape_string(stripslashes($_REQUEST["dir"]));
@@ -49,15 +49,15 @@ function updateProfile($id) {
 	if ($_POST["new_password"]) {
 		$password = md5($_POST["new_password"]);
 		$query = mysql_query("UPDATE users set password = '".$password."'WHERE user_id ='".$id."'");
-		if (!$query) $msg = $lang["database_error_password_not_updated"];
+		if (!$query) $msg = Database Error, Password not updated;
 		
 	}
 	if (!$edit) {
 		$query = mysql_query("UPDATE users set email = '".$_POST["email"]."' WHERE user_id =".$id);
 		if (!$query) {
-			$msg .= $lang["database_error_password_not_updated"];
+			$msg .= Database Error, Password not updated;
 		} else {
-			$msg .= $lang["information_updated"];
+			$msg .= Information Updated;
 		}
 	} else {
 		
@@ -67,7 +67,7 @@ function updateProfile($id) {
 		$add_groups = $_POST["add_users"] ? 1 : 0;
 		$add_categories = $_POST["add_categories"] ? 1 : 0;
 		$query = mysql_query("UPDATE users set email = '".$_POST["email"]."', view = ".$view.", post = ".$post.", add_users = ".$add_users.", add_groups = ".$add_groups.", add_categories = ".$add_categories." WHERE user_id =".$id);
-		if (!$query) $msg .= $lang["database_error_user_not_updated"];
+		if (!$query) $msg .= Database Error, User not updated;
 	
 		// clean out current user to categories table of user
 		$query = mysql_query("DELETE from users_to_categories where user_id = ".$id);
@@ -96,7 +96,7 @@ function updateProfile($id) {
 				
 			}
 		}
-		$msg .= $lang["user_updated"];
+		$msg .= User Updated;
 		
 		
 	}
@@ -117,18 +117,18 @@ function addProfile() {
      }
 	
 	if (!$edit) {
-		$msg = $lang["not_authorized_add_users"];
+		$msg = You are not authorized to add users;
 	} else {
 		if ((!$new_password) || (!$email)) {
-				$msg = $lang["username_password_required"];
+				$msg = Username and Password are required;
 		} else {
 			$query = mysql_query("SELECT email from users where email = '".$email."'");
 			if (mysql_num_rows($query) > 0) {
-				$msg = $lang["email_exists"];
+				$msg = E-mail address already exists;
 			} else {
 				$password = md5($new_password);
 				$query = mysql_query("INSERT INTO users (email, password) values ('".$email."', '".$password."')");
-				if (!$query) $msg .= $lang["database_error_user_not_updated"];
+				if (!$query) $msg .= Database Error, User not updated;
 				$id = mysql_insert_id();
 				$view = $_POST["view"] ? 1 : 0;
 				$post = $_POST["post"] ? 1 : 0;
@@ -136,7 +136,7 @@ function addProfile() {
 				$add_categories = $_POST["add_categories"] ? 1 : 0;
 				$add_groups = $_POST["add_groups"] ? 1 : 0;
 				$query = mysql_query("UPDATE users set add_users = ".$add_users.", add_categories = ".$add_categories.", view = ".$view.", post = ".$post.", add_groups = ".$add_groups." WHERE user_id =".$id);
-				if (!$query) $msg .= $lang["database_error_user_not_updated"];
+				if (!$query) $msg .= Database Error, User not updated;
 		
 				//now add back the ones the user has access to
 				if ($_POST["category"]) {
@@ -162,7 +162,7 @@ function addProfile() {
 			}
 		}
 	}
-	if (!$msg) $msg = $lang["user_updated"];
+	if (!$msg) $msg = User Updated;
 	mysql_close($link);
 	header("Location: edit_users.php?msg=".$msg."&".$common_get);
 }
@@ -189,8 +189,8 @@ function addCategory() {
         }
 		$q = "INSERT INTO categories (name, sub_of, sequence, description, color, background) values ('".$name."', '".$sub_of."', '".$sequence."', '".$description."', '".$color."', '".$background."')";
 		$query = mysql_query($q);
-		if (!$query) $msg = $lang["database_error_category_not_updated"];
-		else $msg = $lang["cateogory_added"];
+		if (!$query) $msg = Database Error, Category Not Added;
+		else $msg = Category Added;
 	}
 	mysql_close($link);
 	header("Location: edit_categories.php?msg=".$msg."&".$common_get);
@@ -216,8 +216,8 @@ function editCategory($id) {
 			$background = mysql_real_escape_string($_POST["background"]);
         }
 		$query = mysql_query("UPDATE categories set name = '".$name."', sub_of = '".$sub_of."', sequence = '".$sequence."', description = '".$description."', color = '".$color."', background = '".$background."' where category_id =".$id);
-		if (!$query) $msg = $lang["database_error_category_not_updated"];
-		else $msg = $lang["category_updated"];
+		if (!$query) $msg = Database Error, Category Not Added;
+		else $msg = Category Updated;
 	}
 	mysql_close($link);
 	header("Location: edit_categories.php?msg=".$msg."&".$common_get);
@@ -234,14 +234,14 @@ function deleteCategory($id) {
           	$sub_of = mysql_real_escape_string($_POST["sub_of"]);
         }
 		$query = mysql_query("UPDATE categories set sub_of = '".$sub_of."' where sub_of =".$id);
-		if (!$query) $msg = $lang["database_error_dependant_categories_not_updated"];
+		if (!$query) $msg = Database Error, Dependant Categories Not Updated;
 		$query = mysql_query("UPDATE events set category_id = '".$sub_of."' where category_id =".$id);
-		if (!$query) $msg .= $lang["database_error_dependant_events_not_updated"] ;
+		if (!$query) $msg .= Database Error, Dependant Events Not Updated ;
 		$query = mysql_query("DELETE from users_to_categories where category_id = ".$id);
-		if (!$query) $msg .= $lang["database_error_user_table_not_updated"];
+		if (!$query) $msg .= Database Error, User Table Not Updated;
 		$query = mysql_query("DELETE from categories where category_id = ".$id);
-		if (!$query) $msg .= $lang["database_error_category_not_deleted"];
-		if (!$msg) $msg = $lang["category_deleted"];
+		if (!$query) $msg .= Database Error, Category Not Deleted;
+		if (!$msg) $msg = Category Deleted;
 	}
 	mysql_close($link);
 	header("Location: edit_categories.php?msg=".$msg."&".$common_get);
@@ -264,7 +264,7 @@ function addGroup() {
 		$q = "INSERT INTO groups (name, sub_of, sequence) values ('".$name."', '".$sub_of."', '".$sequence."')";
 		$query = mysql_query($q);
 		if (!$query) $msg = $lang["database_error_group_not_updated"];
-		else $msg = $lang["group_added"];
+		else $msg = Group Added;
 	}
 	mysql_close($link);
 	header("Location: edit_groups.php?msg=".$msg."&".$common_get);
@@ -284,8 +284,8 @@ function editGroup($id) {
 			$sequence = mysql_real_escape_string($_POST["sequence"]);
         }
 		$query = mysql_query("UPDATE groups set name = '".$name."', sub_of = '".$sub_of."', sequence = '".$sequence."' where group_id =".$id);
-		if (!$query) $msg = $lang["database_error_category_not_updated"];
-		else $msg = $lang["group_updated"];
+		if (!$query) $msg = Database Error, Category Not Added;
+		else $msg = Group Updated;
 	}
 	mysql_close($link);
 	header("Location: edit_groups.php?msg=".$msg."&".$common_get);
@@ -302,14 +302,14 @@ function deleteGroup($id) {
        		$sub_of = mysql_real_escape_string($_POST["sub_of"]);
 		}
 		$query = mysql_query("UPDATE groups set sub_of = '".$sub_of."' where sub_of =".$id);
-		if (!$query) $msg = $lang["database_error_dependant_groups_not_updated"];
+		if (!$query) $msg = Database Error, Dependant Groups Not Updated;
 		$query = mysql_query("UPDATE events set group_id = '".$sub_of."' where group_id =".$id);
-		if (!$query) $msg .= $lang["database_error_dependant_events_not_updated"] ;
+		if (!$query) $msg .= Database Error, Dependant Events Not Updated ;
 		$query = mysql_query("DELETE from users_to_groups where group_id = ".$id);
-		if (!$query) $msg .= $lang["database_error_user_table_not_updated"];
+		if (!$query) $msg .= Database Error, User Table Not Updated;
 		$query = mysql_query("DELETE from groups where group_id = ".$id);
-		if (!$query) $msg .= $lang["database_error_group_not_deleted"];
-		if (!$msg) $msg = $lang["group_deleted"];
+		if (!$query) $msg .= Database Error,Group Not Deleted;
+		if (!$msg) $msg = Group Deleted;
 	}
 	mysql_close($link);
 	header("Location: edit_groups.php?msg=".$msg."&".$common_get);
@@ -350,8 +350,8 @@ function addLink() {
 		
 		
 		$query = mysql_query("INSERT INTO links (company, address1, address2, city, state, zip, phone, fax, contact, email, url, description) values ('".$company."', '".$address1."', '".$address2."', '".$city."', '".$state."', '".$zip."', '".$phone."', '".$fax."', '".$contact."', '".$email."', '".$url."', '".$description."')");
-		if (!$query) $msg = $lang["database_error_link_not_added"];
-		else $msg = $lang["link_added"];
+		if (!$query) $msg = Database Error, Link Not Added;
+		else $msg = Link Added;
 		mysql_close($link);
 	}
 	header("Location: edit_links.php?msg=".$msg."&".$common_get);
@@ -390,8 +390,8 @@ function editLink($id) {
         }
 		$q = "UPDATE links set company = '".$company."', address1 = '".$address1."', address2 = '".$address2."', city = '".$city."', state = '".$state."', zip = '".$zip."', phone = '".$phone."', fax = '".$fax."', contact = '".$contact."', email = '".$email."', url ='".$url."', description ='".$description."' where link_id =".$id;
 		$query = mysql_query($q);
-		if (!$query) $msg = $lang["database_error_link_not_updated"];
-		else $msg = $lang["link_updated"];
+		if (!$query) $msg = Database Error, Link not Updated;
+		else $msg = Link Updated;
 		mysql_close($link);
 	}
 	header("Location: edit_links.php?msg=".$msg."&".$common_get);
@@ -403,11 +403,11 @@ function deleteLink($id) {
 		$msg = $lang["not_authorized_edit_links"];
 	} else {
 		$query = mysql_query("UPDATE events set venue_id = 0 where venue_id =".$id);
-		if (!$query) $msg .= $lang["database_error_dependant_events_not_updated"];
+		if (!$query) $msg .= Database Error, Dependant Events Not Updated;
 		$query = mysql_query("UPDATE events set contact_id = 0 where contact_id =".$id);
 		$query = mysql_query("DELETE from links where link_id = ".$id);
-		if (!$query) $msg .= $lang["database_error_link_not_deleted"];
-		if (!$msg) $msg = $lang["link_deleted"];
+		if (!$query) $msg .= Database Error, Link Not Deleted;
+		if (!$msg) $msg = Link Deleted;
 		mysql_close($link);
 	}
 	header("Location: edit_links.php?msg=".$msg."&".$common_get);
@@ -416,14 +416,14 @@ function deleteLink($id) {
 function deleteUser($id) {
 	global $table_prefix, $link, $common_get, $lang, $edit;
 	if (!$edit) {
-		$msg = $lang["not_authorized_add_users"];
+		$msg = You are not authorized to add users;
 	} else {
 		$sub_of = addslashes($_POST["sub_of"]);
 		$query = mysql_query("DELETE from users_to_categories where user_id = ".$id);
-		if (!$query) $msg .= $lang["database_error_user_table_not_updated"];
+		if (!$query) $msg .= Database Error, User Table Not Updated;
 		$query = mysql_query("DELETE from users where user_id = ".$id);
-		if (!$query) $msg .= $lang["database_error_user_not_deleted"];
-		if (!$msg) $msg = $lang["user_deleted"];
+		if (!$query) $msg .= Database Error, User Not Deleted;
+		if (!$msg) $msg = User Deleted;
 	}
 	mysql_close($link);
 	header("Location: edit_users.php?msg=".$msg."&".$common_get);
@@ -444,10 +444,10 @@ function deleteEvent($id) {
 	}
 	if ($edit == true) {
 		$query = mysql_query("DELETE from dates where event_id = ".$id);
-		if (!$query) $msg .= $lang["database_error_dates_not_updated"];
+		if (!$query) $msg .= Database Error, Dates Table Not Updated;
 		$query = mysql_query("DELETE from events where event_id = ".$id);
-		if (!$query) $msg .= $lang["database_error_event_not_deleted"];
-		if (!$msg) $msg = $lang["event_deleted"];
+		if (!$query) $msg .= Database Error, Event Not Deleted;
+		if (!$msg) $msg = Event Deleted;
 	} else {
 		$msg = $lang["not_authorized_events_category"];
 	}
@@ -458,7 +458,7 @@ function deleteEvent($id) {
 function updateModules() {
 	global $table_prefix, $link, $edit, $common_get, $lang;
 	if (!$edit) {
-		$msg = $lang["not_authorized_add_users"];
+		$msg = You are not authorized to add users;
 	} else {
 		
 		while (list($key, $val) = each($_POST["link_name"])) {
@@ -496,7 +496,7 @@ function updateModules() {
 				
 				$update = mysql_query("update modules set link_name = '".$val."',  name = '".$_POST["name"][$key]."', active = '".$active."', sequence = '".$sequence."', year = '".$year."', month = '".$month."', week = '".$week."', day = '".$day."' where module_id =".$key);
 			}
-			$msg = $lang["modules_updated"];
+			$msg = Modules Updated;
 		}
 	}
 	mysql_close($link);
@@ -506,7 +506,7 @@ function updateModules() {
 function installModule($dir,$file) {
 	global $table_prefix, $link, $edit, $common_get, $lang;
 	if (!$edit) {
-		$msg = $lang["not_authorized_add_users"];
+		$msg = You are not authorized to add users;
 	} else {
 		if ($file) {
 			$script = file_get_contents($dir."/".$file);
@@ -519,7 +519,7 @@ function installModule($dir,$file) {
 			$query = mysql_query("INSERT INTO modules (link_name, name, script) values('".$mod["LINK_NAME"]."','".$mod["NAME"]."','".$file."')");
 				
 		} else {
-			$msg = $lang["modules_updated"];
+			$msg = Modules Updated;
 		}
 		
 	}
@@ -547,7 +547,7 @@ function approve($event_id) {
 		$squery = mysql_query($sq);
 		if ($squery) {
 			$msg = $lang["event_updated"];
-			include "includes/notify.php";
+			include "include/notify.php";
 			notify_group($event_id);
 		}
 		else $msg = "Database Error: $sq";
@@ -582,17 +582,17 @@ if (!$_SESSION["user_id"]) {
 	if (($id != $_SESSION["user_id"])&& !$post && !$edit && !$edit_categories && !$edit_groups){
 	
 		mysql_close($link);
-		$msg =  $lang["not_authorized"];
+		$msg =  You are not authorized to perform this action;
 		header("Location: index.php?msg=".$msg."&id=".$id."&".$common_get);
 	}
 	 
 	switch ($_REQUEST["mode"]) {
-	case $lang["update_profile"];
+	case Update Profile;
 		
 		updateProfile($id);
 		break;
 	
-	case $lang["add_category"];
+	case Add Category;
 		addCategory();
 		break;
 		

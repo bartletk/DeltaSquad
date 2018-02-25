@@ -34,7 +34,7 @@ http://supercali.inforest.com/
 */
 
 function showGrid($date) {
-	global $title, $niceday, $start_time, $end_time, $venue, $city, $state, $cat, $color, $background, $ed, $usr, $o, $c, $m, $a, $y, $w, $lang, $ap, $status;
+	global $title, $niceday, $start_time, $end_time, $cat, $color, $background, $ed, $usr, $o, $c, $m, $a, $y, $w, $lang, $ap, $status;
 	if ($start_time[$date]) {
 		ksort($start_time[$date]);
 		echo "<ul>\n";
@@ -50,19 +50,12 @@ function showGrid($date) {
 				echo "<div class=\"title\"><a href=\"show_event.php?id=".$id."&o=".$o."&c=".$c."&m=".$m."&a=".$a."&y=".$y."&w=".$w."\" onClick=\"openPic('show_event.php?id=".$id."&size=small','pop','600','400'); window.newWindow.focus(); return false\"";
 				if ($color[$id]) echo " style=\"color: ".$color[$id]."; background: ".$background[$id].";\"";
 				echo ">".$title[$id]."</a></div>\n";
-				if ($venue[$id]) {
-					echo "<div class=\"venue\">".$venue[$id]."</div>\n";
-					if ($city[$id]) {
-						echo "<div class=\"location\">".$city[$id];
-						if ($state[$id]) echo ", ".$state[$id];
-						echo "</div>\n";
-					}
-				}
+
 				echo "</div>";
 				if ($ed[$id]==true) {
 					echo "<div class=\"edit\">";
-					if (($ap[$id]==true) && (($status[$id] == 2) || ($status[$id] == 3))) echo "[<a href=\"admin_actions.php?id=".$id."&o=".$o."&c=".$c."&m=".$m."&a=".$a."&y=".$y."&w=".$w."&mode=".approve."\">".$lang["approve"]."</a>]&nbsp;&nbsp;";
-					echo "[<a href=\"edit_event.php?id=".$id."&o=".$o."&c=".$c."&m=".$m."&a=".$a."&y=".$y."&w=".$w."\" onClick=\"openPic('edit_event.php?id=".$id."&size=small','pop','650','600'); window.newWindow.focus(); return false\">".$lang["edit"]."</a>]&nbsp;&nbsp;[<a href=\"delete_event.php?id=".$id."&o=".$o."&c=".$c."&m=".$m."&a=".$a."&y=".$y."&w=".$w."\">".$lang["delete"]."</a>]</div>\n";
+					if (($ap[$id]==true) && (($status[$id] == 2) || ($status[$id] == 3))) echo "[<a href=\"admin_actions.php?id=".$id."&o=".$o."&c=".$c."&m=".$m."&a=".$a."&y=".$y."&w=".$w."&mode=".approve."\">Approve</a>]&nbsp;&nbsp;";
+					echo "[<a href=\"edit_event.php?id=".$id."&o=".$o."&c=".$c."&m=".$m."&a=".$a."&y=".$y."&w=".$w."\" onClick=\"openPic('edit_event.php?id=".$id."&size=small','pop','650','600'); window.newWindow.focus(); return false\">Edit</a>]&nbsp;&nbsp;[<a href=\"delete_event.php?id=".$id."&o=".$o."&c=".$c."&m=".$m."&a=".$a."&y=".$y."&w=".$w."\">Delete</a>]</div>\n";
 				}
 				echo "</li>\n";
 			}
@@ -147,5 +140,5 @@ $nextmonth =  $next["month"]["y"]."-".$next["month"]["m"];
 grab($thismonth."-01",$nextmonth."-01",$c);
 showMonth($m,$y);
 
-include "includes/footer.php";
+
 ?>

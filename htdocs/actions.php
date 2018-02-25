@@ -22,7 +22,7 @@ For further information visit:
 http://supercali.inforest.com/
 */
 
-include "includes/start.php";
+include "include/start.php";
 function check_login() {
 	global $table_prefix, $link, $common_get;
 	if(get_magic_quotes_gpc()) {
@@ -77,10 +77,10 @@ function send_new_password() {
 		$newpass=substr(md5($email.microtime()), 0, 8);
         $crypt_pass=md5($newpass);
 		mysql_query("UPDATE users set temp_password = '".$crypt_pass."' WHERE email ='".$email."'");
-		$message = $lang["password_msg"].$calendar_title.":\n\n$newpass\n\n";
-		mail($email, $lang["password_subject_start"].$calendar_title.$lang["password_subject_end"], "$message", "From: \"".$calendar_title."\" <".$calendar_email.">");
+		$message = Here is your new password to log in to: .$calendar_title.":\n\n$newpass\n\n";
+		mail($email, Your New .$calendar_title. Password, "$message", "From: \"".$calendar_title."\" <".$calendar_email.">");
 		
-		$msg=$lang["password_sent"];
+		$msg=Your New Password has been sent.;
 		
 		
 	} else {
@@ -114,7 +114,7 @@ function approve($code) {
 		if ($squery) {
 			$msg = $lang["event_updated"];
 			$event_id = mysql_result($query,0,0);
-			include "includes/notify.php";
+			include "include/notify.php";
 			notify_group($event_id);
 		}
 	} else {

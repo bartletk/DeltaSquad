@@ -21,7 +21,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 For further information visit:
 http://supercali.inforest.com/
 */
-include "includes/start.php";
+include "include/start.php";
 $page_title = $lang["title_edit_categories"];
 $id = $_REQUEST["id"];
 $edit=false;
@@ -45,7 +45,7 @@ function category_tree_edit($category_id) {
 			echo "<ul>\n";
 			while ($row=mysql_fetch_row($query)) {
 				echo "<li>".$row[1]." [<a href=\"".$PHP_SELF."?mode=edit_category&id=".$row[0]."&".$common_get."\">".$lang["edit"]."</a>]";
-				if ($row[0] != 1) echo "&nbsp;&nbsp;[<a href=\"".$PHP_SELF."?mode=delete_category&id=".$row[0]."&".$common_get."\">".$lang["delete"]."</a>]\n";
+				if ($row[0] != 1) echo "&nbsp;&nbsp;[<a href=\"".$PHP_SELF."?mode=delete_category&id=".$row[0]."&".$common_get."\">Delete</a>]\n";
 				category_tree_edit($row[0]);
 				echo "</li>\n";
 			}
@@ -87,7 +87,7 @@ function deleteCategory($id) {
 <h3>Delete: <?php echo $cat["name"]; ?>?</h3>
 <p class="warning"><?php echo $lang["sure_delete_category"]; ?></p>
 <form action="admin_actions.php" method="post">
-<?php include "includes/hidden_fields.php"; ?>
+<?php include "include/hidden_fields.php"; ?>
 <input type="hidden" name="size" value="<?php echo $_REQUEST["size"]; ?>">
 <input type="hidden" name="id" id="id" value="<?php echo $cat["category_id"]; ?>">
 <p><?php echo $lang["move_existing_events"]; ?>:
@@ -129,7 +129,7 @@ function editCategory($id) {
 		<td><?php echo $lang["background"]; ?>: <input type="text" name="background" value="<?php echo $cat["background"]; ?>" size="10" maxlength="255" onChange="this.form.name.style.background=this.value;">  <A HREF="#" onClick="cp.select(cate.background,'pick2');return false;" NAME="pick2" ID="pick2">Pick</A></td>
 	</tr>
 	<tr>
-		<td colspan="2"><?php echo $lang["description"]; ?>:<br />
+		<td colspan="2"><?php echo "Description"; ?>:<br />
 <?php if ($fck_editor_path) {
 	include($fck_editor_path."fckeditor.php") ;
 	$oFCKeditor = new FCKeditor('description') ;
@@ -148,7 +148,7 @@ function editCategory($id) {
 	</tr>
 
 </table>
-<p><input type="submit" name="mode" value="<?php echo $id == "add" ? $lang["add_category"] : $lang["edit_category"] ; ?>"></p>
+<p><input type="submit" name="mode" value="<?php echo $id == "add" ? Add Category : $lang["edit_category"] ; ?>"></p>
 </form>
 <?php
 }
@@ -185,5 +185,5 @@ if ($edit) {
 
 
 }
-include "includes/footer.php";
+
 ?>

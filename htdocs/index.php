@@ -48,12 +48,12 @@ function grabDates($start,$end,$category_array) {
 		$superedit = true;
 	}
 	if (($mod > 0) || ($superedit)) {
-		$q = "select DATE_FORMAT(dates.date, '%Y%m%d'), DATE_FORMAT(dates.date, '%H%i'), events.event_id, events.title, DATE_FORMAT(dates.date, '%W, %M %e, %Y'), DATE_FORMAT(dates.date, '%l:%i %p'),  DATE_FORMAT(dates.end_date, '%l:%i %p'), links.company, links.city, links.state, events.category_id, events.user_id, dates.date, categories.color, categories.background, events.status_id from events, dates, links, categories, groups where dates.date >= '$start' and dates.date < '$end' and dates.event_id = events.event_id and events.venue_id = links.link_id and events.category_id in (".$cats.") and events.category_id = categories.category_id and events.group_id = groups.group_id and events.group_id = ".$w." order by dates.date";
-		$query = mysql_query($q);
+		$q = "select DATE_FORMAT(dateStart, '%Y%m%d'),DATE_FORMAT(dateStart, '%H%i'), id, title, DATE_FORMAT(dateStart, '%W, %M %e, %Y'), DATE_FORMAT(dateStart, '%l:%i %p'), DATE_FORMAT(dateEnd, '%l:%i %p'), series, user, dates.date, status, from events where dateStart >= '$start' and dateStart < '$end' and order by dates.date";
+			$query = mysql_query($q);
 		//echo $q."<br>";
 		while ($row = mysql_fetch_row($query)) {
 			$edit = false;
-			if ($row[11] == $_SESSION["user_id"]) {
+			if ($row[8] == $_SESSION["user_id"]) {
 				$edit = true;
 			} elseif ($superedit) {
 				$edit = true;
@@ -61,23 +61,18 @@ function grabDates($start,$end,$category_array) {
 			if ($edit==true) $ed[$row[2]]=true;
 			if ($superedit==true) $ap[$row[2]]=true;
 			$title[$row[2]]=strip_tags($row[3]);
-			$niceday[$row[0]][$row[12]][$row[2]]=$row[4];
+			$niceday[$row[0]][$row[9]][$row[2]]=$row[4];
 			if (($row[5] == "12:00 AM") && ($row[6] == "11:59 PM")) {
-				$start_time[$row[0]][$row[12]][$row[2]]=$lang["all_day"];
+				$start_time[$row[0]][$row[9]][$row[2]]=$lang["all_day"];
 			} elseif (($row[5] == "12:00 AM") && ($row[6] == "12:00 AM")) {
-				$start_time[$row[0]][$row[12]][$row[2]]=$lang["tba"];
+				$start_time[$row[0]][$row[9]][$row[2]]="TBA";
 			} else {	
-				$start_time[$row[0]][$row[12]][$row[2]]=$row[5];
-				if ($row[6]) $end_time[$row[0]][$row[12]][$row[2]]=$row[6];
+				$start_time[$row[0]][$row[9]][$row[2]]=$row[5];
+				if ($row[6]) $end_time[$row[0]][$row[9]][$row[2]]=$row[6];
 			}
-			if ($row[7]) $venue[$row[2]]=$row[7];
-			if ($row[7] && $row[8]) $city[$row[2]]=$row[8];
-			if ($row[7] && $row[8] && $row[9]) $state[$row[2]]=$row[9];
-			$cat[$row[2]]=$row[10];
-			$usr[$row[2]]=$row[11];
-			$color[$row[2]]=$row[13];
-			$background[$row[2]]=$row[14];
-			$status[$row[2]]=$row[15];
+			$cat[$row[2]]=$row[7];
+			$usr[$row[2]]=$row[8];
+			$status[$row[2]]=$row[10];
 		}
 	}
 }
@@ -171,7 +166,7 @@ function grab_parent($start,$end,$category,$starter=false) {
 
 
 
-include "includes/start.php";
+include "include/start.php";
 $canview = false;
 //if no access, then kick them out!
 

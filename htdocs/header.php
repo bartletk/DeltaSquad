@@ -75,5 +75,5 @@ if($session->logged_in){
 ?>
 </div>
 <div class="nav">
-<?php include "includes/nav.php"; ?>
+<?php include "include/nav.php"; ?>
 </div>
