@@ -491,9 +491,8 @@ class Session
      /**
     * addEvent - adds an event part 1 not  complete
     */
-   function addEvent($subuser, $subpass, $subemail, $subname){
-   
-     
+   function addEvent($title, $type, $course, $crn, $seats, $notes, $date, $starttime, $endtime){
+   header("Location: /addevent2.php?t=$title&ty=$type&c=$course&crn=$crn&s=$seats&n=$notes&d=$date&st=$starttime&et=$endtime");  
    }
 };
 

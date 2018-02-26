@@ -288,28 +288,15 @@ class Process
       $_POST = $session->cleanInput($_POST);
    
       // Registration attempt 
-      $retval = $session->addEvent($_POST['user'], $_POST['pass'], $_POST['email'], $_POST['name']);
-      
-      
-      if($retval == 0){
-         $_SESSION['reguname'] = $_POST['user'];
-         $_SESSION['regsuccess'] = true;
-         header("Location: ".$session->referrer);
-      }
-      // Error found with form 
-      else if($retval == 1){
-         $_SESSION['value_array'] = $_POST;
-         $_SESSION['error_array'] = $form->getErrorArray();
-         header("Location: ".$session->referrer);
-      }
-      // Registration attempt failed 
-      else if($retval == 2){
-         $_SESSION['reguname'] = $_POST['user'];
-         $_SESSION['regsuccess'] = false;
-         header("Location: ".$session->referrer);
-      }
+      $retval = $session->addEvent($_POST['title'], $_POST['type'], $_POST['course'], $_POST['crn'], $_POST['seats'], $_POST['notes'], $_POST['date'], $_POST['starttime'], $_POST['endtime']);
    }
+   function procAdd2(){
+      global $session, $form;
+      $_POST = $session->cleanInput($_POST);
    
+      // Registration attempt 
+      $retval = $session->addEvent($_POST['title'], $_POST['type'], $_POST['course'], $_POST['crn'], $_POST['seats'], $_POST['notes'], $_POST['date'], $_POST['starttime'], $_POST['endtime']);
+   }
 };
 
 /* Initialize process */

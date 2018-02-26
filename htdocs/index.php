@@ -1,26 +1,5 @@
 <?php
-/*
-Supercali Event Calendar
 
-Copyright 2006 Dana C. Hutchins
-
-This program is free software; you can redistribute it and/or
-modify it under the terms of the GNU General Public License
-as published by the Free Software Foundation; either version 2
-of the License, or (at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program; if not, write to the Free Software
-Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
-
-For further information visit:
-http://supercali.inforest.com/
-*/
 $page = "index.php";
 
 /* Grab Dates Function */
@@ -34,7 +13,7 @@ function grabDates($start,$end,$category_array) {
 	global $supergroup;
 	global $title, $niceday, $start_time, $end_time, $venue, $city, $state, $cat,$ed, $usr, $color, $background,$lang, $w, $ap, $status;
 	/* get applicable events */
-	$superedit = false;
+	$superedit = true;
 	if (!$supergroup) {
 		$q = "select moderate from users_to_groups where group_id = ".$w." and user_id = ".$_SESSION["user_id"];
 		$query = mysql_query($q);
@@ -48,11 +27,10 @@ function grabDates($start,$end,$category_array) {
 		$superedit = true;
 	}
 	if (($mod > 0) || ($superedit)) {
-		$q = "select DATE_FORMAT(dateStart, '%Y%m%d'),DATE_FORMAT(dateStart, '%H%i'), id, title, DATE_FORMAT(dateStart, '%W, %M %e, %Y'), DATE_FORMAT(dateStart, '%l:%i %p'), DATE_FORMAT(dateEnd, '%l:%i %p'), series, user, dates.date, status, from events where dateStart >= '$start' and dateStart < '$end' and order by dates.date";
+		$q = "select DATE_FORMAT(dateStart, '%Y%m%d'),DATE_FORMAT(dateStart, '%H%i'), id, title, DATE_FORMAT(dateStart, '%W, %M %e, %Y'), DATE_FORMAT(dateStart, '%l:%i %p'), DATE_FORMAT(dateEnd, '%l:%i %p'), series, user, dateStart, status, from events order by dateStart";
 			$query = mysql_query($q);
-		//echo $q."<br>";
 		while ($row = mysql_fetch_row($query)) {
-			$edit = false;
+			$edit = true;
 			if ($row[8] == $_SESSION["user_id"]) {
 				$edit = true;
 			} elseif ($superedit) {
@@ -75,11 +53,12 @@ function grabDates($start,$end,$category_array) {
 			$status[$row[2]]=$row[10];
 		}
 	}
+
 }
 
 function grab($start,$end,$category) {
 	global $include_child_categories, $include_parent_categories, $category_array,$supercategory,$supergroup,$category_permissions,$w;
-	$canview = false;
+	$canview = true;
 	$groupview = false;
 	if (!$supergroup) {
 		$q = "SELECT * from users_to_groups where group_id = ".$w." and  user_id = ".$_SESSION["user_id"];
@@ -104,6 +83,7 @@ function grab($start,$end,$category) {
 		} else {
 			$canview = true;
 		}
+
 		if ($canview) {
 			$category_array[] = $category;
 			if ($include_child_categories) grab_child($start,$end,$category,true);
@@ -112,7 +92,7 @@ function grab($start,$end,$category) {
 			
 		}
 	
-	}
+	} 		
 }
 
 function grab_child($start,$end,$category,$starter=false) {
@@ -167,7 +147,7 @@ function grab_parent($start,$end,$category,$starter=false) {
 
 
 include "include/start.php";
-$canview = false;
+$canview = true;
 //if no access, then kick them out!
 
 

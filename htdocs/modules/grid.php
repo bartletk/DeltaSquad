@@ -1,40 +1,8 @@
 <?php
+//include("../include/database.php")
 /*
-<?xml version="1.0" encoding="utf-8"?>
-<module>
-        <name>Month View</name>
-        <author>Dana C. Hutchins</author>
-        <url>http://supercali.inforest.com/</url>
-        <version>1.0.0</version>
-        <link_name>Month</link_name>
-        <description>The original month calendar grid</description>
-        <image></image>
-		<install_script></install_script>     
-</module>
-Supercali Event Calendar
-
-Copyright 2006 Dana C. Hutchins
-
-This program is free software; you can redistribute it and/or
-modify it under the terms of the GNU General Public License
-as published by the Free Software Foundation; either version 2
-of the License, or (at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program; if not, write to the Free Software
-Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
-
-For further information visit:
-http://supercali.inforest.com/
-*/
-
 function showGrid($date) {
-	global $title, $niceday, $start_time, $end_time, $cat, $color, $background, $ed, $usr, $o, $c, $m, $a, $y, $w, $lang, $ap, $status;
+	global $title, $niceday, $start_time, $end_time, $cat, $ed, $usr, $o, $c, $m, $a, $y, $w, $lang, $ap, $status;
 	if ($start_time[$date]) {
 		ksort($start_time[$date]);
 		echo "<ul>\n";
@@ -42,13 +10,11 @@ function showGrid($date) {
 			while (list($id,$value) = each($start_time[$date][$t])) {
 				echo "<li>";
 				echo "<div class=\"item\"";
-				if ($color[$id]) echo " style=\"color: ".$color[$id]."; background: ".$background[$id].";\"";
 				echo ">";
 				echo "<div class=\"time\">".$value;
 				if ($end_time[$date][$t][$id]) echo " - ".$end_time[$date][$t][$id];
 				echo "</div>\n";
 				echo "<div class=\"title\"><a href=\"show_event.php?id=".$id."&o=".$o."&c=".$c."&m=".$m."&a=".$a."&y=".$y."&w=".$w."\" onClick=\"openPic('show_event.php?id=".$id."&size=small','pop','600','400'); window.newWindow.focus(); return false\"";
-				if ($color[$id]) echo " style=\"color: ".$color[$id]."; background: ".$background[$id].";\"";
 				echo ">".$title[$id]."</a></div>\n";
 
 				echo "</div>";
@@ -62,7 +28,33 @@ function showGrid($date) {
 		}
 		echo "</ul>\n";
 	}
+	
 }
+*/
+
+function showGrid($date) {
+	$dateNew = substr_replace(substr_replace($date, "-", 6, 0), "-", 4, 0);
+$link = mysql_connect (DB_SERVER, DB_USER, DB_PASS) or die ("Could not connect to database, try again later");
+mysql_select_db(DB_NAME,$link);
+		$q = sprintf("SELECT * FROM ".TBL_EVENTS." WHERE CAST(dateStart AS DATE) = CAST('$dateNew' AS DATE)");
+   		$result = mysql_query($q, $link);
+   		if(!$result || (mysql_num_rows($result) < 1)){
+   			// NO EVENTS
+   		} else {
+			// EVENTS
+			//$dbarray = mysql_fetch_array($result);
+while($row = mysql_fetch_assoc($result)) {
+    echo $row['title'];
+	echo "<br> ".substr($row[dateStart], 10, -3)." -".substr($row[dateEnd], 10, -3)."<br> Room:";
+	echo $row[room];
+	echo "<br><br>";
+}
+		}
+   		
+		
+}
+
+
 
 function showMonth ($calmonth,$calyear) {
 	global $week_titles, $o, $m, $a, $y, $w, $c, $next, $prev,$ly, $lm, $le, $la;
@@ -98,7 +90,7 @@ function showMonth ($calmonth,$calyear) {
 	/* start entering in the information */
 	for ( $d = 1; $d <= $totaldays; $d++ )
 	{
-			if (($d == date(j)) && ($calmonth == date(m)) && ($calyear == date(Y))) {
+			if (($d == date('j')) && ($calmonth == date('m')) && ($calyear == date('Y'))) {
 				echo '<td class="day" id="today"><div class="day_of_month"><a href="index.php?o=',$la,'&w=',$w,'&c=',$c,'&m=',$calmonth,'&a=',$d,'&y=',$calyear,'">', $d, '</a></div>';
 			} else {
 				echo '<td class="day"><div class="day_of_month"><a href="index.php?o=',$la,'&w=',$w,'&c=',$c,'&m=',$calmonth,'&a=',$d,'&y=',$calyear,'">', $d, '</a></div>';

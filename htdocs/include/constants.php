@@ -1,5 +1,5 @@
 <?php
-define("BASEURL", "http://18.219.59.60/");
+define("BASEURL", "http://18.219.124.71/");
 
 /**
  * Database Constants - these constants are required
@@ -9,7 +9,7 @@ define("BASEURL", "http://18.219.59.60/");
  */
 define("DB_SERVER", "localhost");
 define("DB_USER", "root");
-define("DB_PASS", "wp8dqoJzgg9x");
+define("DB_PASS", "gcLIvSDlyxV5");
 define("DB_NAME", "nursing");
 
 /**
@@ -22,7 +22,8 @@ define("TBL_MAIL", "mail");
 define("TBL_COURSE", "course");
 define("TBL_ROOMS", "rooms");
 define("TBL_TYPES", "types");
-
+define("TBL_EVENTS", "events");
+define("TBL_CRN", "crn");
 /**
  * Special Names and Level Constants - the admin
  * page will only be accessible to the user with

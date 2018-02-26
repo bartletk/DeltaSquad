@@ -1,27 +1,4 @@
 <?php
-/*
-Supercali Event Calendar
-
-Copyright 2006 Dana C. Hutchins
-
-This program is free software; you can redistribute it and/or
-modify it under the terms of the GNU General Public License
-as published by the Free Software Foundation; either version 2
-of the License, or (at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program; if not, write to the Free Software
-Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
-
-For further information visit:
-http://supercali.inforest.com/
-*/
-
 include "include/start.php";
 function check_login() {
 	global $table_prefix, $link, $common_get;
@@ -106,10 +83,10 @@ function approve($code) {
        	$code = mysql_real_escape_string($code);
 		
      }
-	$q = "select event_id from events where quick_approve = '".$code."'";
+	$q = "select id from events where quick_approve = '".$code."'";
 	$query = mysql_query($q);
 	if (mysql_num_rows($query) > 0) {
-		$sq = "update events set status_id = 4, quick_approve = NULL where quick_approve = '".$code."'";
+		$sq = "update events set status = 4, quick_approve = NULL where quick_approve = '".$code."'";
 		$squery = mysql_query($sq);
 		if ($squery) {
 			$msg = $lang["event_updated"];

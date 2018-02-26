@@ -1,17 +1,5 @@
 <?php
-/*
-<?xml version="1.0" encoding="utf-8"?>
-<module>
-        <name>Week View</name>
-        <author>Dana C. Hutchins</author>
-        <url>http://supercali.inforest.com/</url>
-        <version>1.0.0</version>
-        <link_name>Week</link_name>
-        <description>Shows a week on one screen.</description>
-        <image></image>
-		<install_script></install_script>     
-</module>
-*/
+
 include "modules/day_week_functions.php";
 	include "header.php";
 ?>
