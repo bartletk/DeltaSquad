@@ -3,13 +3,12 @@
 include("header.php");
 $page = "main.php";
 if(!$session->logged_in){
-	?>
-		<h1>Student View</h1>
-	<?php
-   echo "[<a href=\"login.php\">Login</a>]";?></p><?php
+	header("Location: /class_select.php");
+} else {
+header("Location: /index.php"); 
 }
-?>
-<div id='calendar'></div>
+	
+	?>
 
 
 

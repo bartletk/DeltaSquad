@@ -69,8 +69,13 @@ if($session->logged_in){
 	<?php
    if($session->isAdmin()){
       echo "[<a href=\"admin/admin.php\">Admin Center</a>]&nbsp;[<a href=\"addevent.php\">Add Event</a>]&nbsp;";
+   } elseif ($session->isInstructor()){
+   echo "&nbsp;[<a href=\"addevent.php\">Add Event</a>]&nbsp;";
    }
    echo "[<a href=\"process.php\">Logout</a>]";?></p><?php
+} else {
+	
+   echo "[<a href=\"login.php\">Login</a>]";
 }
 ?>
 </div>

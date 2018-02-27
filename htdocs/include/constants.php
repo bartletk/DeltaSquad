@@ -24,6 +24,8 @@ define("TBL_ROOMS", "rooms");
 define("TBL_TYPES", "types");
 define("TBL_EVENTS", "events");
 define("TBL_CRN", "crn");
+define("TBL_DEADLINE_TYPES", "deadline_types");
+define("TBL_DEADLINES", "deadlines");
 /**
  * Special Names and Level Constants - the admin
  * page will only be accessible to the user with

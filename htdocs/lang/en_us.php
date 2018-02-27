@@ -156,7 +156,6 @@ $lang["show_events_for"] = "Show Events for";
 $lang["in_category"] = "in Category";
 $lang["for_date"] = "for Date";
 $lang["go"] = "Go";
-$lang["calendar_views"] = "Calendar Views";
 $lang["no_modules_installed"] = "No Modules Installed";
 $lang["must_log_in"] = "You must log in to view this calendar";
 $lang["manage_calendar"] = "Log In";

@@ -62,7 +62,7 @@ function category_nav($category_id) {
 
 
 
-<?php echo $lang["calendar_views"]; ?>:&nbsp;&nbsp;&nbsp;
+<?php echo "Calendar Views"; ?>:&nbsp;&nbsp;&nbsp;
 <?php
 $q = "SELECT module_id, link_name from modules where active = 1 order by sequence";
 $query = mysql_query($q);

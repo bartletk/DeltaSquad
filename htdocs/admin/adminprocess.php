@@ -30,6 +30,9 @@ class AdminProcess
       /* Admin submitted delete banned user form */
       else if(isset($_POST['subdelbanned'])){
          $this->procDeleteBannedUser();
+      } 
+	  else if(isset($_POST['subdeadline'])){
+         $this->procDeadline();
       }
       /* Should not get here, redirect to home page */
       else{
@@ -173,6 +176,16 @@ class AdminProcess
          }
       }
       return $subuser;
+   }
+   function procDeadline(){
+      global $database, $form;
+	  $dateOpen = $_POST['dateOpen'];
+	  $dateClose = $_POST['dateClose'];
+	  $type = $_POST['type'];
+      $q = "INSERT INTO ".TBL_DEADLINES." VALUES (NULL, '".$dateOpen." 00:00:00', '".$dateClose." 00:00:00', '".$type."');";
+      $database->query($q);
+      header("Location: admin.php");
+     
    }
 };
 

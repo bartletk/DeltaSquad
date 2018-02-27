@@ -1,5 +1,5 @@
 <?php
-include("../include/session.php");
+include("../header.php");
 ?>
 <html>
 <head>
@@ -83,7 +83,7 @@ displayUsers();
 	<h3>Update User Level</h3>
 	<?php echo $form->error("upduser"); ?>
 	<form action="adminprocess.php" method="POST">
-		<p class="grid_4">Username: <input type="text" name="upduser" maxlength="30" value="<?php echo $form->value("upduser"); ?>"></p>
+		<p>Username: <input type="text" name="upduser" maxlength="30" value="<?php echo $form->value("upduser"); ?>"></p>
 		<p>Level:
 			<select name="updlevel">
 				<option value="1">1</option>
@@ -105,13 +105,37 @@ displayUsers();
 	<h3>Delete User</h3>
 	<?php echo $form->error("deluser"); ?>
 	<form action="adminprocess.php" method="POST">
-		<p class="grid_4">Username: <input type="text" name="deluser" maxlength="30" value="<?php echo $form->value("deluser"); ?>"></p>
+		<p>Username: <input type="text" name="deluser" maxlength="30" value="<?php echo $form->value("deluser"); ?>"></p>
 		<input type="hidden" name="subdeluser" value="1">
 		<input type="submit" value="Delete User">
 	</form>
 </div>
 <hr>
 
+<div class="deadlines">
+	<h3>Set Deadlines</h3>
+	<?php echo $form->error("deadlines"); ?>
+	<form id="deadlines" action="adminprocess.php" method="POST">
+		<p>Date Open: <input name="dateOpen" type="date" value="<?php echo $form->value("dateOpen"); ?>"><?php echo $form->error("dateOpen"); ?></p>
+		<p>Date Close: <input name="dateClose" type="date" value="<?php echo $form->value("dateClose"); ?>"><?php echo $form->error("dateClose"); ?></p>
+		<p>Type: </p><p><select form="deadlines" name="type" maxlength="30" value="<?php echo $form->value("type"); ?>"><?php echo $form->error("type"); ?>
+		<?php
+   $q = "SELECT * "
+       ."FROM ".TBL_DEADLINE_TYPES." ";
+   $result = $database->query($q);
+   $num_rows = mysql_numrows($result);
+   for($i=0; $i<$num_rows; $i++){
+      $id  = mysql_result($result,$i,"id");
+	  $type  = mysql_result($result,$i,"title");
+      echo "<option value='".$id."'>".$type."</option>";
+   }
+?>		
+		</select></p>
+		<input type="hidden" name="subdeadline" value="1">
+		<input type="submit" value="Set Deadline">
+	</form>
+</div>
+<hr>
 Back to [<a href="../main.php">Main Page</a>]<br><br>
 
 
