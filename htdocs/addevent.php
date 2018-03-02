@@ -1,7 +1,7 @@
 <?php
 	include("header.php");
 	$page = "addevent.php";
-	if(!$session->isInstructor()){
+	if(!$session->isInstructor() && !$session->isAdmin()){
 		header("Location: main.php");
 		} else {
 		global $database;
@@ -97,7 +97,7 @@
 					<option value='9:30'>8:30am</option>
 					<option value='9:45'>9:45am</option>
 					<option value='10:00'>10:00am</option>
-					<option value='10:15'>0:15am</option>
+					<option value='10:15'>10:15am</option>
 					<option value='10:30'>10:30am</option>
 					<option value='10:45'>10:45am</option>
 					<option value='11:00'>11:00am</option>
@@ -144,32 +144,32 @@
 						}
 					?>		
 				</select></p>
-				<input type="hidden" name="addevent" value="1">
+				<input type="hidden" name="addeventA" value="1">
 				<input type="submit" value="Pick CRNs">
 			</form>
 			<?php
 				if (isset($_GET['c'])){
-					$course = $_GET['c']; 
+					$courses[] = explode(" ", trim($_GET['c']));
+					
+					
 				?>
 				<form action="process.php" method="POST" id="addeventB">
-					
-					
-					<p>CRN: </p><p><select form="addeventB" name="crn" maxlength="30" value="<?php echo $form->value("crn"); ?>"><?php echo $form->error("crn"); ?>
-						<?php
-							$q = "SELECT * "
-							."FROM ".TBL_CRN." WHERE courseid = $course";
-							$result = $database->query($q);
-							$num_rows = mysql_numrows($result);
-							for($i=0; $i<$num_rows; $i++){
-								$crn  = mysql_result($result,$i,"crn");
-								echo "<option value='".$crn."'>".$crn."</option>";
-							}
-						?>		
-					</select></p>
-					
-					
-					
-					
+					<p>
+						<label>CRN: </label><br/>
+			            <select name="crn[]" size=5 multiple>
+							<?php
+										$q = "SELECT * FROM ".TBL_CRN." WHERE courseid = ".$_GET['c'];
+										$result = $database->query($q);
+										$num_rows = mysql_numrows($result);
+										for($i=0; $i<$num_rows; $i++){
+											$crn  = mysql_result($result,$i,"crn");
+											echo "<option value='".$crn."'>".$crn."</option>";
+										
+									
+								}
+							?>	
+						</select>
+					</p> 
 					<p>
 						<input type="hidden" name="title" value="<?php echo $_GET['t']?>">
 						<input type="hidden" name="type" value="<?php echo $_GET['ty']?>">
@@ -179,20 +179,58 @@
 						<input type="hidden" name="date" value="<?php echo $_GET['d']?>">
 						<input type="hidden" name="starttime" value="<?php echo $_GET['st']?>">
 						<input type="hidden" name="endtime" value="<?php echo $_GET['et']?>">
-						
-						
 						<input type="hidden" name="addeventB" value="1">
 						<input type="submit" value="Pick Location">
 					</p>
 				</form>
-			<?php } ?>
+				<?php 
+				}
+				if (isset($_GET['crn'])){
+				?>
+				<form action="process.php" method="POST" id="addeventC">
+					
+					<p>Rooms Available at the specified date/time: </p><p><select form="addeventC" name="room" maxlength="30" value="<?php echo $form->value("room"); ?>"><?php echo $form->error("room"); ?></p>
+						<?php
+							$datetimeStart = "".$_GET['d']." ".$_GET['st'].":00";
+							$datetimeEnd = "".$_GET['d']." ".$_GET['et'].":00";
+							echo "Start: ".$datetimeStart." End: ".$datetimeEnd."";
+							$q = "SELECT * FROM ".TBL_ROOMS." WHERE NOT EXISTS (SELECT * FROM ".TBL_ROOMS.", ".TBL_EVENTS." where ".TBL_EVENTS.".dateStart >= STR_TO_DATE('$dateStart', '%Y-%m-%d %H:%i:%s') AND ".TBL_EVENTS.".dateStart <= STR_TO_DATE('$dateEnd', '%Y-%m-%d %H:%i:%s') AND ".TBL_ROOMS.".id = ".TBL_EVENTS.".room)";
+							
+							$result = $database->query($q);
+							
+							$num_rows = mysql_numrows($result);
+							for($i=0; $i<$num_rows; $i++){
+								$id  = mysql_result($result,$i,"id");
+								$room  = mysql_result($result,$i,"number");
+								echo "<option value='".$id."'>".$room."</option>";
+							}
+							
+						?>		
+					</select>
+					<p>
+						<input type="hidden" name="addeventC" value="1">
+						<input type="hidden" name="title" value="<?php echo $_GET['t']; ?>">
+						<input type="hidden" name="type" value="<?php echo $_GET['ty']; ?>">
+						<input type="hidden" name="course" value="<?php echo $_GET['c']; ?>">
+						<input type="hidden" name="crn" value="<?php echo $_GET['crn']; ?>">
+						<input type="hidden" name="seats" value="<?php echo $_GET['s']; ?>">
+						<input type="hidden" name="notes" value="<?php echo $_GET['n']; ?>">
+						<input type="hidden" name="dateStart" value="<?php echo $datetimeStart; ?>">
+						<input type="hidden" name="dateEnd" value="<?php echo $datetimeStart; ?>">
+						<input type="submit" value="Add Event">
+					</p>
+				</form>
+				<?php
+				}
+				} else {
+				echo "This form is not available at the current time. Requests will be implemented later. We apologize for the inconvenience.";
+			?>
 		</div>
 		
 	</body>
 </html>
 <?php
-	} else {
-	echo "This form is not available at the current time. Requests will be implemented later. We apologize for the inconvenience.";
+} 
 }
-}
+
 ?>						

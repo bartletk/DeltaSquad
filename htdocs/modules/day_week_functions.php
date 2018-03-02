@@ -248,10 +248,7 @@ function showDay($dy,$dm,$da,$caption="") {
 
 if ($superpost) {
 $javascript = '<script type="text/javascript">
-/*
-	Written by Jonathan Snook, http://www.snook.ca/jonathan
-	Add-ons by Robert Nyman, http://www.robertnyman.com
-*/
+
 
 function getElementsByClassName(oElm, strTagName, strClassName){
 	var arrElements = (strTagName == "*" && oElm.all)? oElm.all : oElm.getElementsByTagName(strTagName);

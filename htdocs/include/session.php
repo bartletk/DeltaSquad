@@ -493,16 +493,19 @@
 		/**
 			* addEvent - adds an event part 1 not  complete
 		*/
-		function addEventB($title, $type, $course, $crn, $seats, $notes, $date, $starttime, $endtime){
-			header("Location: /addevent2.php?t=$title&ty=$type&c=$course&crn=$crn&s=$seats&n=$notes&d=$date&st=$starttime&et=$endtime");  
-		}
-		function addEvent($title, $type, $course, $seats, $notes, $date, $starttime, $endtime){
+		function addEventA($title, $type, $course, $seats, $notes, $date, $starttime, $endtime){
 			header("Location: /addevent.php?t=$title&ty=$type&c=$course&s=$seats&n=$notes&d=$date&st=$starttime&et=$endtime");  
 		}
-		function addEvent2($title, $type, $course, $crn, $seats, $notes, $dateStart, $dateEnd, $room){
+		function addEventB($title, $type, $course, $crn, $seats, $notes, $date, $starttime, $endtime){
+			foreach ($crn as $c){
+				$crns = $crns . "+" . $c;			
+			}
+			header("Location: /addevent.php?t=$title&ty=$type&c=$course&crn=$crns&s=$seats&n=$notes&d=$date&st=$starttime&et=$endtime");  
+		}
+		function addEventC($title, $type, $course, $crn, $seats, $notes, $dateStart, $dateEnd, $room){
 			global $database, $form; 
 			$user = $this->id;
-			$series=1;
+			$series=1; // put in a database function that checks what the last used series is
 			$time= date("Y/m/d H:i:s");
 			$result = $database->addEvent2($title, $type, $course, $crn, $seats, $notes, $dateStart, $dateEnd, $room, $user, $series, $time);
 			if ($result){return TRUE;}			

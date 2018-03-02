@@ -115,7 +115,7 @@ $week_titles_ss[] = "S";
 $start_category_id = 1;
 
 // Language File
-$language = "lang/en_us.php";
+$language = "lang/en_us.php"; // I H8 U
 
 // Day/week view start hour
 $day_week_start_hour = 8;

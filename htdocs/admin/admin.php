@@ -44,7 +44,7 @@ function displayUsers(){
  * automatically.
  */
 if(!$session->isAdmin()){
-   header("Location: ../main.php");
+   header("Location: ../index.php");
 }
 else{
 /**
@@ -58,7 +58,7 @@ else{
 
 <h1>Admin Center</h1>
 <font size="4">Logged in as <b><?php echo $session->username; ?></b></font><br><br>
-Back to [<a href="../main.php">Main Page</a>]<br><br>
+Back to [<a href="../index.php">Main Page</a>]<br><br>
 <?php
 if($form->num_errors > 0){
    echo "<font size=\"4\" color=\"#ff0000\">"
@@ -82,13 +82,23 @@ displayUsers();
 <div class="update">
 	<h3>Update User Level</h3>
 	<?php echo $form->error("upduser"); ?>
-	<form action="adminprocess.php" method="POST">
-		<p>Username: <input type="text" name="upduser" maxlength="30" value="<?php echo $form->value("upduser"); ?>"></p>
+	<form action="adminprocess.php" method="POST" id="update">
+		<p>Username: <select form="update" name="upduser">
+			<?php
+							$q = "SELECT * FROM ".TBL_USERS;
+							$result = $database->query($q);
+							$num_rows = mysql_numrows($result);
+							for($i=0; $i<$num_rows; $i++){
+								$username  = mysql_result($result,$i,"username");
+								echo "<option value='".$username."'>".$username."</option>";
+							}
+						?>	
+		</select>
 		<p>Level:
 			<select name="updlevel">
-				<option value="1">1</option>
-				<option value="5">5</option>
-				<option value="9">9</option>
+				<option value="1">Student</option>
+				<option value="5">Instructor</option>
+				<option value="9">Administrator</option>
 			</select>
 		</p>
 		<input type="hidden" name="subupdlevel" value="1">
@@ -104,8 +114,18 @@ displayUsers();
 <div class="update">
 	<h3>Delete User</h3>
 	<?php echo $form->error("deluser"); ?>
-	<form action="adminprocess.php" method="POST">
-		<p>Username: <input type="text" name="deluser" maxlength="30" value="<?php echo $form->value("deluser"); ?>"></p>
+	<form action="adminprocess.php" method="POST" id="delete">
+		<p>Username: <select form="delete" name="deluser">
+			<?php
+							$q = "SELECT * FROM ".TBL_USERS;
+							$result = $database->query($q);
+							$num_rows = mysql_numrows($result);
+							for($i=0; $i<$num_rows; $i++){
+								$username  = mysql_result($result,$i,"username");
+								echo "<option value='".$username."'>".$username."</option>";
+							}
+						?>	
+		</select></p>
 		<input type="hidden" name="subdeluser" value="1">
 		<input type="submit" value="Delete User">
 	</form>
@@ -136,7 +156,7 @@ displayUsers();
 	</form>
 </div>
 <hr>
-Back to [<a href="../main.php">Main Page</a>]<br><br>
+Back to [<a href="../index.php">Main Page</a>]<br><br>
 
 
 </div>

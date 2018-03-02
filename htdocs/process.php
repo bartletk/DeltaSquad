@@ -28,14 +28,14 @@
 			else if(isset($_POST['login_with_hash'])){
 				$this->procHashLogin($_POST['hash']);
 			}
-			else if(isset($_POST['addevent'])){
-				$this->procAdd();
+			else if(isset($_POST['addeventA'])){
+				$this->procAddA();
 			}
 			else if(isset($_POST['addeventB'])){
 				$this->procAddB();
 			}
-			else if(isset($_POST['subAdd2'])){
-				$this->procAdd2();
+			else if(isset($_POST['addeventC'])){
+				$this->procAddC();
 			}
 			else if(isset($_POST['choosesemester'])){
 				$this->procSemester();
@@ -59,7 +59,7 @@
 				* by mistake and therefore is redirected.
 			*/
 			else{
-				header("Location: main.php");
+				header("Location: index.php");
 			}
 		}
 		
@@ -76,13 +76,13 @@
 			
 			/* Login successful */
 			if($retval){
-				header("Location: main.php");
+				header("Location: index.php");
 			}
 			/* Login failed */
 			else{
 				$_SESSION['value_array'] = $_POST;
 				$_SESSION['error_array'] = $form->getErrorArray();
-				header("Location: main.php");
+				header("Location: login.php");
 			}
 		}
 		
@@ -93,7 +93,7 @@
 		function procLogout(){
 			global $session;
 			$retval = $session->logout();
-			header("Location: main.php");
+			header("Location: index.php");
 		}
 		
 		/**
@@ -263,7 +263,7 @@
 				$email = $info['email'];
 				
 				if($mailer->sendConfirmation($username,$userid,$email)){
-					echo "Your confirmation email has been sent! Back to <a href='main.php'>Main</a>";
+					echo "Your confirmation email has been sent! Back to <a href='index.php'>Main</a>";
 				}
 			}
 		}
@@ -298,10 +298,10 @@
 		/**
 			* procAdd - add event part 1, document later
 		*/
-		function procAdd(){
+		function procAddA(){
 			global $session, $form;
 			//$_POST = $session->cleanInput($_POST);
-			$retval = $session->addEvent($_POST['title'], $_POST['type'], $_POST['course'], $_POST['seats'], $_POST['notes'], $_POST['date'], $_POST['starttime'], $_POST['endtime']);
+			$retval = $session->addEventA($_POST['title'], $_POST['type'], $_POST['course'], $_POST['seats'], $_POST['notes'], $_POST['date'], $_POST['starttime'], $_POST['endtime']);
 			
 		}
 		
@@ -310,10 +310,10 @@
 			$_POST = $session->cleanInput($_POST);
 			$retval = $session->addEventB($_POST['title'], $_POST['type'], $_POST['course'], $_POST['crn'], $_POST['seats'], $_POST['notes'], $_POST['date'], $_POST['starttime'], $_POST['endtime']);
 		}
-		function procAdd2(){
+		function procAddC(){
 			global $session, $form;
 			//$_POST = $session->cleanInput($_POST);
-			$retval = $session->addEvent2($_POST['title'], $_POST['type'], $_POST['course'], $_POST['crn'], $_POST['seats'], $_POST['notes'],  $_POST['dateStart'], $_POST['dateEnd'], $_POST['room']);
+			$retval = $session->addEventC($_POST['title'], $_POST['type'], $_POST['course'], $_POST['crn'], $_POST['seats'], $_POST['notes'],  $_POST['dateStart'], $_POST['dateEnd'], $_POST['room']);
 			
 				header("Location: index.php");
 			

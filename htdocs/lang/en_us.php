@@ -1,6 +1,5 @@
 <?php
-$lang["password_no_email"] = "Sorry, that e-mail address does not exist in our database.  Please try again.";
-$lang["category"] = "Category";
+
 $lang["group"] = "Group";
 $lang["venue"] = "Venue/Location";
 $lang["in_main_description"] = "In Main Description";

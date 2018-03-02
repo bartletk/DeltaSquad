@@ -184,10 +184,11 @@ if (($supergroup) && ($supercategory)) {
 		}
 	}
 }
-if (($canview == true)&& $script) {
+if ($script) {
 	include "modules/".$script;
 } else {
 	include "header.php";
+	
 }
 
 
