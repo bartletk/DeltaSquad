@@ -53,38 +53,38 @@
 		}
 		
 		/**
-			* confirmUserID - Checks whether or not the given
+			* confirmuser_id - Checks whether or not the given
 			* username is in the database, if so it checks if the
-			* given userid is the same userid in the database
+			* given user_id is the same user_id in the database
 			* for that user. If the user doesn't exist or if the
-			* userids don't match up, it returns an error code
+			* user_ids don't match up, it returns an error code
 			* (1 or 2). On success it returns 0.
 		*/
-		function confirmUserID($username, $userid){
+		function confirmuser_id($username, $user_id){
 			/* Add slashes if necessary (for query) */
 			if(!get_magic_quotes_gpc()) {
 				$username = addslashes($username);
 			}
 			
 			/* Verify that user is in database */
-			$q = sprintf("SELECT userid FROM ".TBL_USERS." WHERE username= '%s'",
+			$q = sprintf("SELECT user_id FROM ".TBL_USERS." WHERE username= '%s'",
             mysql_real_escape_string($username));
 			$result = mysql_query($q, $this->connection);
 			if(!$result || (mysql_numrows($result) < 1)){
 				return 1; //Indicates username failure
 			}
 			
-			/* Retrieve userid from result, strip slashes */
+			/* Retrieve user_id from result, strip slashes */
 			$dbarray = mysql_fetch_array($result);
-			$dbarray['userid'] = stripslashes($dbarray['userid']);
-			$userid = stripslashes($userid);
+			$dbarray['user_id'] = stripslashes($dbarray['user_id']);
+			$user_id = stripslashes($user_id);
 			
-			/* Validate that userid is correct */
-			if($userid == $dbarray['userid']){
-				return 0; //Success! Username and userid confirmed
+			/* Validate that user_id is correct */
+			if($user_id == $dbarray['user_id']){
+				return 0; //Success! Username and user_id confirmed
 			}
 			else{
-				return 2; //Indicates userid invalid
+				return 2; //Indicates user_id invalid
 			}
 		}
 		
@@ -136,7 +136,7 @@
 			* info into the database. Appropriate user level is set.
 			* Returns true on success, false otherwise.
 		*/
-		function addNewUser($username, $password, $email, $userid, $name){
+		function addNewUser($username, $password, $email, $user_id, $name){
 			$time = time();
 			/* If admin sign up, give admin user level */
 			if(strcasecmp($username, ADMIN_NAME) == 0){
@@ -147,7 +147,7 @@
 			$q = sprintf("INSERT INTO ".TBL_USERS." VALUES ('%s', '%s', '%s', '%s', '%s', $time, '0', '%s', '0', '0', NULL)",
             mysql_real_escape_string($username),
             mysql_real_escape_string($password),
-            mysql_real_escape_string($userid),
+            mysql_real_escape_string($user_id),
             mysql_real_escape_string($ulevel),
             mysql_real_escape_string($email),
             mysql_real_escape_string($name));
@@ -209,7 +209,7 @@
 			GET FUNCTIONS - gets crap from the database - mostly used in forms
 		*/
 		function getCourses(){
-			$q = sprintf("SELECT prefix,number,crn FROM ".TBL_COURSE."");
+			$q = sprintf("SELECT prefix,course_number,crn FROM ".TBL_COURSE."");
 			$result = mysql_query($q, $this->connection);
 			if(!$result || (mysql_num_rows($result) < 1)){
 				return NULL;
@@ -219,7 +219,7 @@
 		}
 		
 		function getRooms(){
-			$q = sprintf("SELECT id,roomNum,capacity,description FROM ".TBL_ROOMS."");
+			$q = sprintf("SELECT room_number,capacity,description FROM ".TBL_ROOMS."");
 			$result = mysql_query($q, $this->connection);
 			if(!$result || (mysql_num_rows($result) < 1)){
 				return NULL;
@@ -227,21 +227,11 @@
 			$dbarray = mysql_fetch_array($result);
 			return $dbarray;
 		}
-		
-		function getTypes(){
-			$q = sprintf("SELECT id,title FROM ".TBL_TYPES."");
-			$result = mysql_query($q, $this->connection);
-			if(!$result || (mysql_num_rows($result) < 1)){
-				return NULL;
-			}
-			$dbarray = mysql_fetch_array($result);
-			return $dbarray;
-		}
-		
+
         function addEvent2($title, $type, $course, $crn, $seats, $notes, $dateStart, $dateEnd, $room, $user, $series, $time){
 			$title = str_replace ( "'" , "\'" , $title );
 			$notes = str_replace ( "'" , "\'" , $notes );
-			$q = sprintf("INSERT INTO ".TBL_EVENTS." VALUES (NULL, '$title', $type, $course, $crn, $user, $room, $seats, '$notes', $series, '$dateStart', '$dateEnd', '$time', 1)");
+			$q = sprintf("INSERT INTO ".TBL_EVENTS." VALUES (NULL, '$title', $seats, $type, $crn, $user, $room, '$notes', $series, '$dateStart', '$dateEnd', '$time', 1)");
 			$result = mysql_query($q, $this->connection);
 			if(!$result || (mysql_num_rows($result) < 1)){
 				return NULL;
@@ -249,6 +239,9 @@
 			$dbarray = mysql_fetch_array($result);
 			return TRUE;
 		}
+		
+			
+
 		
 	};
 	

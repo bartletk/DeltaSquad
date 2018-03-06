@@ -131,6 +131,17 @@ displayUsers();
 	</form>
 </div>
 <hr>
+<div>
+		<h3>Add User</h3>
+	<form action="adminprocess.php" method="POST">
+		<p>Name: </p><p><input type="text" name="name" maxlength="30" value="<?php echo $form->value("name"); ?>"><?php echo $form->error("name"); ?></p>
+		<p>Username: </p><p><input type="text" name="user" maxlength="30" value="<?php echo $form->value("user"); ?>"><?php echo $form->error("user"); ?></p>
+		<p>Password: </p><p><input type="password" name="pass" maxlength="30" value="<?php echo $form->value("pass"); ?>"><?php echo $form->error("pass"); ?></p>
+		<p>Email: </p><p><input type="text" name="email" maxlength="50" value="<?php echo $form->value("email"); ?>"><?php echo $form->error("email"); ?></p>
+		<p><input type="hidden" name="subjoin" value="1"><input type="submit" value="Add"></p>
+	</form>
+</div>
+</hr>
 
 <div class="deadlines">
 	<h3>Set Deadlines</h3>
@@ -139,23 +150,54 @@ displayUsers();
 		<p>Date Open: <input name="dateOpen" type="date" value="<?php echo $form->value("dateOpen"); ?>"><?php echo $form->error("dateOpen"); ?></p>
 		<p>Date Close: <input name="dateClose" type="date" value="<?php echo $form->value("dateClose"); ?>"><?php echo $form->error("dateClose"); ?></p>
 		<p>Type: </p><p><select form="deadlines" name="type" maxlength="30" value="<?php echo $form->value("type"); ?>"><?php echo $form->error("type"); ?>
-		<?php
-   $q = "SELECT * "
-       ."FROM ".TBL_DEADLINE_TYPES." ";
-   $result = $database->query($q);
-   $num_rows = mysql_numrows($result);
-   for($i=0; $i<$num_rows; $i++){
-      $id  = mysql_result($result,$i,"id");
-	  $type  = mysql_result($result,$i,"title");
-      echo "<option value='".$id."'>".$type."</option>";
-   }
-?>		
+<option value='schedule'>Schedule</option>
+<option value='semester'>Semester</option>
 		</select></p>
 		<input type="hidden" name="subdeadline" value="1">
 		<input type="submit" value="Set Deadline">
 	</form>
 </div>
 <hr>
+<div>
+		<h3>Add Room</h3>
+	<form action="adminprocess.php" method="POST">
+		<p>Name/Number: </p><p><input type="text" name="name" maxlength="30"></p>
+		<p>Capacity: </p><p><input type="text" name="cap" maxlength="30"></p>
+		<p>Description: </p><p><input type="text" name="desc" maxlength="30"></p>
+		<p><input type="hidden" name="subaddroom" value="1"><input type="submit" value="Add Room"></p>
+	</form>
+</div>
+</hr>
+<div>
+	<h3>Delete Room</h3>
+	<form action="adminprocess.php" method="POST" id="delete">
+		<p>Room Number: <select form="delete" name="number">
+			<?php
+							$q = "SELECT * FROM ".TBL_ROOMS;
+							$result = $database->query($q);
+							$num_rows = mysql_numrows($result);
+							for($i=0; $i<$num_rows; $i++){
+								$number  = mysql_result($result,$i,"room_number");
+								echo "<option value='".$number."'>".$number."</option>";
+							}
+						?>	
+		</select></p>
+		<input type="hidden" name="subdeluser" value="1">
+		<input type="submit" value="Delete Room">
+	</form>
+</div>
+</hr>
+
+
+
+
+
+<?php
+if($form->num_errors > 0){
+   echo "<td><font size=\"2\" color=\"#ff0000\">".$form->num_errors." error(s) found</font></td>";
+}
+?>
+
 Back to [<a href="../index.php">Main Page</a>]<br><br>
 
 

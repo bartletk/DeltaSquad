@@ -27,7 +27,7 @@ function grabDates($start,$end,$category_array) {
 		$superedit = true;
 	}
 	if (($mod > 0) || ($superedit)) {
-		$q = "select DATE_FORMAT(dateStart, '%Y%m%d'),DATE_FORMAT(dateStart, '%H%i'), id, title, DATE_FORMAT(dateStart, '%W, %M %e, %Y'), DATE_FORMAT(dateStart, '%l:%i %p'), DATE_FORMAT(dateEnd, '%l:%i %p'), series, user, dateStart, status, from events order by dateStart";
+		$q = "select DATE_FORMAT(date_start, '%Y%m%d'),DATE_FORMAT(date_etart, '%H%i'), event_id, title, DATE_FORMAT(date_start, '%W, %M %e, %Y'), DATE_FORMAT(date_start, '%l:%i %p'), DATE_FORMAT(date_end, '%l:%i %p'), series, user_id, date_start, status from events order by date_start";
 			$query = mysql_query($q);
 		while ($row = mysql_fetch_row($query)) {
 			$edit = true;

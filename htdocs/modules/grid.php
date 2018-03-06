@@ -9,7 +9,7 @@
 				$dateNew = substr_replace(substr_replace($date, "-", 6, 0), "-", 4, 0);
 				$link = mysql_connect (DB_SERVER, DB_USER, DB_PASS) or die ("Could not connect to database, try again later");
 				mysql_select_db(DB_NAME,$link);
-				$q = sprintf("SELECT * FROM ".TBL_EVENTS." JOIN ".TBL_ROOMS." ON ".TBL_EVENTS.".room = ".TBL_ROOMS.".id WHERE (CAST(dateStart AS DATE) = CAST('$dateNew' AS DATE)) AND (crn IN (".implode(',', $crns[0])."))");
+				$q = sprintf("SELECT * FROM ".TBL_EVENTS." JOIN ".TBL_ROOMS." ON ".TBL_EVENTS.".room_number = ".TBL_ROOMS.".room_number WHERE (CAST(date_start AS DATE) = CAST('$dateNew' AS DATE)) AND (crn IN (".implode(',', $crns[0])."))");
 				$result = mysql_query($q, $link);
 				if(!$result || (mysql_num_rows($result) < 1)){
 					// NO EVENTS
@@ -17,8 +17,8 @@
 					// EVENTS
 					while($row = mysql_fetch_assoc($result)) {
 						echo $row['title'];
-						echo "<br> ".substr($row[dateStart], 10, -3)." -".substr($row[dateEnd], 10, -3)."<br> Room:";
-						echo $row['number'];
+						echo "<br> ".substr($row[date_start], 10, -3)." -".substr($row[date_end], 10, -3)."<br> Room:";
+						echo $row['room_number'];
 						echo "<br><br>";
 					}
 				}
@@ -29,7 +29,7 @@
 			$dateNew = substr_replace(substr_replace($date, "-", 6, 0), "-", 4, 0);
 			$link = mysql_connect (DB_SERVER, DB_USER, DB_PASS) or die ("Could not connect to database, try again later");
 			mysql_select_db(DB_NAME,$link);
-			$q = sprintf("SELECT * FROM ".TBL_EVENTS." WHERE CAST(dateStart AS DATE) = CAST('$dateNew' AS DATE)");
+			$q = sprintf("SELECT * FROM ".TBL_EVENTS." WHERE CAST(date_start AS DATE) = CAST('$dateNew' AS DATE)");
 			$result = mysql_query($q, $link);
 			if(!$result || (mysql_num_rows($result) < 1)){
 				// NO EVENTS

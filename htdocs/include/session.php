@@ -6,7 +6,7 @@
 	class Session
 	{
 		var $username;     //Username given on sign-up
-		var $userid;       //Random value generated on current login
+		var $user_id;       //Random value generated on current login
 		var $userlevel;    //The level to which the user pertains
 		var $time;         //Time user was last active (page loaded)
 		var $logged_in;    //True if user is logged in, false otherwise
@@ -73,24 +73,24 @@
 			/* Check if user has been remembered */
 			if(isset($_COOKIE['cookname']) && isset($_COOKIE['cookid'])){
 				$this->username = $_SESSION['username'] = $_COOKIE['cookname'];
-				$this->userid   = $_SESSION['userid']   = $_COOKIE['cookid'];
+				$this->user_id   = $_SESSION['user_id']   = $_COOKIE['cookid'];
 			}
 			
-			/* Username and userid have been set and not guest */
-			if(isset($_SESSION['username']) && isset($_SESSION['userid']) &&
+			/* Username and user_id have been set and not guest */
+			if(isset($_SESSION['username']) && isset($_SESSION['user_id']) &&
 			$_SESSION['username'] != GUEST_NAME){
-				/* Confirm that username and userid are valid */
-				if($database->confirmUserID($_SESSION['username'], $_SESSION['userid']) != 0){
+				/* Confirm that username and user_id are valid */
+				if($database->confirmuser_id($_SESSION['username'], $_SESSION['user_id']) != 0){
 					/* Variables are incorrect, user not logged in */
 					unset($_SESSION['username']);
-					unset($_SESSION['userid']);
+					unset($_SESSION['user_id']);
 					return false;
 				}
 				
 				/* User is logged in, set class variables */
 				$this->userinfo  = $database->getUserInfo($_SESSION['username']);
 				$this->username  = $this->userinfo['username'];
-				$this->userid    = $this->userinfo['userid'];
+				$this->user_id    = $this->userinfo['user_id'];
 				$this->userlevel = $this->userinfo['userlevel'];
 				$this->id = $this->userinfo['id'];
 				
@@ -181,23 +181,23 @@
 			/* Username and password correct, register session variables */
 			$this->userinfo  = $database->getUserInfo($subuser);
 			$this->username  = $_SESSION['username'] = $this->userinfo['username'];
-			$this->userid    = $_SESSION['userid']   = $this->generateRandID();
+			$this->user_id    = $_SESSION['user_id']   = $this->generateRandID();
 			$this->userlevel = $this->userinfo['userlevel'];
 			$this->id = $this->userinfo['id'];
-			/* Insert userid into database and update active users table */
-			$database->updateUserField($this->username, "userid", $this->userid);
+			/* Insert user_id into database and update active users table */
+			$database->updateUserField($this->username, "user_id", $this->user_id);
 			
 			
 			/**
 				* This is the cool part: the user has requested that we remember that
 				* he's logged in, so we set two cookies. One to hold his username,
-				* and one to hold his random value userid. It expires by the time
+				* and one to hold his random value user_id. It expires by the time
 				* specified in constants.php. Now, next time he comes to our site, we will
 				* log him in automatically, but only if he didn't log out before he left.
 			*/
 			if($subremember){
 				setcookie("cookname", $this->username, time()+COOKIE_EXPIRE, COOKIE_PATH);
-				setcookie("cookid",   $this->userid,   time()+COOKIE_EXPIRE, COOKIE_PATH);
+				setcookie("cookid",   $this->user_id,   time()+COOKIE_EXPIRE, COOKIE_PATH);
 			}
 			
 			/* Login completed successfully */
@@ -224,7 +224,7 @@
 			
 			/* Unset PHP session variables */
 			unset($_SESSION['username']);
-			unset($_SESSION['userid']);
+			unset($_SESSION['user_id']);
 			
 			/* Reflect fact that user has logged out */
 			$this->logged_in = false;
@@ -457,7 +457,7 @@
 		/**
 			* generateRandID - Generates a string made up of randomized
 			* letters (lower and upper case) and digits and returns
-			* the md5 hash of it to be used as a userid.
+			* the md5 hash of it to be used as a user_id.
 		*/
 		function generateRandID(){
 			return md5($this->generateRandStr(16));
@@ -502,10 +502,9 @@
 			}
 			header("Location: /addevent.php?t=$title&ty=$type&c=$course&crn=$crns&s=$seats&n=$notes&d=$date&st=$starttime&et=$endtime");  
 		}
-		function addEventC($title, $type, $course, $crn, $seats, $notes, $dateStart, $dateEnd, $room){
+		function addEventC($title, $type, $course, $crn, $seats, $notes, $dateStart, $dateEnd, $room, $series){
 			global $database, $form; 
 			$user = $this->id;
-			$series=1; // put in a database function that checks what the last used series is
 			$time= date("Y/m/d H:i:s");
 			$result = $database->addEvent2($title, $type, $course, $crn, $seats, $notes, $dateStart, $dateEnd, $room, $user, $series, $time);
 			if ($result){return TRUE;}			

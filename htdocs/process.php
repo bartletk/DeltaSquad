@@ -254,15 +254,15 @@
 				header("Location: ".$session->referrer);
 			}
 			else{
-				$q = "SELECT username, userid, email FROM ".TBL_USERS." WHERE username='$user'";
+				$q = "SELECT username, user_id, email FROM ".TBL_USERS." WHERE username='$user'";
 				$info = $database->query($q) or die(mysql_error());
 				$info = mysql_fetch_array($info);
 				
 				$username = $info['username'];
-				$userid = $info['userid'];
+				$user_id = $info['user_id'];
 				$email = $info['email'];
 				
-				if($mailer->sendConfirmation($username,$userid,$email)){
+				if($mailer->sendConfirmation($username,$user_id,$email)){
 					echo "Your confirmation email has been sent! Back to <a href='index.php'>Main</a>";
 				}
 			}
@@ -284,9 +284,9 @@
 				return false;
 			}
 			
-			if($user_info['username'] && $user_info['userid']){  
+			if($user_info['username'] && $user_info['user_id']){  
 				$_SESSION['username'] = $user_info['username'];
-				$_SESSION['userid'] = $user_info['userid'];
+				$_SESSION['user_id'] = $user_info['user_id'];
 				$session->checkLogin();
 				die("Logging In...");
 				} else {
@@ -307,15 +307,14 @@
 		
 		function procAddB(){
 			global $session, $form;
-			$_POST = $session->cleanInput($_POST);
+			//$_POST = $session->cleanInput($_POST);
 			$retval = $session->addEventB($_POST['title'], $_POST['type'], $_POST['course'], $_POST['crn'], $_POST['seats'], $_POST['notes'], $_POST['date'], $_POST['starttime'], $_POST['endtime']);
 		}
 		function procAddC(){
 			global $session, $form;
 			//$_POST = $session->cleanInput($_POST);
-			$retval = $session->addEventC($_POST['title'], $_POST['type'], $_POST['course'], $_POST['crn'], $_POST['seats'], $_POST['notes'],  $_POST['dateStart'], $_POST['dateEnd'], $_POST['room']);
-			
-				header("Location: index.php");
+			$retval = $session->addEventC($_POST['title'], $_POST['type'], $_POST['course'], $_POST['crn'], $_POST['seats'], $_POST['notes'],  $_POST['dateStart'], $_POST['dateEnd'], $_POST['room'], $_POST['series']);
+			header("Location: index.php");
 			
 			
 		}

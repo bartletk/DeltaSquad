@@ -7,7 +7,7 @@ $id = mysql_real_escape_string($_REQUEST["id"]);
 if ((!$id) or (!ctype_digit($id))) {
 	echo "<p class=\"warning\">".$lang["no_event_selected"]."</p>\n";
 } else {
-	$q = "SELECT * from events where id =".$id;
+	$q = "SELECT * from events where event_id =".$id;
 	$query = mysql_query($q);
 	if (mysql_num_rows($query) < 1) {
 		echo "<p class=\"warning\">".$lang["event_not_found"]."</p>\n";
@@ -15,7 +15,7 @@ if ((!$id) or (!ctype_digit($id))) {
 		$row = mysql_fetch_array($query);
 		if (!$query) echo "<p class=\"warning\">Database Error : ".$q."</p>\n";
 		
-		$q = "SELECT DATE_FORMAT(dateStart, '%W, %M %e, %Y'), DATE_FORMAT(dateStart,' - %l:%i %p'),  DATE_FORMAT(dateEnd, ' - %l:%i %p') from events where id =".$id." order by date";
+		$q = "SELECT DATE_FORMAT(date_start, '%W, %M %e, %Y'), DATE_FORMAT(date_start,' - %l:%i %p'),  DATE_FORMAT(date_end, ' - %l:%i %p') from events where event_id =".$id." order by date";
 		$squery = mysql_query($q);
 		if (!$squery) echo "<p class=\"warning\">Database Error : ".$q."</p>\n";
 		else {

@@ -37,10 +37,9 @@
 							$result = $database->query($q);
 							$num_rows = mysql_numrows($result);
 							for($i=0; $i<$num_rows; $i++){
-								$id  = mysql_result($result,$i,"id");
-								$num = mysql_result($result,$i,"number");
+								$num = mysql_result($result,$i,"course_number");
 								$title = mysql_result($result,$i,"title");
-								echo "<option value='".$id."'>".$num." - ".$title."</option>";
+								echo "<option value='".$num."'>".$num." - ".$title."</option>";
 							}
 						?>	
 					</select>
@@ -66,7 +65,7 @@
 								foreach ($courses as $c){
 									foreach ($c as $c1){
 										echo "<optgroup label=\"".$c1."\">";
-										$q = "SELECT * FROM ".TBL_CRN." WHERE courseid = $c1";
+										$q = "SELECT * FROM ".TBL_CRN." WHERE course_number = $c1";
 										$result = $database->query($q);
 										$num_rows = mysql_numrows($result);
 										for($i=0; $i<$num_rows; $i++){
