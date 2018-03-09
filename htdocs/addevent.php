@@ -36,6 +36,13 @@
 				<p>Date: </p><p><input name="date" type="date" value="<?php echo $_GET['d']; ?>"></p>
 				<p>Start Time: </p><p><input type="time" name="starttime" maxlength="30" value="<?php echo $_GET['st']; ?>"></p>
 				<p>End Time: </p><p><input type="time" name="endtime" maxlength="30" value="<?php echo $_GET['et']; ?>"></p>
+				<p>Repeat?: </p><p><input type="checkbox" name="repeat" maxlength="30" value="1" <?php if ($_GET['repeat']== 1){echo "checked";}?>>Yes</p>
+				<br><p><input type="checkbox" name="repeatm" maxlength="30" value="1" <?php if ($_GET['repeatm'] == 1){echo "checked";}?>>Monday</p>
+				<p><input type="checkbox" name="repeatt" maxlength="30" value="1" <?php if ($_GET['repeatt']== 1){echo "checked";}?>>Tuesday</p>
+				<p><input type="checkbox" name="repeatw" maxlength="30" value="1" <?php if ($_GET['repeatw']== 1){echo "checked";}?>>Wednesday</p>
+				<p><input type="checkbox" name="repeatth" maxlength="30" value="1" <?php if ($_GET['repeatth']== 1){echo "checked";}?>>Thursday</p>
+				<p><input type="checkbox" name="repeatf" maxlength="30" value="1" <?php if ($_GET['repeatf']== 1){echo "checked";}?>>Friday</p>
+				<p>Repeat until: </p><p><input name="re" type="date" value="<?php echo $_GET['re']; ?>"></p>
 				<p>Course: </p><p><select form="addevent" name="course" maxlength="30" value="<?php echo $_GET['c']?>">
 					<?php
 						$q = "SELECT * FROM ".TBL_COURSE;
@@ -50,14 +57,14 @@
 				</select></p>
 				<input type="hidden" name="addeventA" value="1">
 				<input type="submit" value="Pick CRNs">
-				</form>
-				<?php
-					if (isset($_GET['c'])){
-						$courses[] = explode(" ", trim($_GET['c']));
-						
-						
-					?>
-					<form action="process.php" method="POST" id="addeventB">
+			</form>
+			<?php
+				if (isset($_GET['c'])){
+					$courses[] = explode(" ", trim($_GET['c']));
+					
+					
+				?>
+				<form action="process.php" method="POST" id="addeventB">
 					<p>
 						<label>CRN: </label><br/>
 			            <select name="crn[]" size=5 multiple>
@@ -83,6 +90,13 @@
 						<input type="hidden" name="date" value="<?php echo $_GET['d']?>">
 						<input type="hidden" name="starttime" value="<?php echo $_GET['st']?>">
 						<input type="hidden" name="endtime" value="<?php echo $_GET['et']?>">
+						<input type="hidden" name="repeat" value="<?php echo $_GET['repeat']?>">
+						<input type="hidden" name="repeatm" value="<?php echo $_GET['repeatm']?>">
+						<input type="hidden" name="repeatt" value="<?php echo $_GET['repeatt']?>">
+						<input type="hidden" name="repeatw" value="<?php echo $_GET['repeatw']?>">
+						<input type="hidden" name="repeatth" value="<?php echo $_GET['repeatth']?>">
+						<input type="hidden" name="repeatf" value="<?php echo $_GET['repeatf']?>">
+						<input type="hidden" name="re" value="<?php echo $_GET['re']?>">
 						<input type="hidden" name="addeventB" value="1">
 						<input type="submit" value="Pick Location">
 					</p>
@@ -97,16 +111,12 @@
 						<?php
 							$datetimeStart = "".$_GET['d']." ".$_GET['st'].":00";
 							$datetimeEnd = "".$_GET['d']." ".$_GET['et'].":00";
-							echo "Start: ".$datetimeStart." End: ".$datetimeEnd."";
-							$q = "SELECT DISTINCT * FROM ".TBL_ROOMS." WHERE number = 'Offsite' OR NOT EXISTS (SELECT * FROM ".TBL_ROOMS.", ".TBL_EVENTS." where ".TBL_EVENTS.".dateStart >= STR_TO_DATE('$dateStart', '%Y-%m-%d %H:%i:%s') AND ".TBL_EVENTS.".dateStart <= STR_TO_DATE('$dateEnd', '%Y-%m-%d %H:%i:%s') AND ".TBL_ROOMS.".id = ".TBL_EVENTS.".room)";
-							
+							$q = "SELECT DISTINCT room_number FROM ".TBL_ROOMS." WHERE room_number = 'Offsite' OR NOT EXISTS (SELECT * FROM ".TBL_ROOMS.", ".TBL_EVENTS." where ".TBL_EVENTS.".dateStart >= STR_TO_DATE('$datetimeStart', '%Y-%m-%d %H:%i:%s') AND ".TBL_EVENTS.".dateStart <= STR_TO_DATE('$datetimeEnd', '%Y-%m-%d %H:%i:%s') AND ".TBL_ROOMS.".room_number = ".TBL_EVENTS.".room_number)";
 							$result = $database->query($q);
-							
 							$num_rows = mysql_numrows($result);
 							for($i=0; $i<$num_rows; $i++){
-								$id  = mysql_result($result,$i,"id");
-								$room  = mysql_result($result,$i,"number");
-								echo "<option value='".$id."'>".$room."</option>";
+								$room  = mysql_result($result,$i,"room_number");
+								echo "<option value='".$room."'>".$room."</option>";
 							}
 							
 						?>
@@ -131,24 +141,31 @@
 						<input type="hidden" name="notes" value="<?php echo $_GET['n']; ?>">
 						<input type="hidden" name="dateStart" value="<?php echo $datetimeStart; ?>">
 						<input type="hidden" name="dateEnd" value="<?php echo $datetimeEnd; ?>">
+						<input type="hidden" name="repeat" value="<?php echo $_GET['repeat']?>">
+						<input type="hidden" name="repeatm" value="<?php echo $_GET['repeatm']?>">
+						<input type="hidden" name="repeatt" value="<?php echo $_GET['repeatt']?>">
+						<input type="hidden" name="repeatw" value="<?php echo $_GET['repeatw']?>">
+						<input type="hidden" name="repeatth" value="<?php echo $_GET['repeatth']?>">
+						<input type="hidden" name="repeatf" value="<?php echo $_GET['repeatf']?>">
+						<input type="hidden" name="re" value="<?php echo $_GET['re']?>">
 						<input type="submit" value="Add Event">
 					</p>
 				</form>
 				<?php
 					
-				echo $dateStart;
-				echo "<br>";
-				echo $dateEnd;
+					echo $dateStart;
+					echo "<br>";
+					echo $dateEnd;
 				}
 				} else {
 				echo "This form is not available at the current time. Requests will be implemented later. We apologize for the inconvenience.";
-				?>
+			?>
 		</div>
 		
 	</body>
-</html>
-<?php
-} 
-}
-
-?>						
+	</html>
+	<?php
+	} 
+	}
+	
+	?>							

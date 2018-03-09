@@ -293,27 +293,35 @@
 				die();
 			}
 		}
-		
-		
-		/**
-			* procAdd - add event part 1, document later
+		/*
+			
+			The following add functions are for add event form. It sends the values to the session function matching
 		*/
+		
 		function procAddA(){
 			global $session, $form;
-			//$_POST = $session->cleanInput($_POST);
-			$retval = $session->addEventA($_POST['title'], $_POST['type'], $_POST['course'], $_POST['seats'], $_POST['notes'], $_POST['date'], $_POST['starttime'], $_POST['endtime']);
-			
+			if (isset($_POST['repeat'])){
+				$retval = $session->addEventAA($_POST['title'], $_POST['type'], $_POST['course'], $_POST['seats'], $_POST['notes'], $_POST['date'], $_POST['starttime'], $_POST['endtime'], $_POST['repeat'], $_POST['repeatm'], $_POST['repeatt'], $_POST['repeatw'], $_POST['repeatth'], $_POST['repeatf'], $_POST['re']);
+				} else {
+				$retval = $session->addEventA($_POST['title'], $_POST['type'], $_POST['course'], $_POST['seats'], $_POST['notes'], $_POST['date'], $_POST['starttime'], $_POST['endtime']);
+			}
 		}
 		
 		function procAddB(){
 			global $session, $form;
-			//$_POST = $session->cleanInput($_POST);
-			$retval = $session->addEventB($_POST['title'], $_POST['type'], $_POST['course'], $_POST['crn'], $_POST['seats'], $_POST['notes'], $_POST['date'], $_POST['starttime'], $_POST['endtime']);
+			if (isset($_POST['repeat'])){
+				$retval = $session->addEventBA($_POST['title'], $_POST['type'], $_POST['course'], $_POST['crn'], $_POST['seats'], $_POST['notes'], $_POST['date'], $_POST['starttime'], $_POST['endtime'], $_POST['repeat'], $_POST['repeatm'], $_POST['repeatt'], $_POST['repeatw'], $_POST['repeatth'], $_POST['repeatf'], $_POST['re']);
+				} else {
+				$retval = $session->addEventB($_POST['title'], $_POST['type'], $_POST['course'], $_POST['crn'], $_POST['seats'], $_POST['notes'], $_POST['date'], $_POST['starttime'], $_POST['endtime']);			
+			}
 		}
 		function procAddC(){
 			global $session, $form;
-			//$_POST = $session->cleanInput($_POST);
-			$retval = $session->addEventC($_POST['title'], $_POST['type'], $_POST['course'], $_POST['crn'], $_POST['seats'], $_POST['notes'],  $_POST['dateStart'], $_POST['dateEnd'], $_POST['room'], $_POST['series']);
+			if (isset($_POST['repeat'])){
+				$retval = $session->addEventCA($_POST['title'], $_POST['type'], $_POST['course'], $_POST['crn'], $_POST['seats'], $_POST['notes'],  $_POST['dateStart'], $_POST['dateEnd'], $_POST['room'], $_POST['series'], $_POST['repeat'], $_POST['repeatm'], $_POST['repeatt'], $_POST['repeatw'], $_POST['repeatth'], $_POST['repeatf'], $_POST['re']);
+				} else {
+			$retval = $session->addEventC($_POST['title'], $_POST['type'], $_POST['course'], $_POST['crn'], $_POST['seats'], $_POST['notes'],  $_POST['dateStart'], $_POST['dateEnd'], $_POST['room'], $_POST['series']);			
+			}
 			header("Location: index.php");
 			
 			
@@ -327,15 +335,15 @@
 			global $session, $form;
 			//$_POST = $session->cleanInput($_POST);
 			$retval = $session->chooseCourse($_POST['course'], $_POST['sem']);
-		}
-        function procCrn(){
-			global $session, $form;
-			//header("Location: index.php?t=$_POST['crn']");
-			$retval = $session->chooseCrn($_POST['crn']);
-		}
-	};
+			}
+			function procCrn(){
+				global $session, $form;
+				//header("Location: index.php?t=$_POST['crn']");
+				$retval = $session->chooseCrn($_POST['crn']);
+			}
+		};
 	
-	/* Initialize process */
-	$process = new Process;
-	
+/* Initialize process */
+$process = new Process;
+
 ?>

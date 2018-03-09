@@ -1,5 +1,5 @@
 <?php
-
+	
 	function showGrid($date) {
 		GLOBAL $session;
 		if(!$session->isInstructor() & !$session->isAdmin()){
@@ -9,7 +9,7 @@
 				$dateNew = substr_replace(substr_replace($date, "-", 6, 0), "-", 4, 0);
 				$link = mysql_connect (DB_SERVER, DB_USER, DB_PASS) or die ("Could not connect to database, try again later");
 				mysql_select_db(DB_NAME,$link);
-				$q = sprintf("SELECT * FROM ".TBL_EVENTS." JOIN ".TBL_ROOMS." ON ".TBL_EVENTS.".room_number = ".TBL_ROOMS.".room_number WHERE (CAST(date_start AS DATE) = CAST('$dateNew' AS DATE)) AND (crn IN (".implode(',', $crns[0])."))");
+				$q = sprintf("SELECT * FROM ".TBL_EVENTS." JOIN ".TBL_ROOMS." ON ".TBL_EVENTS.".room_number = ".TBL_ROOMS.".room_number WHERE (CAST(dateStart AS DATE) = CAST('$dateNew' AS DATE)) AND (crn IN (".implode(',', $crns[0])."))");
 				$result = mysql_query($q, $link);
 				if(!$result || (mysql_num_rows($result) < 1)){
 					// NO EVENTS
@@ -25,11 +25,11 @@
 				} else {
 				header ("Location: class_select.php");
 			}
-			} else {
+			} elseif (!$session->isAdmin() & $session->isInstructor()) {
 			$dateNew = substr_replace(substr_replace($date, "-", 6, 0), "-", 4, 0);
 			$link = mysql_connect (DB_SERVER, DB_USER, DB_PASS) or die ("Could not connect to database, try again later");
 			mysql_select_db(DB_NAME,$link);
-			$q = sprintf("SELECT * FROM ".TBL_EVENTS." WHERE CAST(date_start AS DATE) = CAST('$dateNew' AS DATE)");
+			$q = sprintf("SELECT * FROM ".TBL_EVENTS." WHERE CAST(dateStart AS DATE) = CAST('$dateNew' AS DATE)");
 			$result = mysql_query($q, $link);
 			if(!$result || (mysql_num_rows($result) < 1)){
 				// NO EVENTS
@@ -39,7 +39,26 @@
 				while($row = mysql_fetch_assoc($result)) {
 					echo $row['title'];
 					echo "<br> ".substr($row[dateStart], 10, -3)." -".substr($row[dateEnd], 10, -3)."<br> Room:";
-					echo $row[room];
+					echo $row['room_number'];
+					echo "<br><br>";
+				}
+			}
+			
+			} else {
+			$dateNew = substr_replace(substr_replace($date, "-", 6, 0), "-", 4, 0);
+			$link = mysql_connect (DB_SERVER, DB_USER, DB_PASS) or die ("Could not connect to database, try again later");
+			mysql_select_db(DB_NAME,$link);
+			$q = sprintf("SELECT * FROM ".TBL_EVENTS." WHERE CAST(dateStart AS DATE) = CAST('$dateNew' AS DATE)");
+			$result = mysql_query($q, $link);
+			if(!$result || (mysql_num_rows($result) < 1)){
+				// NO EVENTS
+				} else {
+				// EVENTS
+				//$dbarray = mysql_fetch_array($result);
+				while($row = mysql_fetch_assoc($result)) {
+					echo $row['title'];
+					echo "<br> ".substr($row[dateStart], 10, -3)." -".substr($row[dateEnd], 10, -3)."<br> Room:";
+					echo $row['room_number'];
 					echo "<br><br>";
 				}
 			}
@@ -76,20 +95,20 @@
 				$offyear = date( "Y", mktime( 0, 0, 0, $calmonth, $calday-$off, $calyear ) );
 				$offmonth = date( "m", mktime( 0, 0, 0, $calmonth, $calday-$off, $calyear ) );
 				$offday = date( "d", mktime( 0, 0, 0, $calmonth, $calday-$off, $calyear ) );
-				echo '<td class="day"><div class="week"><a href="index.php?o=',$le,'&w=',$w,'&c=',$c,'&m=',$offmonth,'&a=',$offday,'&y=',$offyear,'">week</a></div></td>';
-				} else {
-				echo '<td class="day">&nbsp;</td>';
+			echo '<td class="day"><div class="week"><a href="index.php?o=',$le,'&w=',$w,'&c=',$c,'&m=',$offmonth,'&a=',$offday,'&y=',$offyear,'">week</a></div></td>';
+			} else {
+			echo '<td class="day">&nbsp;</td>';
 			}
-		}
-		/* start entering in the information */
-		for ( $d = 1; $d <= $totaldays; $d++ )
-		{
+			}
+			/* start entering in the information */
+			for ( $d = 1; $d <= $totaldays; $d++ )
+			{
 			if (($d == date('j')) && ($calmonth == date('m')) && ($calyear == date('Y'))) {
-				echo '<td class="day" id="today"><div class="day_of_month"><a href="index.php?o=',$la,'&w=',$w,'&c=',$c,'&m=',$calmonth,'&a=',$d,'&y=',$calyear,'">', $d, '</a></div>';
-				} else {
-				echo '<td class="day"><div class="day_of_month"><a href="index.php?o=',$la,'&w=',$w,'&c=',$c,'&m=',$calmonth,'&a=',$d,'&y=',$calyear,'">', $d, '</a></div>';
-				if ($offset == 0) echo '<div class="week"><a href="index.php?o=',$le,'&w=',$w,'&c=',$c,'&m=',$calmonth,'&a=',$d,'&y=',$calyear,'">week</a></div>';
-				
+			echo '<td class="day" id="today"><div class="day_of_month"><a href="index.php?o=',$la,'&w=',$w,'&c=',$c,'&m=',$calmonth,'&a=',$d,'&y=',$calyear,'">', $d, '</a></div>';
+			} else {
+			echo '<td class="day"><div class="day_of_month"><a href="index.php?o=',$la,'&w=',$w,'&c=',$c,'&m=',$calmonth,'&a=',$d,'&y=',$calyear,'">', $d, '</a></div>';
+			if ($offset == 0) echo '<div class="week"><a href="index.php?o=',$le,'&w=',$w,'&c=',$c,'&m=',$calmonth,'&a=',$d,'&y=',$calyear,'">week</a></div>';
+			
 			}
 			/* correct date format */
 			$coredate = date( "Ymd", mktime( 0, 0, 0, $calmonth, $d, $calyear ) );
@@ -100,31 +119,32 @@
 			/* if we're on the last day of the week, wrap to the other side */
 			if ( $offset > 6 )
 			{
-				$offset = 0;
-				echo '</tr>';
-				if ( $day < $totaldays )
-				echo '<tr>';
+			$offset = 0;
+			echo '</tr>';
+			if ( $day < $totaldays )
+			echo '<tr>';
 			}
-		}
-		
-		/* fill in the remaining spaces for the end of the month, just to make it look
-		pretty */
-		if ( $offset > 0 )
-		$offset = 7 - $offset;
-		
-		for ($t=0; $t < $offset; $t++) {
+			}
+			
+			/* fill in the remaining spaces for the end of the month, just to make it look
+			pretty */
+			if ( $offset > 0 )
+			$offset = 7 - $offset;
+			
+			for ($t=0; $t < $offset; $t++) {
 			echo "<td>&nbsp;</td>";
-		}
-		/* end the table */
-		echo '</tr></table>';
-	}
-	
-include "header.php";
-
-$thismonth = $y."-".$m;
-$nextmonth =  $next["month"]["y"]."-".$next["month"]["m"];
-grab($thismonth."-01",$nextmonth."-01",$c);
-showMonth($m,$y);
-
-
-?>
+			}
+			/* end the table */
+			echo '</tr></table>';
+			}
+			
+			include "header.php";
+			
+			$thismonth = $y."-".$m;
+			$nextmonth =  $next["month"]["y"]."-".$next["month"]["m"];
+			grab($thismonth."-01",$nextmonth."-01",$c);
+			showMonth($m,$y);
+			
+			
+			?>
+						

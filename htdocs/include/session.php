@@ -14,6 +14,7 @@
 		var $url;          //The page url current being viewed
 		var $referrer;     //Last recorded site page viewed
 		var $id;
+		var $cwid;
 		/**
 			* Note: referrer should really only be considered the actual
 			* page referrer in process.php, any other time it may be
@@ -93,6 +94,7 @@
 				$this->user_id    = $this->userinfo['user_id'];
 				$this->userlevel = $this->userinfo['userlevel'];
 				$this->id = $this->userinfo['id'];
+				$this->cwid = $this->userinfo['cwid'];
 				
 				/* auto login hash expires in three days */
 				if($this->userinfo['hash_generated'] < (time() - (60*60*24*3))){
@@ -491,10 +493,13 @@
 		}
 		
 		/**
-			* addEvent - adds an event part 1 not  complete
+			* addEvent 
 		*/
 		function addEventA($title, $type, $course, $seats, $notes, $date, $starttime, $endtime){
 			header("Location: /addevent.php?t=$title&ty=$type&c=$course&s=$seats&n=$notes&d=$date&st=$starttime&et=$endtime");  
+		}
+				function addEventAA($title, $type, $course, $seats, $notes, $date, $starttime, $endtime, $repeat, $repeatm, $repeatt, $repeatw, $repeatth, $repeatf, $re){
+			header("Location: /addevent.php?t=$title&ty=$type&c=$course&s=$seats&n=$notes&d=$date&st=$starttime&et=$endtime&repeat=$repeat&repeatm=$repeatm&repeatt=$repeatt&repeatw=$repeatw&repeatth=$repeatth&repeatf=$repeatf&re=$re");  
 		}
 		function addEventB($title, $type, $course, $crn, $seats, $notes, $date, $starttime, $endtime){
 			foreach ($crn as $c){
@@ -502,11 +507,24 @@
 			}
 			header("Location: /addevent.php?t=$title&ty=$type&c=$course&crn=$crns&s=$seats&n=$notes&d=$date&st=$starttime&et=$endtime");  
 		}
+				function addEventBA($title, $type, $course, $crn, $seats, $notes, $date, $starttime, $endtime, $repeat, $repeatm, $repeatt, $repeatw, $repeatth, $repeatf, $re){
+			foreach ($crn as $c){
+				$crns = $crns . "+" . $c;			
+			}
+			header("Location: /addevent.php?t=$title&ty=$type&c=$course&crn=$crns&s=$seats&n=$notes&d=$date&st=$starttime&et=$endtime&repeat=$repeat&repeatm=$repeatm&repeatt=$repeatt&repeatw=$repeatw&repeatth=$repeatth&repeatf=$repeatf&re=$re");  
+		}
 		function addEventC($title, $type, $course, $crn, $seats, $notes, $dateStart, $dateEnd, $room, $series){
 			global $database, $form; 
 			$user = $this->id;
 			$time= date("Y/m/d H:i:s");
-			$result = $database->addEvent2($title, $type, $course, $crn, $seats, $notes, $dateStart, $dateEnd, $room, $user, $series, $time);
+			$result = $database->addEvent2($title, $type, $course, $crn, $seats, $notes, $dateStart, $dateEnd, $room, $cwid, $series, $time);
+			if ($result){return TRUE;}			
+		}
+		function addEventCA($title, $type, $course, $crn, $seats, $notes, $dateStart, $dateEnd, $room, $series, $repeat, $repeatm, $repeatt, $repeatw, $repeatth, $repeatf, $re){
+			global $database, $form; 
+			$user = $this->id;
+			$time= date("Y/m/d H:i:s");
+			$result = $database->addEvent2A($title, $type, $course, $crn, $seats, $notes, $dateStart, $dateEnd, $room, $cwid, $series, $time, $repeat, $repeatm, $repeatt, $repeatw, $repeatth, $repeatf, $re);
 			if ($result){return TRUE;}			
 		}
 		function chooseSemester($semester){

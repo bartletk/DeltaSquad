@@ -144,7 +144,7 @@
 				}else{
 				$ulevel = USER_LEVEL;
 			}
-			$q = sprintf("INSERT INTO ".TBL_USERS." VALUES ('%s', '%s', '%s', '%s', '%s', $time, '0', '%s', '0', '0', NULL)",
+			$q = sprintf("INSERT INTO ".TBL_USERS." VALUES ('%s', '%s', '%s', '%s', '%s', $time, '0', '%s', '0', '0', NULL, '00001111')",
             mysql_real_escape_string($username),
             mysql_real_escape_string($password),
             mysql_real_escape_string($user_id),
@@ -227,11 +227,11 @@
 			$dbarray = mysql_fetch_array($result);
 			return $dbarray;
 		}
-
+		
         function addEvent2($title, $type, $course, $crn, $seats, $notes, $dateStart, $dateEnd, $room, $user, $series, $time){
 			$title = str_replace ( "'" , "\'" , $title );
 			$notes = str_replace ( "'" , "\'" , $notes );
-			$q = sprintf("INSERT INTO ".TBL_EVENTS." VALUES (NULL, '$title', $seats, $type, $crn, $user, $room, '$notes', $series, '$dateStart', '$dateEnd', '$time', 1)");
+			$q = sprintf("INSERT INTO ".TBL_EVENTS." VALUES (NULL, '$title', $seats, $type, $crn, $cwid, $room, '$notes', $series, '$dateStart', '$dateEnd', '$time', 'accepted')");
 			$result = mysql_query($q, $this->connection);
 			if(!$result || (mysql_num_rows($result) < 1)){
 				return NULL;
@@ -240,8 +240,20 @@
 			return TRUE;
 		}
 		
-			
-
+		function addEvent2A($title, $type, $course, $crn, $seats, $notes, $dateStart, $dateEnd, $room, $user, $series, $time, $repeat, $repeatm, $repeatt, $repeatw, $repeatth, $repeatf, $re){
+			$title = str_replace ( "'" , "\'" , $title );
+			$notes = str_replace ( "'" , "\'" , $notes );
+			$q = sprintf("INSERT INTO ".TBL_EVENTS." VALUES (NULL, '$title', $seats, $type, $crn, $cwid, $room, '$notes', $series, '$dateStart', '$dateEnd', '$time', 'accepted')");
+			$result = mysql_query($q, $this->connection);
+			if(!$result || (mysql_num_rows($result) < 1)){
+				return NULL;
+			}
+			$dbarray = mysql_fetch_array($result);
+			return TRUE;
+		}
+		
+		
+		
 		
 	};
 	
