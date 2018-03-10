@@ -300,7 +300,7 @@
 		
 		function procAddA(){
 			global $session, $form;
-			if (isset($_POST['repeat'])){
+			if (isset($_POST['repeat']) && $_POST['repeat']==1){
 				$retval = $session->addEventAA($_POST['title'], $_POST['type'], $_POST['course'], $_POST['seats'], $_POST['notes'], $_POST['date'], $_POST['starttime'], $_POST['endtime'], $_POST['repeat'], $_POST['repeatm'], $_POST['repeatt'], $_POST['repeatw'], $_POST['repeatth'], $_POST['repeatf'], $_POST['re']);
 				} else {
 				$retval = $session->addEventA($_POST['title'], $_POST['type'], $_POST['course'], $_POST['seats'], $_POST['notes'], $_POST['date'], $_POST['starttime'], $_POST['endtime']);
@@ -309,7 +309,7 @@
 		
 		function procAddB(){
 			global $session, $form;
-			if (isset($_POST['repeat'])){
+			if (isset($_POST['repeat']) && $_POST['repeat']==1){
 				$retval = $session->addEventBA($_POST['title'], $_POST['type'], $_POST['course'], $_POST['crn'], $_POST['seats'], $_POST['notes'], $_POST['date'], $_POST['starttime'], $_POST['endtime'], $_POST['repeat'], $_POST['repeatm'], $_POST['repeatt'], $_POST['repeatw'], $_POST['repeatth'], $_POST['repeatf'], $_POST['re']);
 				} else {
 				$retval = $session->addEventB($_POST['title'], $_POST['type'], $_POST['course'], $_POST['crn'], $_POST['seats'], $_POST['notes'], $_POST['date'], $_POST['starttime'], $_POST['endtime']);			
@@ -317,7 +317,7 @@
 		}
 		function procAddC(){
 			global $session, $form;
-			if (isset($_POST['repeat'])){
+			if (isset($_POST['repeat']) && $_POST['repeat']==1){
 				$retval = $session->addEventCA($_POST['title'], $_POST['type'], $_POST['course'], $_POST['crn'], $_POST['seats'], $_POST['notes'],  $_POST['dateStart'], $_POST['dateEnd'], $_POST['room'], $_POST['series'], $_POST['repeat'], $_POST['repeatm'], $_POST['repeatt'], $_POST['repeatw'], $_POST['repeatth'], $_POST['repeatf'], $_POST['re']);
 				} else {
 			$retval = $session->addEventC($_POST['title'], $_POST['type'], $_POST['course'], $_POST['crn'], $_POST['seats'], $_POST['notes'],  $_POST['dateStart'], $_POST['dateEnd'], $_POST['room'], $_POST['series']);			

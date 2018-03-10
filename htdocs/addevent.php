@@ -148,14 +148,12 @@
 						<input type="hidden" name="repeatth" value="<?php echo $_GET['repeatth']?>">
 						<input type="hidden" name="repeatf" value="<?php echo $_GET['repeatf']?>">
 						<input type="hidden" name="re" value="<?php echo $_GET['re']?>">
+						
 						<input type="submit" value="Add Event">
 					</p>
 				</form>
 				<?php
-					
-					echo $dateStart;
-					echo "<br>";
-					echo $dateEnd;
+
 				}
 				} else {
 				echo "This form is not available at the current time. Requests will be implemented later. We apologize for the inconvenience.";

@@ -138,6 +138,7 @@ displayUsers();
 		<p>Username: </p><p><input type="text" name="user" maxlength="30" value="<?php echo $form->value("user"); ?>"><?php echo $form->error("user"); ?></p>
 		<p>Password: </p><p><input type="password" name="pass" maxlength="30" value="<?php echo $form->value("pass"); ?>"><?php echo $form->error("pass"); ?></p>
 		<p>Email: </p><p><input type="text" name="email" maxlength="50" value="<?php echo $form->value("email"); ?>"><?php echo $form->error("email"); ?></p>
+		<p>CWID: </p><p><input type="text" name="cwid" maxlength="50" value="<?php echo $form->value("cwid"); ?>"><?php echo $form->error("cwid"); ?></p>
 		<p><input type="hidden" name="subjoin" value="1"><input type="submit" value="Add"></p>
 	</form>
 </div>

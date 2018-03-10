@@ -136,7 +136,7 @@
 			* info into the database. Appropriate user level is set.
 			* Returns true on success, false otherwise.
 		*/
-		function addNewUser($username, $password, $email, $user_id, $name){
+		function addNewUser($username, $password, $email, $user_id, $name, $CWID){
 			$time = time();
 			/* If admin sign up, give admin user level */
 			if(strcasecmp($username, ADMIN_NAME) == 0){
@@ -144,13 +144,14 @@
 				}else{
 				$ulevel = USER_LEVEL;
 			}
-			$q = sprintf("INSERT INTO ".TBL_USERS." VALUES ('%s', '%s', '%s', '%s', '%s', $time, '0', '%s', '0', '0', NULL, '00001111')",
+			$q = sprintf("INSERT INTO ".TBL_USERS." VALUES ('%s', '%s', '%s', '%s', '%s', $time, '0', '%s', '0', '0', NULL, '%s')",
             mysql_real_escape_string($username),
             mysql_real_escape_string($password),
             mysql_real_escape_string($user_id),
             mysql_real_escape_string($ulevel),
             mysql_real_escape_string($email),
-            mysql_real_escape_string($name));
+            mysql_real_escape_string($name),
+			mysql_real_escape_string($CWID));
 			return mysql_query($q, $this->connection);
 		}
 		
@@ -231,8 +232,13 @@
         function addEvent2($title, $type, $course, $crn, $seats, $notes, $dateStart, $dateEnd, $room, $user, $series, $time){
 			$title = str_replace ( "'" , "\'" , $title );
 			$notes = str_replace ( "'" , "\'" , $notes );
-			$q = sprintf("INSERT INTO ".TBL_EVENTS." VALUES (NULL, '$title', $seats, $type, $crn, $cwid, $room, '$notes', $series, '$dateStart', '$dateEnd', '$time', 'accepted')");
-			$result = mysql_query($q, $this->connection);
+			$crn = substr($crn, 1);
+			$crns = explode(" ",$crn);
+			foreach ($crns as $c){
+				$q = sprintf("INSERT INTO ".TBL_EVENTS." VALUES (NULL, '$title', $seats, $type, $c, $user, $room, '$notes', $series, '$dateStart', '$dateEnd', '$time', 'accepted')");
+				$result = mysql_query($q, $this->connection);
+				//$myfile = fopen("error.txt", "a") or die(print_r($q));
+			}
 			if(!$result || (mysql_num_rows($result) < 1)){
 				return NULL;
 			}
@@ -243,13 +249,79 @@
 		function addEvent2A($title, $type, $course, $crn, $seats, $notes, $dateStart, $dateEnd, $room, $user, $series, $time, $repeat, $repeatm, $repeatt, $repeatw, $repeatth, $repeatf, $re){
 			$title = str_replace ( "'" , "\'" , $title );
 			$notes = str_replace ( "'" , "\'" , $notes );
-			$q = sprintf("INSERT INTO ".TBL_EVENTS." VALUES (NULL, '$title', $seats, $type, $crn, $cwid, $room, '$notes', $series, '$dateStart', '$dateEnd', '$time', 'accepted')");
-			$result = mysql_query($q, $this->connection);
+			$crn = substr($crn, 1);
+			$crns = explode(" ",$crn);
+			foreach ($crns as $c){
+				$q = sprintf("INSERT INTO ".TBL_EVENTS." VALUES (NULL, '$title', $seats, $type, $c, $user, $room, '$notes', $series, '$dateStart', '$dateEnd', '$time', 'accepted')");				
+				$result = mysql_query($q, $this->connection);				
+				//$myfile = fopen("error.txt", "a") or die(print_r($q));
+				$dateStartOriginal = new DateTime($dateStart);
+				$dateEndOriginal = new DateTime($dateEnd);
+				//$myfile = fopen("error.txt", "a") or die(print_r($dateEndOriginal));
+				if ($repeatm == 1) {
+					$dateStart = $dateStartOriginal;
+					$dateEnd = $dateEndOriginal;
+					$dateStart->modify('next monday');
+					$dateEnd->modify('next monday');
+					while ($re > $dateStart) {
+						$q = sprintf("INSERT INTO ".TBL_EVENTS." VALUES (NULL, '$title', $seats, $type, $c, $user, $room, '$notes', $series, '$dateStart->format('Y-m-d H:i:s')', '$dateEnd->format('Y-m-d H:i:s')', '$time', 'accepted')");
+						$result = mysql_query($q, $this->connection);	
+						$myfile = fopen("error.txt", "a") or die(print_r($q));
+						$dateStart->modify('+7 day');
+						$dateEnd->modify('+7 day');
+					}
+					} elseif ($repeatt == 1){
+					$dateStart = $dateStartOriginal;
+					$dateEnd = $dateEndOriginal;
+					$dateStart->modify('next tuesday');
+					$dateEnd->modify('next tuesday');
+					while ($re > $dateStart) {
+						$q = sprintf("INSERT INTO ".TBL_EVENTS." VALUES (NULL, '$title', $seats, $type, $c, $user, $room, '$notes', $series, '$dateStart->format('Y-m-d H:i:s')', '$dateEnd->format('Y-m-d H:i:s')', '$time', 'accepted')");
+						$result = mysql_query($q, $this->connection);
+						$dateStart->modify('+7 day');
+						$dateEnd->modify('+7 day');
+					}
+					} elseif ($repeatw == 1){
+					$dateStart = $dateStartOriginal;
+					$dateEnd = $dateEndOriginal;
+					$dateStart->modify('next wednesday');
+					$dateEnd->modify('next wednesday');
+					while ($re > $dateStart) {
+						$q = sprintf("INSERT INTO ".TBL_EVENTS." VALUES (NULL, '$title', $seats, $type, $c, $user, $room, '$notes', $series, '$dateStart->format('Y-m-d H:i:s')', '$dateEnd->format('Y-m-d H:i:s')', '$time', 'accepted')");
+						$result = mysql_query($q, $this->connection);
+						$dateStart->modify('+7 day');
+						$dateEnd->modify('+7 day');
+					}
+					} elseif ($repeatth == 1){
+					$dateStart = $dateStartOriginal;
+					$dateEnd = $dateEndOriginal;
+					$dateStart->modify('next thursday');
+					$dateEnd->modify('next thursday');
+					while ($re > $dateStart) {
+						$q = sprintf("INSERT INTO ".TBL_EVENTS." VALUES (NULL, '$title', $seats, $type, $c, $user, $room, '$notes', $series, '$dateStart->format('Y-m-d H:i:s')', '$dateEnd->format('Y-m-d H:i:s')', '$time', 'accepted')");
+						$result = mysql_query($q, $this->connection);	
+						$dateStart->modify('+7 day');
+						$dateEnd->modify('+7 day');
+					}
+					} elseif ($repeatf == 1){
+					$dateStart = $dateStartOriginal;
+					$dateEnd = $dateEndOriginal;
+					$dateStart->modify('next friday');
+					$dateEnd->modify('next friday');
+					while ($re > $dateStart) {
+						$q = sprintf("INSERT INTO ".TBL_EVENTS." VALUES (NULL, '$title', $seats, $type, $c, $user, $room, '$notes', $series, '$dateStart->format('Y-m-d H:i:s')', '$dateEnd->format('Y-m-d H:i:s')', '$time', 'accepted')");
+						$result = mysql_query($q, $this->connection);	
+						$dateStart->modify('+7 day');
+						$dateEnd->modify('+7 day');
+					}
+				}
+			}
 			if(!$result || (mysql_num_rows($result) < 1)){
 				return NULL;
 			}
 			$dbarray = mysql_fetch_array($result);
 			return TRUE;
+			
 		}
 		
 		

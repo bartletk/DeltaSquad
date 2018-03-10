@@ -14,7 +14,7 @@
 		var $url;          //The page url current being viewed
 		var $referrer;     //Last recorded site page viewed
 		var $id;
-		var $cwid;
+		var $CWID;
 		/**
 			* Note: referrer should really only be considered the actual
 			* page referrer in process.php, any other time it may be
@@ -94,7 +94,7 @@
 				$this->user_id    = $this->userinfo['user_id'];
 				$this->userlevel = $this->userinfo['userlevel'];
 				$this->id = $this->userinfo['id'];
-				$this->cwid = $this->userinfo['cwid'];
+				$this->CWID = $this->userinfo['CWID'];
 				
 				/* auto login hash expires in three days */
 				if($this->userinfo['hash_generated'] < (time() - (60*60*24*3))){
@@ -244,7 +244,7 @@
 			* 1. If no errors were found, it registers the new user and
 			* returns 0. Returns 2 if registration failed.
 		*/
-		function register($subuser, $subpass, $subemail, $subname){
+		function register($subuser, $subpass, $subemail, $subname, $CWID){
 			
 			global $database, $form, $mailer;  //The database, form and mailer object
 			
@@ -337,7 +337,7 @@
 			}
 			/* No errors, add the new account to the */
 			else{
-				if($database->addNewUser($subuser, md5($subpass), $subemail, $randid, $subname)){
+				if($database->addNewUser($subuser, md5($subpass), $subemail, $randid, $subname, $CWID)){
 					if(EMAIL_WELCOME){               
 						$mailer->sendWelcome($subuser,$subemail,$subpass,$randid);
 					}
@@ -516,15 +516,17 @@
 		function addEventC($title, $type, $course, $crn, $seats, $notes, $dateStart, $dateEnd, $room, $series){
 			global $database, $form; 
 			$user = $this->id;
+			$CWID = $this->CWID;
 			$time= date("Y/m/d H:i:s");
-			$result = $database->addEvent2($title, $type, $course, $crn, $seats, $notes, $dateStart, $dateEnd, $room, $cwid, $series, $time);
+			$result = $database->addEvent2($title, $type, $course, $crn, $seats, $notes, $dateStart, $dateEnd, $room, $CWID, $series, $time);
 			if ($result){return TRUE;}			
 		}
 		function addEventCA($title, $type, $course, $crn, $seats, $notes, $dateStart, $dateEnd, $room, $series, $repeat, $repeatm, $repeatt, $repeatw, $repeatth, $repeatf, $re){
 			global $database, $form; 
 			$user = $this->id;
+			$CWID = $this->CWID;
 			$time= date("Y/m/d H:i:s");
-			$result = $database->addEvent2A($title, $type, $course, $crn, $seats, $notes, $dateStart, $dateEnd, $room, $cwid, $series, $time, $repeat, $repeatm, $repeatt, $repeatw, $repeatth, $repeatf, $re);
+			$result = $database->addEvent2A($title, $type, $course, $crn, $seats, $notes, $dateStart, $dateEnd, $room, $CWID, $series, $time, $repeat, $repeatm, $repeatt, $repeatw, $repeatth, $repeatf, $re);
 			if ($result){return TRUE;}			
 		}
 		function chooseSemester($semester){

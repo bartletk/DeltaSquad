@@ -205,7 +205,7 @@
 				$_POST['user'] = strtolower($_POST['user']);
 			}
 			/* Registration attempt */
-			$retval = $session->register($_POST['user'], $_POST['pass'], $_POST['email'], $_POST['name']);
+			$retval = $session->register($_POST['user'], $_POST['pass'], $_POST['email'], $_POST['name'], $_POST['cwid']);
 			
 			/* Registration Successful */
 			if($retval == 0){
