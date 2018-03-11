@@ -235,7 +235,7 @@
 			$crn = substr($crn, 1);
 			$crns = explode(" ",$crn);
 			foreach ($crns as $c){
-				$q = sprintf("INSERT INTO ".TBL_EVENTS." VALUES (NULL, '$title', $seats, $type, $c, $user, $room, '$notes', $series, '$dateStart', '$dateEnd', '$time', 'accepted')");
+				$q = sprintf("INSERT INTO ".TBL_EVENTS." VALUES (NULL, '$title', $seats, $type, $c, $user, '$room', '$notes', $series, '$dateStart', '$dateEnd', '$time', 'accepted')");
 				$result = mysql_query($q, $this->connection);
 				//$myfile = fopen("error.txt", "a") or die(print_r($q));
 			}
@@ -252,67 +252,97 @@
 			$crn = substr($crn, 1);
 			$crns = explode(" ",$crn);
 			foreach ($crns as $c){
-				$q = sprintf("INSERT INTO ".TBL_EVENTS." VALUES (NULL, '$title', $seats, $type, $c, $user, $room, '$notes', $series, '$dateStart', '$dateEnd', '$time', 'accepted')");				
+				$q = sprintf("INSERT INTO ".TBL_EVENTS." VALUES (NULL, '$title', $seats, $type, $c, $user, '$room', '$notes', $series, '$dateStart', '$dateEnd', '$time', 'accepted')");				
 				$result = mysql_query($q, $this->connection);				
 				//$myfile = fopen("error.txt", "a") or die(print_r($q));
-				$dateStartOriginal = new DateTime($dateStart);
-				$dateEndOriginal = new DateTime($dateEnd);
-				//$myfile = fopen("error.txt", "a") or die(print_r($dateEndOriginal));
+				$dateStartOriginal = new DateTime($dateStart,new \DateTimeZone('UTC'));
+				$dateEndOriginal = new DateTime($dateEnd,new \DateTimeZone('UTC'));
+				$re1 = new DateTime($re,new \DateTimeZone('UTC'));
+				$dateStartOriginalHours = $dateStartOriginal->format('h');
+				$dateStartOriginalMinutes = $dateStartOriginal->format('i');
+				$dateEndOriginalHours = $dateEndOriginal->format('h');
+				$dateEndOriginalMinutes = $dateEndOriginal->format('i');
 				if ($repeatm == 1) {
-					$dateStart = $dateStartOriginal;
-					$dateEnd = $dateEndOriginal;
-					$dateStart->modify('next monday');
-					$dateEnd->modify('next monday');
-					while ($re > $dateStart) {
-						$q = sprintf("INSERT INTO ".TBL_EVENTS." VALUES (NULL, '$title', $seats, $type, $c, $user, $room, '$notes', $series, '$dateStart->format('Y-m-d H:i:s')', '$dateEnd->format('Y-m-d H:i:s')', '$time', 'accepted')");
+					$dateStartA = clone $dateStartOriginal;
+					$dateEndA = clone $dateEndOriginal;
+					$dateStartA->modify('next monday');
+					$dateEndA->modify('next monday');
+					$dateEndA->setTime($dateEndOriginalHours, $dateEndOriginalMinutes);
+					$dateStartA->setTime($dateStartOriginalHours, $dateStartOriginalMinutes);					
+					while ($re1 > $dateStartA) {
+						$dateStart1=$dateStartA->format('Y-m-d H:i:s');
+						$dateEnd1=$dateEndA->format('Y-m-d H:i:s');
+						$q = sprintf("INSERT INTO ".TBL_EVENTS." VALUES (NULL, '$title', $seats, $type, $c, $user, '$room', '$notes', $series, '$dateStart1', '$dateEnd1', '$time', 'accepted')");
+						//$myfile = fopen("error.txt", "a") or die(print_r($q));
 						$result = mysql_query($q, $this->connection);	
-						$myfile = fopen("error.txt", "a") or die(print_r($q));
-						$dateStart->modify('+7 day');
-						$dateEnd->modify('+7 day');
+						$dateStartA->modify('+7 day');
+						$dateEndA->modify('+7 day');
 					}
-					} elseif ($repeatt == 1){
-					$dateStart = $dateStartOriginal;
-					$dateEnd = $dateEndOriginal;
-					$dateStart->modify('next tuesday');
-					$dateEnd->modify('next tuesday');
-					while ($re > $dateStart) {
-						$q = sprintf("INSERT INTO ".TBL_EVENTS." VALUES (NULL, '$title', $seats, $type, $c, $user, $room, '$notes', $series, '$dateStart->format('Y-m-d H:i:s')', '$dateEnd->format('Y-m-d H:i:s')', '$time', 'accepted')");
+				} 
+				
+				if ($repeatt == 1){
+					$dateStartA = clone $dateStartOriginal;
+					$dateEndA = clone $dateEndOriginal;
+					$dateStartA->modify('next tuesday');
+					$dateEndA->modify('next tuesday');
+					$dateEndA->setTime($dateEndOriginalHours, $dateEndOriginalMinutes);
+					$dateStartA->setTime($dateStartOriginalHours, $dateStartOriginalMinutes);
+					while ($re1 > $dateStartA) {
+						$dateStart1=$dateStartA->format('Y-m-d H:i:s');
+						$dateEnd1=$dateEndA->format('Y-m-d H:i:s');
+						$q = sprintf("INSERT INTO ".TBL_EVENTS." VALUES (NULL, '$title', $seats, $type, $c, $user, '$room', '$notes', $series, '$dateStart1', '$dateEnd1', '$time', 'accepted')");
 						$result = mysql_query($q, $this->connection);
-						$dateStart->modify('+7 day');
-						$dateEnd->modify('+7 day');
+						$dateStartA->modify('+7 day');
+						$dateEndA->modify('+7 day');
 					}
-					} elseif ($repeatw == 1){
-					$dateStart = $dateStartOriginal;
-					$dateEnd = $dateEndOriginal;
-					$dateStart->modify('next wednesday');
-					$dateEnd->modify('next wednesday');
-					while ($re > $dateStart) {
-						$q = sprintf("INSERT INTO ".TBL_EVENTS." VALUES (NULL, '$title', $seats, $type, $c, $user, $room, '$notes', $series, '$dateStart->format('Y-m-d H:i:s')', '$dateEnd->format('Y-m-d H:i:s')', '$time', 'accepted')");
+				} 
+				if ($repeatw == 1){
+				
+					$dateStartA = clone $dateStartOriginal;
+					$dateEndA = clone $dateEndOriginal;
+					$dateStartA->modify('next wednesday');
+					$dateEndA->modify('next wednesday');
+					$dateEndA->setTime($dateEndOriginalHours, $dateEndOriginalMinutes);
+					$dateStartA->setTime($dateStartOriginalHours, $dateStartOriginalMinutes);
+					while ($re1 > $dateStartA) {
+						$dateStart1=$dateStartA->format('Y-m-d H:i:s');
+						$dateEnd1=$dateEndA->format('Y-m-d H:i:s');
+						$q = sprintf("INSERT INTO ".TBL_EVENTS." VALUES (NULL, '$title', $seats, $type, $c, $user, '$room', '$notes', $series, '$dateStart1', '$dateEnd1', '$time', 'accepted')");
 						$result = mysql_query($q, $this->connection);
-						$dateStart->modify('+7 day');
-						$dateEnd->modify('+7 day');
+						$dateStartA->modify('+7 day');
+						$dateEndA->modify('+7 day');
 					}
-					} elseif ($repeatth == 1){
-					$dateStart = $dateStartOriginal;
-					$dateEnd = $dateEndOriginal;
-					$dateStart->modify('next thursday');
-					$dateEnd->modify('next thursday');
-					while ($re > $dateStart) {
-						$q = sprintf("INSERT INTO ".TBL_EVENTS." VALUES (NULL, '$title', $seats, $type, $c, $user, $room, '$notes', $series, '$dateStart->format('Y-m-d H:i:s')', '$dateEnd->format('Y-m-d H:i:s')', '$time', 'accepted')");
-						$result = mysql_query($q, $this->connection);	
-						$dateStart->modify('+7 day');
-						$dateEnd->modify('+7 day');
+				} 
+				if ($repeatth == 1){
+					$dateStartA = clone $dateStartOriginal;
+					$dateEndA = clone $dateEndOriginal;
+					$dateStartA->modify('next thursday');
+					$dateEndA->modify('next thursday');
+					$dateEndA->setTime($dateEndOriginalHours, $dateEndOriginalMinutes);
+					$dateStartA->setTime($dateStartOriginalHours, $dateStartOriginalMinutes);
+					while ($re1 > $dateStartA) {
+						$dateStart1=$dateStartA->format('Y-m-d H:i:s');
+						$dateEnd1=$dateEndA->format('Y-m-d H:i:s');
+						$q = sprintf("INSERT INTO ".TBL_EVENTS." VALUES (NULL, '$title', $seats, $type, $c, $user, '$room', '$notes', $series, '$dateStart1', '$dateEnd1', '$time', 'accepted')");
+						$result = mysql_query($q, $this->connection);
+						$dateStartA->modify('+7 day');
+						$dateEndA->modify('+7 day');
 					}
-					} elseif ($repeatf == 1){
-					$dateStart = $dateStartOriginal;
-					$dateEnd = $dateEndOriginal;
-					$dateStart->modify('next friday');
-					$dateEnd->modify('next friday');
-					while ($re > $dateStart) {
-						$q = sprintf("INSERT INTO ".TBL_EVENTS." VALUES (NULL, '$title', $seats, $type, $c, $user, $room, '$notes', $series, '$dateStart->format('Y-m-d H:i:s')', '$dateEnd->format('Y-m-d H:i:s')', '$time', 'accepted')");
+				} 
+				if ($repeatf == 1){
+					$dateStartA = clone $dateStartOriginal;
+					$dateEndA = clone $dateEndOriginal;
+					$dateStartA->modify('next friday');
+					$dateEndA->modify('next friday');
+					$dateEndA->setTime($dateEndOriginalHours, $dateEndOriginalMinutes);
+					$dateStartA->setTime($dateStartOriginalHours, $dateStartOriginalMinutes);
+					while ($re1 > $dateStartA) {
+						$dateStart1=$dateStartA->format('Y-m-d H:i:s');
+						$dateEnd1=$dateEndA->format('Y-m-d H:i:s');
+						$q = sprintf("INSERT INTO ".TBL_EVENTS." VALUES (NULL, '$title', $seats, $type, $c, $user, '$room', '$notes', $series, '$dateStart1', '$dateEnd1', '$time', 'accepted')");
 						$result = mysql_query($q, $this->connection);	
-						$dateStart->modify('+7 day');
-						$dateEnd->modify('+7 day');
+						$dateStartA->modify('+7 day');
+						$dateEndA->modify('+7 day');
 					}
 				}
 			}

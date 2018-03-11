@@ -2,6 +2,8 @@
 
 function showGrid($date) {
 	global $title, $niceday, $start_time, $end_time, $venue, $city, $state, $cat, $color, $background, $ed, $usr, $o, $c, $m, $a, $y, $w,$scale,$ap,$status, $day_week_start_hour, $day_week_end_hour;
+	
+	
 	$threshold_hour = $day_week_start_hour ? $day_week_start_hour : 0;
 	$threshold_min = $day_week_start_hour ? 0 : 30;
 	$txi = ($threshold_hour * 60) + $threshold_min;

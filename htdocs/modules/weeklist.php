@@ -2,42 +2,67 @@
 
 
 function showWeek() {
-	global $title, $niceday, $start_time, $end_time, $venue, $city, $state, $cat, $color, $background, $ed, $usr, $o, $c, $m, $a, $y, $w, $lang,$startnice;
-	ksort($start_time);
-	$curdate = "";
-	while (list($date,$val) = each($start_time)) {
-		if ($date != $curdate) {
-			$curdate = $date;
-			echo "<h2>".$startnice[$date]."</h2>\n";
-		}
-		echo "<ul>\n";
-		while (list($t) = each($start_time[$date])) {
-			while (list($id,$value) = each($start_time[$date][$t])) {
-				echo "<li>";
-				echo "<div class=\"item\"";
-				if ($color[$id]) echo " style=\"color: ".$color[$id]."; background: ".$background[$id].";\"";
-				echo ">";
-				echo "<div class=\"time\">".$value;
-				if ($end_time[$date][$t][$id]) echo " - ".$end_time[$date][$t][$id];
-				echo "</div>\n";
-				echo "<div class=\"title\"><a href=\"show_event.php?id=".$id."&o=".$o."&c=".$c."&m=".$m."&a=".$a."&y=".$y."&w=".$w."\" onClick=\"openPic('show_event.php?id=".$id."&size=small','pop','600','400'); window.newWindow.focus(); return false\"";
-				if ($color[$id]) echo " style=\"color: ".$color[$id]."; background: ".$background[$id].";\"";
-				echo ">".$title[$id]."</a></div>\n";
-				if ($venue[$id]) {
-					echo "<div class=\"venue\">".$venue[$id]."</div>\n";
-					if ($city[$id]) {
-						echo "<div class=\"location\">".$city[$id];
-						if ($state[$id]) echo ", ".$state[$id];
-						echo "</div>\n";
+		if(!$session->isInstructor() & !$session->isAdmin()){
+			if (isset($_GET['crn'])){
+				$crns[] = explode(" ", trim($_GET['crn']));
+				//print_r($crns);
+				$dateNew = substr_replace(substr_replace($date, "-", 6, 0), "-", 4, 0);
+				$link = mysql_connect (DB_SERVER, DB_USER, DB_PASS) or die ("Could not connect to database, try again later");
+				mysql_select_db(DB_NAME,$link);
+				$q = sprintf("SELECT * FROM ".TBL_EVENTS." JOIN ".TBL_ROOMS." ON ".TBL_EVENTS.".room_number = ".TBL_ROOMS.".room_number WHERE (CAST(dateStart AS DATE) = CAST('$dateNew' AS DATE)) AND (crn IN (".implode(',', $crns[0])."))");
+				$result = mysql_query($q, $link);
+				if(!$result || (mysql_num_rows($result) < 1)){
+					// NO EVENTS
+					} else {
+					// EVENTS
+					while($row = mysql_fetch_assoc($result)) {
+						echo $row['title'];
+						echo "<br> ".substr($row[date_start], 10, -3)." -".substr($row[date_end], 10, -3)."<br> Room:";
+						echo $row['room_number'];
+						echo "<br><br>";
 					}
 				}
-				echo "</div>";
-				if ($ed[$id]==true) echo "<div class=\"edit\">[<a href=\"edit_event.php?id=".$id."&o=".$o."&c=".$c."&m=".$m."&a=".$a."&y=".$y."&w=".$w."\" onClick=\"openPic('edit_event.php?id=".$id."&size=small','pop','600','500'); window.newWindow.focus(); return false\">Edit</a>]&nbsp;&nbsp;[<a href=\"delete_event.php?id=".$id."&o=".$o."&c=".$c."&m=".$m."&a=".$a."&y=".$y."&w=".$w."\">Delete</a>]</div>\n";
-				echo "</li>\n";
+				} else {
+				header ("Location: class_select.php");
+			}
+			} elseif (!$session->isAdmin() & $session->isInstructor()) {
+			$dateNew = substr_replace(substr_replace($date, "-", 6, 0), "-", 4, 0);
+			$link = mysql_connect (DB_SERVER, DB_USER, DB_PASS) or die ("Could not connect to database, try again later");
+			mysql_select_db(DB_NAME,$link);
+			$q = sprintf("SELECT * FROM ".TBL_EVENTS." WHERE CAST(dateStart AS DATE) = CAST('$dateNew' AS DATE)");
+			$result = mysql_query($q, $link);
+			if(!$result || (mysql_num_rows($result) < 1)){
+				// NO EVENTS
+				} else {
+				// EVENTS
+				//$dbarray = mysql_fetch_array($result);
+				while($row = mysql_fetch_assoc($result)) {
+					echo $row['title'];
+					echo "<br> ".substr($row[dateStart], 10, -3)." -".substr($row[dateEnd], 10, -3)."<br> Room:";
+					echo $row['room_number'];
+					echo "<br><br>";
+				}
+			}
+			
+			} else {
+			$dateNew = substr_replace(substr_replace($date, "-", 6, 0), "-", 4, 0);
+			$link = mysql_connect (DB_SERVER, DB_USER, DB_PASS) or die ("Could not connect to database, try again later");
+			mysql_select_db(DB_NAME,$link);
+			$q = sprintf("SELECT * FROM ".TBL_EVENTS." WHERE CAST(dateStart AS DATE) = CAST('$dateNew' AS DATE)");
+			$result = mysql_query($q, $link);
+			if(!$result || (mysql_num_rows($result) < 1)){
+				// NO EVENTS
+				} else {
+				// EVENTS
+				//$dbarray = mysql_fetch_array($result);
+				while($row = mysql_fetch_assoc($result)) {
+					echo $row['title'];
+					echo "<br> ".substr($row[dateStart], 10, -3)." -".substr($row[dateEnd], 10, -3)."<br> Room:";
+					echo $row['room_number'];
+					echo "<br><br>";
+				}
 			}
 		}
-		echo "</ul>\n";
-	}
 }
 
 

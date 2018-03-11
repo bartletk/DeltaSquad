@@ -8,37 +8,7 @@ include("../header.php");
 <body>
 
 <?php
-/**
- * displayUsers - Displays the users database table in
- * a nicely formatted html table.
- */
-function displayUsers(){
-   global $database;
-   $q = "SELECT username,userlevel,email,timestamp "
-       ."FROM ".TBL_USERS." ORDER BY userlevel DESC,username";
-   $result = $database->query($q);
-   /* Error occurred, return given name by default */
-   $num_rows = mysql_numrows($result);
-   if(!$result || ($num_rows < 0)){
-      echo "Error displaying info";
-      return;
-   }
-   if($num_rows == 0){
-      echo "Database table empty";
-      return;
-   }
-   /* Display table contents */
-   echo "<table>";
-   echo "<tr><td colspan='2'>Username</td><td>Level</td><td colspan='2'>Email</td></tr>";
-   echo "<div></div>";
-   for($i=0; $i<$num_rows; $i++){
-      $uname  = mysql_result($result,$i,"username");
-      $ulevel = mysql_result($result,$i,"userlevel");
-      $email  = mysql_result($result,$i,"email");
-      echo "<tr><td colspan='2'>".$uname."</td><td>".$ulevel."</td><td colspan='2'>".$email."</td></tr>";
-   }
-   echo "</table>";
-}
+
 /**
  * User not an administrator, redirect to main page
  * automatically.
@@ -65,16 +35,6 @@ if($form->num_errors > 0){
        ."!*** Error with request, please fix</font><br><br>";
 }
 
-/**
- * Display Users Table
- */
-?>
-<h3>Users Table Contents:</h3>
-<?php
-displayUsers();
-?>
-<hr>
-<?php
 /**
  * Update User Level
  */
@@ -142,7 +102,7 @@ displayUsers();
 		<p><input type="hidden" name="subjoin" value="1"><input type="submit" value="Add"></p>
 	</form>
 </div>
-</hr>
+<hr>
 
 <div class="deadlines">
 	<h3>Set Deadlines</h3>
@@ -168,7 +128,7 @@ displayUsers();
 		<p><input type="hidden" name="subaddroom" value="1"><input type="submit" value="Add Room"></p>
 	</form>
 </div>
-</hr>
+<hr>
 <div>
 	<h3>Delete Room</h3>
 	<form action="adminprocess.php" method="POST" id="delete">
@@ -187,8 +147,42 @@ displayUsers();
 		<input type="submit" value="Delete Room">
 	</form>
 </div>
-</hr>
-
+<hr>
+<div class="update">
+	<h3>Assign Lead Instructor Role:</h3>
+	<?php echo $form->error("leaduser"); ?>
+	<form action="adminprocess.php" method="POST" id="lead">
+		<p>Username: <select form="lead" name="user">
+			<?php
+							$q = "SELECT * FROM ".TBL_USERS." WHERE userlevel >=5";
+							$result = $database->query($q);
+							$num_rows = mysql_numrows($result);
+							for($i=0; $i<$num_rows; $i++){
+								$username  = mysql_result($result,$i,"username");
+								$cwid = mysql_result($result, $i, "CWID");
+								echo "<option value='".$cwid."'>".$username."</option>";
+							}
+						?>	
+		</select>
+		<p>Course:
+				<select form="lead" name="course">
+						<?php
+							$q = "SELECT * FROM ".TBL_COURSE."";
+							$result = $database->query($q);
+							$num_rows = mysql_numrows($result);
+							for($i=0; $i<$num_rows; $i++){
+								$num = mysql_result($result,$i,"course_number");
+								$title = mysql_result($result,$i,"title");
+								echo "<option value='".$num."'>".$num." - ".$title."</option>";
+							}
+						?>	
+					</select>
+		</p>
+		<input type="hidden" name="sublead" value="1">
+		<input type="submit" value="Add Lead Instructor">
+	</form>
+</div>
+<hr>
 
 
 

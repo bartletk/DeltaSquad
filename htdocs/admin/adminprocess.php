@@ -43,6 +43,9 @@
 			else if (isset($_POST['subdelroom'])){
 				$this->procDeleteRoom();
 			}
+			else if (isset($_POST['sublead'])){
+				$this->procAddLeader();
+			}
 			/* Should not get here, redirect to home page */
 			else{
 				header("Location: ../main.php");
@@ -241,6 +244,15 @@
 			global $session, $database, $form;
 			$number = $_POST['number'];
 			$q = "DELETE FROM ".TBL_ROOMS." WHERE room_number = '$number'";
+			$database->query($q);
+			header("Location: ".$session->referrer);
+		}
+		function procAddLeader(){
+		//UPDATE ".TBL_COURSES." SET 'Lead_Instructor' = ".$_POST['user']." WHERE ".TBL_COURSES.".'course_number' = ".$POST_['course'];
+			global $session, $database, $form;
+			$q = "UPDATE ".TBL_COURSE." SET Lead_Instructor = ".$_POST['user']." where course_number = ".$_POST['course'];
+			
+							//$myfile = fopen("error.txt", "a") or die(print_r($q));
 			$database->query($q);
 			header("Location: ".$session->referrer);
 		}

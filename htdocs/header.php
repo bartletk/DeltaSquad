@@ -79,5 +79,24 @@
 					echo "[<a href=\"/login.php\">Login</a>]";
 				}
 			?>
+			
+			<?php echo "Calendar Views"; ?>:&nbsp;&nbsp;&nbsp;
+<?php
+
+$q = "SELECT module_id, link_name from modules where active = 1 order by sequence";
+$query = mysql_query($q);
+if (!$query) $msg .= "Database Error : ".$q;
+else {
+	$i = false;
+	while($row = mysql_fetch_row($query)) {
+		if ($i == true) echo " | ";
+		echo "<a href=\"index.php?o=".$row[0]."&c=".$c."&m=".$m."&a=".$a."&y=".$y."&w=".$w."\"";
+			if ($o == $row[0]) echo " class=\"selected\"";
+		echo ">".$row[1]."</a>";
+		$i = true;
+	}
+}
+	
+?>
 		</div>
 		
