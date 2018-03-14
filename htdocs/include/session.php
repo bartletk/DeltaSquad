@@ -456,6 +456,22 @@
 			$this->userlevel == ADMIN_LEVEL);
 		}
 		
+				/**
+			* isStudent - Returns true if currently logged in user is
+			* a student, false otherwise.
+		*/
+		function isStudent(){
+			return ($this->userlevel == USER_LEVEL);
+		}
+		
+		
+						/**
+			* getCWID - gets CWID of logged in user
+		*/
+		function getCWID(){
+			return ($this->CWID);
+		}
+		
 		/**
 			* generateRandID - Generates a string made up of randomized
 			* letters (lower and upper case) and digits and returns
