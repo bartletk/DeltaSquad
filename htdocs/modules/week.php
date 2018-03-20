@@ -1,7 +1,7 @@
 <?php
 
 include "modules/day_week_functions.php";
-	include "header.php";
+	include "top_header.php";
 ?>
 
 <?php

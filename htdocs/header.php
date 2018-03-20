@@ -63,8 +63,6 @@
 						echo "<div><p class='right'>[<a href=\"/mail.php\">You have $numUnreadMail Unread Mail</a>]&nbsp;</p></div>";
 					}
 				?>
-				<h1>Logged In</h1>
-				<p>Welcome <b><?php echo $session->username; ?></b>, you are logged in.</p>
 				<p>[<a href="userinfo.php?user=<?php echo $session->username; ?>">My Account</a>]&nbsp;[<a href="/useredit.php">Edit Account</a>]
 					<?php
 						if($session->isAdmin()){

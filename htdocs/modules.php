@@ -71,7 +71,7 @@ if (!$_SESSION["user_id"]) {
 	mysql_close($link);
 	header("Location: ".$path."login.php?return_to=".$PHP_SELF);
 } else {
-		include "header.php";
+		include "top_header.php";
 	$query = mysql_query("SELECT add_users from users where user_id = ".$_SESSION["user_id"]." limit 1");
 	$row = mysql_fetch_row($query);
 	if ($row[0] == 1) {

@@ -1,7 +1,39 @@
 <?php
+include("top_header.php");
 include("header.php");
 $page = "userinfo.php";
 ?>
+
+<div class="row">
+        <div class="col s12 m6">
+          <div class="card">
+            <div class="card-content black-text">
+              <span class="card-title"><h5>My Account</h5></span>
+              <p><strong>Name:</strong> admin</p>
+              <p><strong>Username:</strong> admin</p>
+              <p><strong>Email</strong>: admin@admin.com</p>
+            </div>
+            <div class="card-action">
+              <a href="#" class="link-color">Edit Account</a>
+            </div>
+          </div>
+        </div>
+      </div>
+<hr>
+
+  <!--Import jQuery before materialize.js-->
+  <script src="https://code.jquery.com/jquery-2.2.4.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
+        
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.8/js/materialize.js"></script>
+          <script>
+              $( document ).ready(function(){
+                $(".button-collapse").sideNav();
+
+
+              })
+          </script>
+
+
 <div>
 <?php
 /* Requested Username error checking */
@@ -58,11 +90,11 @@ echo "<b>Email:</b> ".$req_user_info['email']."</p>";
 if(strcmp($session->username,$req_user) == 0){
    echo "<a href=\"useredit.php\">Edit Account Information</a><br><br>";
 }
-
-
-
-
 ?>
 </div>
+<?php
+include("footer.php");
+?>
+
 </body>
 </html>

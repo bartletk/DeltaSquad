@@ -1,6 +1,7 @@
-<?php
+<!DOCTYPE html>
 
-$page = "index.php";
+<?php
+	$page = "index.php";
 
 /* Grab Dates Function */
 // Queries database and dumps events into an array.
@@ -27,7 +28,7 @@ function grabDates($start,$end,$category_array) {
 		$superedit = true;
 	}
 	if (($mod > 0) || ($superedit)) {
-		$q = "select DATE_FORMAT(date_start, '%Y%m%d'),DATE_FORMAT(date_etart, '%H%i'), event_id, title, DATE_FORMAT(date_start, '%W, %M %e, %Y'), DATE_FORMAT(date_start, '%l:%i %p'), DATE_FORMAT(date_end, '%l:%i %p'), series, user_id, date_start, status from events order by date_start";
+		$q = "select DATE_FORMAT(date_start, '%Y%m%d'),DATE_FORMAT(date_start, '%H%i'), event_id, title, DATE_FORMAT(date_start, '%W, %M %e, %Y'), DATE_FORMAT(date_start, '%l:%i %p'), DATE_FORMAT(date_end, '%l:%i %p'), series, user_id, date_start, status from events order by date_start";
 			$query = mysql_query($q);
 		while ($row = mysql_fetch_row($query)) {
 			$edit = true;
@@ -187,10 +188,30 @@ if (($supergroup) && ($supercategory)) {
 if ($script) {
 	include "modules/".$script;
 } else {
-	include "header.php";
+			include ('top_header.php');	
+
+
 	
 }
 
+echo "Calendar Views"; ?>:&nbsp;&nbsp;&nbsp;
+<?php
 
-
+$q = "SELECT module_id, link_name from modules where active = 1 order by sequence";
+$query = mysql_query($q);
+if (!$query) $msg .= "Database Error : ".$q;
+else {
+	$i = false;
+	while($row = mysql_fetch_row($query)) {
+		if ($i == true) echo " | ";
+		echo "<a href=\"index.php?o=".$row[0]."&c=".$c."&m=".$m."&a=".$a."&y=".$y."&w=".$w."\"";
+			if ($o == $row[0]) echo " class=\"selected\"";
+		echo ">".$row[1]."</a>";
+		$i = true;
+	}
+}
+include('footer.php');
 ?>
+
+</body>
+</html>
