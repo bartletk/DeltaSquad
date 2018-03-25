@@ -8,7 +8,7 @@
 			global $session;
 			/* Make sure administrator is accessing page */
 			if(!$session->isAdmin()){
-				header("Location: ../main.php");
+				header("Location: ../index.php");
 				return;
 			}
 			/* Admin submitted update user level form */
@@ -48,7 +48,7 @@
 			}
 			/* Should not get here, redirect to home page */
 			else{
-				header("Location: ../main.php");
+				header("Location: ../index.php");
 			}
 		}
 		

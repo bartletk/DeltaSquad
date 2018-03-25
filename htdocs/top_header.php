@@ -15,8 +15,8 @@
 		<script src="https://code.jquery.com/jquery-2.2.4.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.8/js/materialize.js"></script>
 		
-		<link rel="stylesheet" type="text/css" href="userinfo.css">
-		<link rel="stylesheet" type="text/css" href="navbar.css">
+		<link rel="stylesheet" type="text/css" href="css/userinfo.css">
+		<link rel="stylesheet" type="text/css" href="css/navbar.css">
 		<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.min.js"></script>
 		<script type="text/javascript">
 			jQuery(function($){
@@ -75,6 +75,7 @@
 							<?php } 
 							if ($session->isInstructor() || $session->isAdmin()){ ?>
 							<li><a href="/addevent.php">Add Event</a></li>
+							<li><a href="/mycourse.php">My Courses</a></li>
 						<?php } ?>
 						<li><a href="index.php">Calendar</a></li>
 						<li><a href="process.php">Logout</a></li>
@@ -102,6 +103,7 @@
 							<?php }
 							if ($session->isInstructor() || $session->isAdmin()){ ?>
 							<li><a href="/addevent.php">Add Event</a></li>
+							<li><a href="/mycourse.php">My Courses</a></li>
 						<?php } ?>
 						<li><a href="index.php">Calendar</a></li>
 						<li><a href="process.php">Logout</a></li>

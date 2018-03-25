@@ -1,0 +1,96 @@
+body
+{
+	background: #f5f5f5;
+
+}
+
+h5
+{
+	font-weight: 400;
+}
+
+#email{
+
+}
+
+.container
+{
+
+	margin-top: 40px;
+	width: 400px;
+	height: 600px;
+	margin-bottom: 20px;
+}
+
+.tabs .indicator
+{
+	background-color: #e0f2f1;
+	height: 60px;
+	opacity: 0.3;
+}
+#
+
+.form-container
+{
+	padding: 40px;
+	padding-top: 10px;
+}
+
+.confirmation-tabs-btn
+{
+	position: absolute;
+}
+
+
+.teal{
+	background-color:#600 !important;
+}
+
+.teal-text{
+	color:#600 !important;
+}
+
+.nav-wrapper{
+		  background-color: #660000;
+      height:80px;
+		  }
+		
+.logo{
+width:57px;
+   }
+   .emailpass{
+   	padding: 20px;
+   }
+
+   .login-form{
+   	padding:200px;   }
+
+   	hr { 
+  border : 0;
+  height: 1px; 
+  background-image: linear-gradient(to right, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0)); 
+}
+
+body {
+    display: flex;
+    min-height: 100vh;
+    flex-direction: column;
+  }
+
+
+  main {
+    flex: 1 0 auto;
+  }
+
+
+  .page-footer{
+    background:#585858 url(http://www.ulm.edu/_resources/images/line-pattern_0.png) !important;
+  }
+
+  .footer-copyright{
+    background:#585858 !important;
+
+  }
+.card-2{
+  padding:1em 3em;
+}

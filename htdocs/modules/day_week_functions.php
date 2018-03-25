@@ -34,6 +34,7 @@
 		$txi = ($threshold_hour * 60) + $threshold_min;
 		if ($start_time[$date]) {
 			ksort($start_time[$date]);
+			print_r($start_time);
 			$scale = 1;
 			$wait = 1;
 			while (list($t) = each($start_time[$date])) {

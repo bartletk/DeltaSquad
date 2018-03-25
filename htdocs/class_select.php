@@ -1,16 +1,25 @@
 <!DOCTYPE html>
 <?php
-	include("header.php");
+	include("top_header.php");
 	$page = "class_select.php";
 	
 	global $database;
 ?>
-<html>
-</head>
 <body>
 	<fieldset>
-		<legend>Student Class Selector</legend>
+		<legend>Student Login</legend>
 		<p>
+		<form action="process.php" method="POST" id="studentLogin">
+			<div class="input-field col s12">
+		<input type="text" name="CWID" maxlength="30"></p>
+		<label for="CWID">CWID</label>
+	</div>
+	<input type="hidden" name="studentLogin" value="1">
+	<input type="submit" value="Submit">
+		</form>
+		<?php
+		if (isset($_GET['c'])){
+		?>
 			<form action="process.php" method="POST" id="choosesemester">
 				<label>Choose Your Semester: </label><br/>
 				<select form="choosesemester" name="semester">
@@ -81,7 +90,7 @@
 					<input type="submit" value="View Schedule">
 				</form>
 				<?php
-				
+				}
 				}
 			}
 		?>
@@ -91,8 +100,6 @@
 		
 	</fieldset>
 </form>
-</body>
-</html>
 <?php
-	
+	include "footer.php";
 	?>		
