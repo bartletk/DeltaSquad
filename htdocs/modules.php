@@ -1,27 +1,5 @@
 <?php
-/*
-Supercali Event Calendar
-
-Copyright 2007 Dana C. Hutchins
-
-This program is free software; you can redistribute it and/or
-modify it under the terms of the GNU General Public License
-as published by the Free Software Foundation; either version 2
-of the License, or (at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program; if not, write to the Free Software
-Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
-
-For further information visit:
-http://supercali.inforest.com/
-*/
-include "includes/start.php";
+include "include/start.php";
 $page_title = $lang["title_modules"];
 $id = $_REQUEST["id"];
 $dir = "modules"; 
@@ -93,7 +71,7 @@ if (!$_SESSION["user_id"]) {
 	mysql_close($link);
 	header("Location: ".$path."login.php?return_to=".$PHP_SELF);
 } else {
-		include "header.php";
+		include "top_header.php";
 	$query = mysql_query("SELECT add_users from users where user_id = ".$_SESSION["user_id"]." limit 1");
 	$row = mysql_fetch_row($query);
 	if ($row[0] == 1) {
@@ -120,5 +98,5 @@ if ($edit) {
 
 
 }
-include "includes/footer.php";
+
 ?>

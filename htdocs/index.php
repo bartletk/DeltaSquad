@@ -1,27 +1,7 @@
+<!DOCTYPE html>
+
 <?php
-/*
-Supercali Event Calendar
-
-Copyright 2006 Dana C. Hutchins
-
-This program is free software; you can redistribute it and/or
-modify it under the terms of the GNU General Public License
-as published by the Free Software Foundation; either version 2
-of the License, or (at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program; if not, write to the Free Software
-Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
-
-For further information visit:
-http://supercali.inforest.com/
-*/
-$page = "index.php";
+	$page = "index.php";
 
 /* Grab Dates Function */
 // Queries database and dumps events into an array.
@@ -34,7 +14,7 @@ function grabDates($start,$end,$category_array) {
 	global $supergroup;
 	global $title, $niceday, $start_time, $end_time, $venue, $city, $state, $cat,$ed, $usr, $color, $background,$lang, $w, $ap, $status;
 	/* get applicable events */
-	$superedit = false;
+	$superedit = true;
 	if (!$supergroup) {
 		$q = "select moderate from users_to_groups where group_id = ".$w." and user_id = ".$_SESSION["user_id"];
 		$query = mysql_query($q);
@@ -48,12 +28,11 @@ function grabDates($start,$end,$category_array) {
 		$superedit = true;
 	}
 	if (($mod > 0) || ($superedit)) {
-		$q = "select DATE_FORMAT(dates.date, '%Y%m%d'), DATE_FORMAT(dates.date, '%H%i'), events.event_id, events.title, DATE_FORMAT(dates.date, '%W, %M %e, %Y'), DATE_FORMAT(dates.date, '%l:%i %p'),  DATE_FORMAT(dates.end_date, '%l:%i %p'), links.company, links.city, links.state, events.category_id, events.user_id, dates.date, categories.color, categories.background, events.status_id from events, dates, links, categories, groups where dates.date >= '$start' and dates.date < '$end' and dates.event_id = events.event_id and events.venue_id = links.link_id and events.category_id in (".$cats.") and events.category_id = categories.category_id and events.group_id = groups.group_id and events.group_id = ".$w." order by dates.date";
-		$query = mysql_query($q);
-		//echo $q."<br>";
+		$q = "select DATE_FORMAT(date_start, '%Y%m%d'),DATE_FORMAT(date_start, '%H%i'), event_id, title, DATE_FORMAT(date_start, '%W, %M %e, %Y'), DATE_FORMAT(date_start, '%l:%i %p'), DATE_FORMAT(date_end, '%l:%i %p'), series, user_id, date_start, status from events order by date_start";
+			$query = mysql_query($q);
 		while ($row = mysql_fetch_row($query)) {
-			$edit = false;
-			if ($row[11] == $_SESSION["user_id"]) {
+			$edit = true;
+			if ($row[8] == $_SESSION["user_id"]) {
 				$edit = true;
 			} elseif ($superedit) {
 				$edit = true;
@@ -61,30 +40,26 @@ function grabDates($start,$end,$category_array) {
 			if ($edit==true) $ed[$row[2]]=true;
 			if ($superedit==true) $ap[$row[2]]=true;
 			$title[$row[2]]=strip_tags($row[3]);
-			$niceday[$row[0]][$row[12]][$row[2]]=$row[4];
+			$niceday[$row[0]][$row[9]][$row[2]]=$row[4];
 			if (($row[5] == "12:00 AM") && ($row[6] == "11:59 PM")) {
-				$start_time[$row[0]][$row[12]][$row[2]]=$lang["all_day"];
+				$start_time[$row[0]][$row[9]][$row[2]]=$lang["all_day"];
 			} elseif (($row[5] == "12:00 AM") && ($row[6] == "12:00 AM")) {
-				$start_time[$row[0]][$row[12]][$row[2]]="TBA";
+				$start_time[$row[0]][$row[9]][$row[2]]="TBA";
 			} else {	
-				$start_time[$row[0]][$row[12]][$row[2]]=$row[5];
-				if ($row[6]) $end_time[$row[0]][$row[12]][$row[2]]=$row[6];
+				$start_time[$row[0]][$row[9]][$row[2]]=$row[5];
+				if ($row[6]) $end_time[$row[0]][$row[9]][$row[2]]=$row[6];
 			}
-			if ($row[7]) $venue[$row[2]]=$row[7];
-			if ($row[7] && $row[8]) $city[$row[2]]=$row[8];
-			if ($row[7] && $row[8] && $row[9]) $state[$row[2]]=$row[9];
-			$cat[$row[2]]=$row[10];
-			$usr[$row[2]]=$row[11];
-			$color[$row[2]]=$row[13];
-			$background[$row[2]]=$row[14];
-			$status[$row[2]]=$row[15];
+			$cat[$row[2]]=$row[7];
+			$usr[$row[2]]=$row[8];
+			$status[$row[2]]=$row[10];
 		}
 	}
+
 }
 
 function grab($start,$end,$category) {
 	global $include_child_categories, $include_parent_categories, $category_array,$supercategory,$supergroup,$category_permissions,$w;
-	$canview = false;
+	$canview = true;
 	$groupview = false;
 	if (!$supergroup) {
 		$q = "SELECT * from users_to_groups where group_id = ".$w." and  user_id = ".$_SESSION["user_id"];
@@ -109,6 +84,7 @@ function grab($start,$end,$category) {
 		} else {
 			$canview = true;
 		}
+
 		if ($canview) {
 			$category_array[] = $category;
 			if ($include_child_categories) grab_child($start,$end,$category,true);
@@ -117,7 +93,7 @@ function grab($start,$end,$category) {
 			
 		}
 	
-	}
+	} 		
 }
 
 function grab_child($start,$end,$category,$starter=false) {
@@ -171,8 +147,8 @@ function grab_parent($start,$end,$category,$starter=false) {
 
 
 
-include "includes/start.php";
-$canview = false;
+include "include/start.php";
+$canview = true;
 //if no access, then kick them out!
 
 
@@ -209,12 +185,33 @@ if (($supergroup) && ($supercategory)) {
 		}
 	}
 }
-if (($canview == true)&& $script) {
+if ($script) {
 	include "modules/".$script;
 } else {
-	include "header.php";
+			include ('top_header.php');	
+
+
+	
 }
 
+echo "Calendar Views"; ?>:&nbsp;&nbsp;&nbsp;
+<?php
 
-
+$q = "SELECT module_id, link_name from modules where active = 1 order by sequence";
+$query = mysql_query($q);
+if (!$query) $msg .= "Database Error : ".$q;
+else {
+	$i = false;
+	while($row = mysql_fetch_row($query)) {
+		if ($i == true) echo " | ";
+		echo "<a href=\"index.php?o=".$row[0]."&c=".$c."&m=".$m."&a=".$a."&y=".$y."&w=".$w."\"";
+			if ($o == $row[0]) echo " class=\"selected\"";
+		echo ">".$row[1]."</a>";
+		$i = true;
+	}
+}
+include('footer.php');
 ?>
+
+</body>
+</html>
