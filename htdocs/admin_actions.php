@@ -149,7 +149,7 @@ function addProfile() {
 function addCategory() {
 	global $table_prefix, $link, $edit_categories, $common_get;
 	if (!$edit_categories) {
-		$msg = $lang["not_authorized_edit_categories"];
+		$msg = "You are not authorized to edit categories.";
 	} else {
 		if(get_magic_quotes_gpc()) {
             $name = mysql_real_escape_string(stripslashes($_POST["name"]));
@@ -177,7 +177,7 @@ function addCategory() {
 function editCategory($id) {
 	global $table_prefix, $link, $edit_categories, $common_get, $lang;
 	if (!$edit_categories) {
-		$msg = $lang["not_authorized_edit_categories"];
+		$msg = "You are not authorized to edit categories.";
 	} else {
 		if(get_magic_quotes_gpc()) {
             $name = mysql_real_escape_string(stripslashes($_POST["name"]));
@@ -205,7 +205,7 @@ function editCategory($id) {
 function deleteCategory($id) {
 	global $table_prefix, $link, $edit_categories, $common_get, $lang;
 	if (!$edit_categories) {
-		$msg = $lang["not_authorized_edit_categories"];
+		$msg = "You are not authorized to edit categories.";
 	} else {
 		if(get_magic_quotes_gpc()) {
             $sub_of = mysql_real_escape_string(stripslashes($_POST["sub_of"]));
@@ -229,7 +229,7 @@ function deleteCategory($id) {
 function addGroup() {
 	global $table_prefix, $link, $edit_groups, $common_get;
 	if (!$edit_groups) {
-		$msg = $lang["not_authorized_edit_groups"];
+		$msg = "You are not authorized to edit groups.";
 	} else {
 		if(get_magic_quotes_gpc()) {
             $name = mysql_real_escape_string(stripslashes($_POST["name"]));
@@ -251,7 +251,7 @@ function addGroup() {
 function editGroup($id) {
 	global $table_prefix, $link, $edit_groups, $common_get, $lang;
 	if (!$edit_groups) {
-		$msg = $lang["not_authorized_edit_groups"];
+		$msg = "You are not authorized to edit groups.";
 	} else {
 		if(get_magic_quotes_gpc()) {
             $name = mysql_real_escape_string(stripslashes($_POST["name"]));
@@ -273,7 +273,7 @@ function editGroup($id) {
 function deleteGroup($id) {
 	global $table_prefix, $link, $edit_groups, $common_get, $lang;
 	if (!$edit_groups) {
-		$msg = $lang["not_authorized_edit_groups"];
+		$msg = "You are not authorized to edit groups.";
 	} else {
 		if(get_magic_quotes_gpc()) {
     		$sub_of = mysql_real_escape_string(stripslashes($_POST["sub_of"]));
@@ -297,7 +297,7 @@ function deleteGroup($id) {
 function addLink() {
 	global $table_prefix, $link, $common_get, $lang, $edit_categories;
 	if (!$edit_categories) {
-		$msg = $lang["not_authorized_edit_links"];
+		$msg = "You are not authorized to edit links.";
 	} else {
 		if(get_magic_quotes_gpc()) {
             $company = mysql_real_escape_string(stripslashes($_POST["company"]));
@@ -338,7 +338,7 @@ function addLink() {
 function editLink($id) {
 	global $table_prefix, $link, $common_get, $lang, $edit_categories;
 	if (!$edit_categories) {
-		$msg = $lang["not_authorized_edit_links"];
+		$msg = "You are not authorized to edit links.";
 	} else {
 		if(get_magic_quotes_gpc()) {
             $company = mysql_real_escape_string(stripslashes($_POST["company"]));
@@ -379,7 +379,7 @@ function editLink($id) {
 function deleteLink($id) {
 	global $table_prefix, $link, $common_get, $lang, $edit_categories;
 	if (!$edit_categories) {
-		$msg = $lang["not_authorized_edit_links"];
+		$msg = "You are not authorized to edit links.";
 	} else {
 		$query = mysql_query("UPDATE events set venue_id = 0 where venue_id =".$id);
 		if (!$query) $msg .= Database Error, Dependant Events Not Updated;
@@ -428,7 +428,7 @@ function deleteEvent($id) {
 		if (!$query) $msg .= Database Error, Event Not Deleted;
 		if (!$msg) $msg = Event Deleted;
 	} else {
-		$msg = $lang["not_authorized_events_category"];
+		$msg = "Not Authorized to Edit Events in this Category";
 	}
 	mysql_close($link);
 	header("Location: index.php?msg=".$msg."&".$common_get);
@@ -525,13 +525,13 @@ function approve($event_id) {
 		$sq = "update events set status_id = 4, quick_approve = NULL where event_id = '".$event_id."'";
 		$squery = mysql_query($sq);
 		if ($squery) {
-			$msg = $lang["event_updated"];
+			$msg = "Event Updated";
 			include "include/notify.php";
 			notify_group($event_id);
 		}
 		else $msg = "Database Error: $sq";
 	} else {
-		$msg = $lang["not_authorized_approve"];
+		$msg = "Not Authorized to Approve Event";
 	}
 	header("Location: index.php?msg=".$msg."&".$common_get);
 
@@ -575,27 +575,27 @@ if (!$_SESSION["user_id"]) {
 		addCategory();
 		break;
 		
-	case $lang["edit_category"]; 
+	case "Edit Category"; 
 		editCategory($id);
 		break;
 		
-	case $lang["delete_category"]; 
+	case "Delete Category"; 
 		deleteCategory($id);
 		break;
 		
-	case $lang["add_group"];
+	case "Add Group";
 		addGroup();
 		break;
 		
-	case $lang["edit_group"]; 
+	case "Edit Group"; 
 		editGroup($id);
 		break;
 		
-	case $lang["delete_group"]; 
+	case "Delete Group"; 
 		deleteGroup($id);
 		break;
 	
-	case $lang["add_link"];
+	case "Add Link";
 		addLink();
 		break;
 		
@@ -607,7 +607,7 @@ if (!$_SESSION["user_id"]) {
 		deleteLink($id);
 		break;
 	
-	case $lang["delete_user"]; 
+	case "Delete User"; 
 		deleteUser($id);
 		break;
 		
@@ -616,11 +616,11 @@ if (!$_SESSION["user_id"]) {
 		break;
 	
 		
-	case $lang["add_profile"];
+	case "Add Profile";
 		addProfile();
 		break;
 		
-	case $lang["update modules"];
+	case "Update Modules";
 		updateModules();
 		break;
 	

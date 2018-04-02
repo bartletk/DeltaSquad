@@ -171,7 +171,7 @@ if (!$superview) {
 		include "header.php";
 	echo "<p class=\"warning\">Not Authorized to Edit Events in this Category</p>\n";
 } else {
-	if ($_POST["mode"] == $lang["add_event"]) {
+	if ($_POST["mode"] == "Add Event") {
 		if(get_magic_quotes_gpc()) {
             $title = mysql_real_escape_string(stripslashes($_POST["title"]));
 			$link_id = mysql_real_escape_string(stripslashes($_POST["venue"]));
@@ -198,12 +198,12 @@ if (!$superview) {
 				//echo $q."<br>";
 				$gmod = mysql_result(mysql_query($q),0,0);
 				if ($gmod < 2) {
-					header("Location: ".$path."add_event.php?msg=".$lang["not_authorized_events_group"]."&size=".$_REQUEST["size"]);
+					header("Location: ".$path."add_event.php?msg="."Not Authorized to Add or Edit Events in Group"."&size=".$_REQUEST["size"]);
 				} else {
 					if ($gmod == 2) $propose = "propose";
 				}
 			} else {
-				header("Location: ".$path."add_event.php?msg=".$lang["not_authorized_events_group"]."&size=".$_REQUEST["size"]);
+				header("Location: ".$path."add_event.php?msg="."Not Authorized to Add or Edit Events in Group"."&size=".$_REQUEST["size"]);
 			}
 		}
 		if (!$supercategory) {
@@ -211,7 +211,7 @@ if (!$superview) {
 			
 			$mod = mysql_result(mysql_query($q),0,0);
 			if ($mod < 2) {
-				header("Location: ".$path."add_event.php?msg=".$lang["not_authorized_events_category"]."&size=".$_REQUEST["size"]);
+				header("Location: ".$path."add_event.php?msg="."Not Authorized to Edit Events in this Category"."&size=".$_REQUEST["size"]);
 			}
 		}
 		if ($propose == "propose") $status_id = 2;
@@ -349,7 +349,7 @@ if (!$superview) {
 		<td><input type="text" name="title" id="title" value="<?php echo $_POST["title"]; ?>" size="40"></td>
 	</tr>
 	<tr>
-		<td><?php echo $lang["group"];?>:</td>
+		<td><?php echo "Group";?>:</td>
 		<td>
 			<select name="group" id="group">
 				<?php group_tree(0); ?>
@@ -388,7 +388,7 @@ if (!$superview) {
 <table>
 	<tr>
 		<th><?php echo "Delete?";?></th>
-		<th><?php echo "Date";?></th><th><?php echo $lang["all_day"];?> / <?php echo "TBA";?> / <?php echo $lang["enter_time"];?></th><th><?php echo "Start Time";?></th>
+		<th><?php echo "Date";?></th><th><?php echo $lang["all_day"];?> / <?php echo "TBA";?> / <?php echo "Enter Time";?></th><th><?php echo "Start Time";?></th>
 		<th><?php echo "End Time";?></th>
 		
 	</tr>
@@ -536,7 +536,7 @@ if ($_POST["date_add"]) {
 }
 ?>
 </p>
-<p><input type="submit" name="mode" id="mode" value="<?php echo $lang["add_event"];?>"></p>
+<p><input type="submit" name="mode" id="mode" value="<?php echo "Add Event";?>"></p>
 </form>
 
 <div id="timelayer" STYLE="position:absolute;visibility:hidden;background-color:white;layer-background-color:white;top:0px;z-index: 1;">

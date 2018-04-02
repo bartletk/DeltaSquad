@@ -247,7 +247,7 @@ if (!$superview) {
 		}
 	}
 	
-	if ($_POST["mode"] == $lang["update_event"]) {
+	if ($_POST["mode"] == "Update Event") {
 		if(get_magic_quotes_gpc()) {
             $title = mysql_real_escape_string(stripslashes($_POST["title"]));
 			$link_id = mysql_real_escape_string(stripslashes($_POST["venue"]));
@@ -396,7 +396,7 @@ if (!$superview) {
 				include "include/notify.php";
 				notify_group($_POST["id"]);
 			}
-			$msg .= $lang["event_updated"];
+			$msg .= "Event Updated";
 			if ($_REQUEST["size"] != "small") {
 				mysql_close($link);
 				header("Location: ".$path."index.php?msg=".$msg);
@@ -423,7 +423,7 @@ if ($msg) echo "<p class=\"warning\">".$msg."</p>\n";
 		<td><input type="text" name="title" id="title" value="<?php echo $_POST["title"]; ?>" size="40"></td>
 	</tr>
 	<tr>
-		<td><?php echo $lang["group"];?>:</td>
+		<td><?php echo "Group";?>:</td>
 		<td>
 			<select name="group" id="group">
 				<?php group_tree(0); ?>
@@ -462,7 +462,7 @@ if ($msg) echo "<p class=\"warning\">".$msg."</p>\n";
 <table>
 	<tr>
 		<th><?php echo "Delete?";?></th>
-		<th><?php echo "Date";?></th><th><?php echo $lang["all_day"];?> / <?php echo "TBA";?> / <?php echo $lang["enter_time"];?></th><th><?php echo "Start Time";?></th>
+		<th><?php echo "Date";?></th><th><?php echo $lang["all_day"];?> / <?php echo "TBA";?> / <?php echo "Enter Time";?></th><th><?php echo "Start Time";?></th>
 		<th><?php echo "End Time";?></th>
 		
 	</tr>
@@ -606,7 +606,7 @@ if ($_POST["date_add"]) {
 }
 ?>
 </p>
-<p><input type="submit" name="mode" id="mode" value="<?php echo $lang["update_event"];?>"></p>
+<p><input type="submit" name="mode" id="mode" value="<?php echo "Update Event";?>"></p>
 </form>
 
 <div id="timelayer" STYLE="position:absolute;visibility:hidden;background-color:white;layer-background-color:white;top:0px;z-index: 1;">

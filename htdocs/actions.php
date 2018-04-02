@@ -89,13 +89,13 @@ function approve($code) {
 		$sq = "update events set status = 4, quick_approve = NULL where quick_approve = '".$code."'";
 		$squery = mysql_query($sq);
 		if ($squery) {
-			$msg = $lang["event_updated"];
+			$msg = "Event Updated";
 			$event_id = mysql_result($query,0,0);
 			include "include/notify.php";
 			notify_group($event_id);
 		}
 	} else {
-		$msg = $lang["event_not_found"];
+		$msg = "Event Not Found";
 	}
 	header("Location: index.php?msg=".$msg);
 
@@ -103,7 +103,7 @@ function approve($code) {
 
 
 switch ($_REQUEST["mode"]) {
-case $lang["send_new_password"];
+case "Send New Password";
 	
 	send_new_password();
 	break;

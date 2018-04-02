@@ -139,7 +139,7 @@ if ((is_numeric($_REQUEST["o"]))&& ($_REQUEST["o"]!= 0)) {
 }
 if (!$o) {
 	
-	$msg .= "<p class=\"warning\">".$lang["no_modules_installed"]."</p>\n";
+	$msg .= "<p class=\"warning\">"."No modules installed"."</p>\n";
 } else {
 	$q = "SELECT * from modules where module_id = ".$o;
 	$query = mysql_query($q);

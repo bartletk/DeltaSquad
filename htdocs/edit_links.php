@@ -1,13 +1,13 @@
 <?php
 
 include "include/start.php";
-$page_title = $lang["title_edit_links"];
+$page_title = "Edit Links";
 $id = $_REQUEST["id"];
 $edit=false;
 
 function showLinks() {
 	global $table_prefix, $common_get, $lang;
-	echo "<h3>".$lang["select_links"]."</h3>\n";
+	echo "<h3>"."Select Links"."</h3>\n";
 	$q = "SELECT link_id, state, city, company from links where company != '' order by state, city, company";
 	$query = mysql_query($q);
 	if (!$query) echo "Database Error : ".$q;
@@ -17,13 +17,13 @@ function showLinks() {
 			echo "<li>";
 			if ($row[1]) echo $row[1]." : ";
 			if ($row[2]) echo $row[2]." : ";
-			echo $row[3]."&nbsp;&nbsp;[<a href=\"".$PHP_SELF."?mode=edit_link&id=".$row[0]."&".$common_get."\">".$lang["edit"]."</a>]&nbsp;&nbsp;[<a href=\"".$PHP_SELF."?mode=delete_link&id=".$row[0]."&".$common_get."\">Delete</a>]</li>\n";
+			echo $row[3]."&nbsp;&nbsp;[<a href=\"".$PHP_SELF."?mode=edit_link&id=".$row[0]."&".$common_get."\">"."Edit"."</a>]&nbsp;&nbsp;[<a href=\"".$PHP_SELF."?mode=delete_link&id=".$row[0]."&".$common_get."\">Delete</a>]</li>\n";
 			
 			
 		}
 		echo "</ul>\n";
 	}
-	echo "<p><a href=\"".$PHP_SELF."?mode=edit_link&id=add\">".$lang["add_new_link"]."</a></p>\n";
+	echo "<p><a href=\"".$PHP_SELF."?mode=edit_link&id=add\">"."Add New Link"."</a></p>\n";
 }
 
 
@@ -36,8 +36,8 @@ function deleteLink($id) {
 		$cat = mysql_fetch_array($query);
 		
 ?>
-<h3><?php echo $lang["delete"]; ?>: <?php echo $cat["company"]; ?>?</h3>
-<p class="warning"><?php echo $lang["sure_delete_link"]; ?></p>
+<h3><?php echo "Delete"; ?>: <?php echo $cat["company"]; ?>?</h3>
+<p class="warning"><?php echo "Are you sure you want to delete this link?"; ?></p>
 <form action="admin_actions.php" method="post">
 <?php include "include/hidden_fields.php"; ?>
 <input type="hidden" name="id" id="id" value="<?php echo $cat["link_id"]; ?>">
@@ -54,25 +54,25 @@ function editLink($id) {
 		$query = mysql_query($q);
 		if (!$query) echo "Database Error : ".$q;
 		else $cat = mysql_fetch_array($query);
-		echo "<h3>".$lang["edit"].": ".$cat["name"]."</h3>\n";
+		echo "<h3>"."Edit".": ".$cat["name"]."</h3>\n";
 	} else {
-		echo "<h3>".$lang["add_new_link"]."</h3>\n";
+		echo "<h3>"."Add New Link"."</h3>\n";
 	}
 ?>
 <form action="admin_actions.php" method="post">
 <input type="hidden" name="id" id="id" value="<?php echo $cat["link_id"]; ?>">
 <table>
-	<tr><td><?php echo $lang["company"]; ?>:</td><td><input type="text" name="company" value="<?php echo $cat["company"]; ?>"></td></tr>
-	<tr><td><?php echo $lang["address1"]; ?>:</td><td><input type="text" name="address1" value="<?php echo $cat["address1"]; ?>"></td></tr>
-	<tr><td><?php echo $lang["address2"]; ?>:</td><td><input type="text" name="address2" value="<?php echo $cat["address2"]; ?>"></td></tr>
-	<tr><td><?php echo $lang["city"]; ?>:</td><td><input type="text" name="city" value="<?php echo $cat["city"]; ?>"></td></tr>
-	<tr><td><?php echo $lang["state"]; ?>:</td><td><input type="text" name="state" value="<?php echo $cat["state"]; ?>"></td></tr>
-	<tr><td><?php echo $lang["zip"]; ?>:</td><td><input type="text" name="zip" value="<?php echo $cat["zip"]; ?>"></td></tr>
-	<tr><td><?php echo $lang["phone"]; ?>:</td><td><input type="text" name="phone" value="<?php echo $cat["phone"]; ?>"></td></tr>
-	<tr><td><?php echo $lang["fax"]; ?>:</td><td><input type="text" name="fax" value="<?php echo $cat["fax"]; ?>"></td></tr>
-	<tr><td><?php echo $lang["contact_name"]; ?>:</td><td><input type="text" name="contact" value="<?php echo $cat["contact"]; ?>"></td></tr>
-	<tr><td><?php echo $lang["email"]; ?>:</td><td><input type="text" name="email" value="<?php echo $cat["email"]; ?>"></td></tr>
-	<tr><td><?php echo $lang["web_site"]; ?>:</td><td><input type="text" name="url" value="<?php echo $cat["url"]; ?>"></td></tr>
+	<tr><td><?php echo "Company"; ?>:</td><td><input type="text" name="company" value="<?php echo $cat["company"]; ?>"></td></tr>
+	<tr><td><?php echo "Address1"; ?>:</td><td><input type="text" name="address1" value="<?php echo $cat["address1"]; ?>"></td></tr>
+	<tr><td><?php echo "Address"; ?>:</td><td><input type="text" name="address2" value="<?php echo $cat["address2"]; ?>"></td></tr>
+	<tr><td><?php echo "City"; ?>:</td><td><input type="text" name="city" value="<?php echo $cat["city"]; ?>"></td></tr>
+	<tr><td><?php echo "State"; ?>:</td><td><input type="text" name="state" value="<?php echo $cat["state"]; ?>"></td></tr>
+	<tr><td><?php echo "Zip"; ?>:</td><td><input type="text" name="zip" value="<?php echo $cat["zip"]; ?>"></td></tr>
+	<tr><td><?php echo "Phone"; ?>:</td><td><input type="text" name="phone" value="<?php echo $cat["phone"]; ?>"></td></tr>
+	<tr><td><?php echo "Fax"; ?>:</td><td><input type="text" name="fax" value="<?php echo $cat["fax"]; ?>"></td></tr>
+	<tr><td><?php echo "Contact Name"; ?>:</td><td><input type="text" name="contact" value="<?php echo $cat["contact"]; ?>"></td></tr>
+	<tr><td><?php echo "E-mail"; ?>:</td><td><input type="text" name="email" value="<?php echo $cat["email"]; ?>"></td></tr>
+	<tr><td><?php echo "Web Site"; ?>:</td><td><input type="text" name="url" value="<?php echo $cat["url"]; ?>"></td></tr>
 	<tr>
 		<td colspan="2"><?php echo "Description"; ?>:<br />
 		<?php if ($fck_editor_path) {
@@ -92,7 +92,7 @@ function editLink($id) {
 	</tr>
 
 </table>
-<p><input type="submit" name="mode" value="<?php echo $id == "add" ? $lang["add_link"] : $lang["edit_link"] ; ?>"></p>
+<p><input type="submit" name="mode" value="<?php echo $id == "add" ? "Add Link" : $lang["edit_link"] ; ?>"></p>
 </form>
 <?php
 }

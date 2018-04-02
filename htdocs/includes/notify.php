@@ -27,7 +27,7 @@ $q = "SELECT *, DATE_FORMAT(stamp, '%M %e, %Y - %l:%i %p') as stamp_date from ev
 //echo $q;
 $query = mysql_query($q);
 if (mysql_num_rows($query) < 1) {
-	echo "<p class=\"warning\">".$lang["event_not_found"]."</p>\n";
+	echo "<p class=\"warning\">"."Event Not Found"."</p>\n";
 } else {
 	$row = mysql_fetch_array($query);
 	if (!$query) echo "<p class=\"warning\">Database Error : ".$q."</p>\n";
@@ -46,7 +46,7 @@ if (mysql_num_rows($query) < 1) {
 			$ur = $calendar_url."index.php?c=".$category_id."&w=".$group_id."&y=".$srow[3]."&m=".$srow[4]."&a=".$srow[5];
 		
 			if (($srow[1] == " - 12:00 AM") && ($srow[2] == " - 11:59 PM")) $nicedate[] = $srow[0]." - ".$lang["all_day"]."\n".$ur;
-			elseif (($srow[1] == " - 12:00 AM") && ($srow[2] == " - 12:00 AM")) $nicedate[] = $srow[0]." - ".$lang["tba"]."\n".$ur;
+			elseif (($srow[1] == " - 12:00 AM") && ($srow[2] == " - 12:00 AM")) $nicedate[] = $srow[0]." - "."TBA"."\n".$ur;
 			elseif ($srow[2]) $nicedate[] = $srow[0].$srow[1].$srow[2]."\n".$ur;
 			else $nicedate[] = $srow[0].$srow[1]."\n".$ur;
 			
@@ -59,58 +59,58 @@ $grou = mysql_result(mysql_query("select name from groups where group_id = ".$ro
 $cate = mysql_result(mysql_query("select name from categories where category_id = ".$row["category_id"]),0,0);
 $use = mysql_result(mysql_query("select email from users where user_id = ".$row["user_id"]),0,0);
 $status = $lang["status"][$row["status_id"]];
-$message = $lang["notify_intro"];
+$message = "This is an automated e-mail notifying you of changes to the calendar\n\n";
 $message .= $use." has ".$status.": ".$page_title." on ".$row["stamp_date"]."\n\n";
 $message .= $lang["title"].": ".$page_title."\n";
-$message .= $lang["group"].": ".$grou."\n";
+$message .= "Group".": ".$grou."\n";
 $message .= $lang["category"].": ".$cate."\n";
 if ($venue_id != 1) {
 	$q = "select url, company, description, address1, address2, city, state, zip, phone, fax  FROM links where link_id = ".$row["venue_id"];
 	$lq = mysql_query($q);
 	
-	$message .= $lang["venue"].": ";
+	$message .= "Venue/Location".": ";
 	$li = mysql_fetch_row($lq);
 	$message.= $li[1];
 	if ($li[3]) $message.= ", ".$li[3];
 	if ($li[4]) $message.= ", ".$li[4];
 	if ($li[5]) $message.= ", ".$li[5].", ".$li[6]."  ".$li[7];
-	if ($li[8]) $message.= ", ".$lang["phone"].": ".$li[8];
-	if ($li[9]) $message.= ", ".$lang["fax"].": ".$li[9];
+	if ($li[8]) $message.= ", "."Phone".": ".$li[8];
+	if ($li[9]) $message.= ", "."Fax".": ".$li[9];
 	$message.= "\n";
 } 
 if ($contact_id != 1) {
 	$q = "select url, company, description, address1, address2, city, state, zip, phone, fax  FROM links where link_id = ".$row["contact_id"];
 	$lq = mysql_query($q);
 	
-	$message .= $lang["contact_sponsor"].": ";
+	$message .= "Contact/Sponsor".": ";
 	$li = mysql_fetch_row($lq);
 	$message.= $li[1];
 	if ($li[3]) $message.= ", ".$li[3];
 	if ($li[4]) $message.= ", ".$li[4];
 	if ($li[5]) $message.= ", ".$li[5].", ".$li[6]."  ".$li[7];
-	if ($li[8]) $message.= ", ".$lang["phone"].": ".$li[8];
-	if ($li[9]) $message.= ", ".$lang["fax"].": ".$li[9];
+	if ($li[8]) $message.= ", "."Phone".": ".$li[8];
+	if ($li[9]) $message.= ", "."Fax".": ".$li[9];
 	$message.= "\n";
 }
 if ($nicedate[1]) {
-	$message.= $lang["dates"].":\n";
+	$message.= "Dates".":\n";
 	while (list($k,$v) = each($nicedate)) {
 		$message.= $v."\n\n";
 	}
 	$message.= "\n\n";
 } elseif ($nicedate[0]) {
-	$message.= $lang["date"].": ".$nicedate[0]."\n\n";
+	$message.= "Date".": ".$nicedate[0]."\n\n";
 }
 
 $message.= "Description:\n".$description."\n\n";
-if ($row["status_id"] == 2) $nextmessage .= "\n".$lang["quick_approve"]."\n".$calendar_url."actions.php?mode=q&qa=".$quick_approve."\n\n";
+if ($row["status_id"] == 2) $nextmessage .= "\n"."To approve this event without changes, visit: "."\n".$calendar_url."actions.php?mode=q&qa=".$quick_approve."\n\n";
 $message .= $calendar_title." (".$calendar_url.")\n";
 $q = "select users.email, users_to_groups.moderate, users.add_groups from users, users_to_groups where users_to_groups.group_id = ".$row["group_id"]." and users_to_groups.user_id = users.user_id and users_to_groups.subscribe = 1";
 $gq = mysql_query($q);
 while ($grow = mysql_fetch_row($gq)) {
 	if (($grow[1] == 3)|| ($grow[2] == 1)) $sendmessage = $message.$nextmessage;
 	else $sendmessage = $message;
-	mail($grow[0],$lang["title_event"]." ".$status.": ".$page_title, $sendmessage, "From: \"SuperCali\" <".$use.">");
+	mail($grow[0],"Event"." ".$status.": ".$page_title, $sendmessage, "From: \"SuperCali\" <".$use.">");
 	
 }
 }
