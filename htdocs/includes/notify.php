@@ -59,7 +59,7 @@ $grou = mysql_result(mysql_query("select name from groups where group_id = ".$ro
 $cate = mysql_result(mysql_query("select name from categories where category_id = ".$row["category_id"]),0,0);
 $use = mysql_result(mysql_query("select email from users where user_id = ".$row["user_id"]),0,0);
 $status = $lang["status"][$row["status_id"]];
-$message = $lang["notify_intro"];
+$message = "This is an automated e-mail notifying you of changes to the calendar\n\n";
 $message .= $use." has ".$status.": ".$page_title." on ".$row["stamp_date"]."\n\n";
 $message .= $lang["title"].": ".$page_title."\n";
 $message .= "Group".": ".$grou."\n";
@@ -103,7 +103,7 @@ if ($nicedate[1]) {
 }
 
 $message.= "Description:\n".$description."\n\n";
-if ($row["status_id"] == 2) $nextmessage .= "\n".$lang["quick_approve"]."\n".$calendar_url."actions.php?mode=q&qa=".$quick_approve."\n\n";
+if ($row["status_id"] == 2) $nextmessage .= "\n"."To approve this event without changes, visit: "."\n".$calendar_url."actions.php?mode=q&qa=".$quick_approve."\n\n";
 $message .= $calendar_title." (".$calendar_url.")\n";
 $q = "select users.email, users_to_groups.moderate, users.add_groups from users, users_to_groups where users_to_groups.group_id = ".$row["group_id"]." and users_to_groups.user_id = users.user_id and users_to_groups.subscribe = 1";
 $gq = mysql_query($q);

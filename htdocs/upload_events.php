@@ -187,14 +187,14 @@ group_table(0);
 <input type="hidden" name="MAX_FILE_SIZE" value="5120000">
 <table>
 <tr><td><?php echo "File"; ?>:</td><td><input name="data" type="file" size="30"></td></tr>
-<tr><td><?php echo $lang["fields_separated_by"]; ?>:</td><td><input type="text" name="separator" id="separator" value="," size="2"></td></tr>
-<tr><td><?php echo $lang["default_group"]; ?>:</td><td><select name="group" id="group" size="1">
+<tr><td><?php echo "Fields separated by"; ?>:</td><td><input type="text" name="separator" id="separator" value="," size="2"></td></tr>
+<tr><td><?php echo "Default Group"; ?>:</td><td><select name="group" id="group" size="1">
 <?php group_tree(0,1); ?></select></td></tr>
-<tr><td><?php echo $lang["default_category"]; ?>:</td><td><select name="category" id="category" size="1">
+<tr><td><?php echo "Default Category"; ?>:</td><td><select name="category" id="category" size="1">
 <?php category_tree(0,1); ?></select></td></tr>
-<tr><td><?php echo $lang["default_venue"]; ?>:</td><td><select name="venue" id="venue" size="1"><option value="1"><?php echo "In Main Description"; ?></option>
+<tr><td><?php echo "Default Venue"; ?>:</td><td><select name="venue" id="venue" size="1"><option value="1"><?php echo "In Main Description"; ?></option>
 <?php select_place(1); ?></select></td></tr>
-<tr><td><?php echo $lang["default_contact"]; ?>:</td><td><select name="contact" id="contact" size="1"><option value="1"><?php echo "None"; ?></option>
+<tr><td><?php echo "Default Contact"; ?>:</td><td><select name="contact" id="contact" size="1"><option value="1"><?php echo "None"; ?></option>
 <?php select_place(1); ?></select></td></tr>
 </table>
 <input type="submit" NAME="mode" VALUE="<?php echo "Upload CSV File"; ?>">
@@ -212,8 +212,8 @@ fgetcsv($fp, 10000, $_POST["separator"])  //dump first line headers
 ?>
 <form action="<?php echo $PHP_SELF; ?>" method="post">
 <?php include "include/hidden_fields.php"; ?>
-<h3><?php echo $lang["verify_event_listings_title"]; ?></h3>
-<?php echo $lang["verify_event_listings"]; ?>
+<h3><?php echo "Verify Event Listings"; ?></h3>
+<?php echo '<p>Any date or time errors will be indicated with a red background.</p>'; ?>
 <table>
 <tr><th><?php echo "Title"; ?></th><th><?php echo "Venue/Location"; ?></th><th><?php echo "Contact/Sponsor"; ?></th><th><?php echo "Category"; ?></th><th><?php echo "Group"; ?></th><th><?php echo "Date"; ?></th><th><?php echo "Start Time"; ?></th><th><?php echo "End Time"; ?></th><th><?php echo "Description"; ?></th></tr>
 <?php
@@ -252,7 +252,7 @@ while (($data = fgetcsv($fp, 10000, $_POST["separator"])) !== FALSE) {
 fclose($fp);
 unlink($datafile);
 echo "</table>\n";
-echo "<INPUT TYPE=\"submit\" NAME=\"mode\" VALUE=\"".$lang["add_events"]."\"></form>";
+echo "<INPUT TYPE=\"submit\" NAME=\"mode\" VALUE=\""."Add Events"."\"></form>";
 }
 
 function addEvents() {
@@ -281,12 +281,12 @@ while (list($k,$v) = each($start)) {
 	if (!$supercategory) {
 		$q = "select * from users_to_categories where category_id = ".$category[$k]." and user_id = ".$_SESSION["user_id"];
 		$qu = mysql_query($q);
-		if (mysql_num_rows($qu) < 2) $verify = $lang["no_permision_post_events"];
+		if (mysql_num_rows($qu) < 2) $verify = "You are attempting to add events into categories or groups you do not have permission to post to. ";
 	}
 	if (!$supergroup) {
 		$q = "select * from users_to_groups where group_id = ".$group[$k]." and user_id = ".$_SESSION["user_id"];
 		$qu = mysql_query($q);
-		if (mysql_num_rows($qu) < 2) $verify = $lang["no_permision_post_events"];
+		if (mysql_num_rows($qu) < 2) $verify = "You are attempting to add events into categories or groups you do not have permission to post to. ";
 	}
 	// verify categories
 }
@@ -296,8 +296,8 @@ if ($verify) {
 ?>
 <form action="<?php echo $PHP_SELF; ?>" method="post">
 <?php include "include/hidden_fields.php"; ?>
-<h3><?php echo $lang["verify_event_listings_title"]; ?></h3>
-<p><?php echo $lang["errors_in_listings"]; ?> <?php echo $verify; ?></p>
+<h3><?php echo "Verify Event Listings"; ?></h3>
+<p><?php echo "There were errors in your listings."; ?> <?php echo $verify; ?></p>
 <table>
 <tr><th><?php echo "Title"; ?></th><th><?php echo "Venue/Location"; ?></th><th><?php echo "Contact/Sponsor"; ?></th><th><?php echo "Category"; ?></th><th><?php echo "Group"; ?></th><th><?php echo "Date"; ?></th><th><?php echo "Start Time"; ?></th><th<?php echo "End Time"; ?></th><th><?php echo "Description"; ?></th></tr>
 <?php
@@ -333,7 +333,7 @@ if ($verify) {
 		echo "</tr>\n";
 	}
 	echo "</table>\n";
-	echo "<INPUT TYPE=\"submit\" NAME=\"mode\" VALUE=\"".$lang["add_events"]."\"></form>";
+	echo "<INPUT TYPE=\"submit\" NAME=\"mode\" VALUE=\""."Add Events"."\"></form>";
 } else  {
 	while (list($k,$v) = each($start)) {
 		$dstart = preg_replace("/([0-9]{1,2}:[0-9]{2}):[0-9]{2}([ ]?[a|p]m)/i","\\1\\2",$v);
@@ -378,7 +378,7 @@ if ($verify) {
 			}
 		}
 	}
-	if (!$msg) $msg =  $lang["events_added"];
+	if (!$msg) $msg =  "Events Added";
 	header("Location: upload_events.php?msg=".$msg."&".$common_get);
 }
 
@@ -388,7 +388,7 @@ if ($verify) {
 
 if (!$superpost) {
 	mysql_close($link);
-	$msg =  $lang["no_permision_post_events"];
+	$msg =  "You are attempting to add events into categories or groups you do not have permission to post to. ";
 	header("Location: upload_events.php?msg=".$msg."&".$common_get);
 } else {
 	
@@ -398,7 +398,7 @@ if (!$superpost) {
 			include "header.php";
 		processUpload();
 		break;
-	case $lang["add_events"];
+	case "Add Events";
 		addEvents();
 		break;
 	default; 

@@ -229,7 +229,7 @@ function deleteCategory($id) {
 function addGroup() {
 	global $table_prefix, $link, $edit_groups, $common_get;
 	if (!$edit_groups) {
-		$msg = $lang["not_authorized_edit_groups"];
+		$msg = "You are not authorized to edit groups.";
 	} else {
 		if(get_magic_quotes_gpc()) {
             $name = mysql_real_escape_string(stripslashes($_POST["name"]));
@@ -251,7 +251,7 @@ function addGroup() {
 function editGroup($id) {
 	global $table_prefix, $link, $edit_groups, $common_get, $lang;
 	if (!$edit_groups) {
-		$msg = $lang["not_authorized_edit_groups"];
+		$msg = "You are not authorized to edit groups.";
 	} else {
 		if(get_magic_quotes_gpc()) {
             $name = mysql_real_escape_string(stripslashes($_POST["name"]));
@@ -273,7 +273,7 @@ function editGroup($id) {
 function deleteGroup($id) {
 	global $table_prefix, $link, $edit_groups, $common_get, $lang;
 	if (!$edit_groups) {
-		$msg = $lang["not_authorized_edit_groups"];
+		$msg = "You are not authorized to edit groups.";
 	} else {
 		if(get_magic_quotes_gpc()) {
     		$sub_of = mysql_real_escape_string(stripslashes($_POST["sub_of"]));
@@ -583,15 +583,15 @@ if (!$_SESSION["user_id"]) {
 		deleteCategory($id);
 		break;
 		
-	case $lang["add_group"];
+	case "Add Group";
 		addGroup();
 		break;
 		
-	case $lang["edit_group"]; 
+	case "Edit Group"; 
 		editGroup($id);
 		break;
 		
-	case $lang["delete_group"]; 
+	case "Delete Group"; 
 		deleteGroup($id);
 		break;
 	

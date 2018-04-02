@@ -1,15 +1,15 @@
 <?php
 
 include "include/start.php";
-$page_title = $lang["title_edit_groups"];
+$page_title = "Edit Groups";
 $id = $_REQUEST["id"];
 $edit=false;
 
 function showGroups() {
 	global $lang;
-	echo "<h3>".$lang["select_group"]."</h3>\n";
+	echo "<h3>"."Select Group"."</h3>\n";
 	group_tree_edit(0);
-	echo "<p><a href=\"".$PHP_SELF."?mode=edit_group&id=add\">".$lang["add_new_group"]."</a></p>\n";
+	echo "<p><a href=\"".$PHP_SELF."?mode=edit_group&id=add\">"."Add New Group"."</a></p>\n";
 }
 
 
@@ -64,16 +64,16 @@ function deleteGroup($id) {
 		
 ?>
 <h3>Delete: <?php echo $cat["name"]; ?>?</h3>
-<p class="warning"><?php echo $lang["sure_delete_group"]; ?></p>
+<p class="warning"><?php echo "Are you sure you want to delete this group?"; ?></p>
 <form action="admin_actions.php" method="post">
 <?php include "include/hidden_fields.php"; ?>
 <input type="hidden" name="size" value="<?php echo $_REQUEST["size"]; ?>">
 <input type="hidden" name="id" id="id" value="<?php echo $cat["group_id"]; ?>">
-<p><?php echo $lang["move_existing_events_group"]; ?>:
+<p><?php echo "Move any existing events, subgroups in this group to"; ?>:
 <select name="sub_of" id="sub_of">
 <?php group_tree_find(0,$cat["sub_of"]); ?>
 </select>
-<p><input type="submit" name="mode" value="<?php echo $lang["delete_group"]; ?>"></p>
+<p><input type="submit" name="mode" value="<?php echo "Delete Group"; ?>"></p>
 <?php
 	}
 }
@@ -87,16 +87,16 @@ function editGroup($id) {
 		else $cat = mysql_fetch_array($query);
 		echo "<h3>"."Edit".": ".$cat["name"]."</h3>\n";
 	} else {
-		echo "<h3>".$lang["add_new_group"]."</h3>\n";
+		echo "<h3>"."Add New Group"."</h3>\n";
 	}
 ?>
 <form action="admin_actions.php" method="post" name="cate" id="cate">
 <input type="hidden" name="id" id="id" value="<?php echo $cat["group_id"]; ?>">
 <table>
 	<tr>
-		<td colspan="2"><?php echo $lang["group_name"]; ?>: <input type="text" name="name" value="<?php echo $cat["name"]; ?>" size="20" maxlength="40"></td>
+		<td colspan="2"><?php echo "Group Name"; ?>: <input type="text" name="name" value="<?php echo $cat["name"]; ?>" size="20" maxlength="40"></td>
 	</tr>
-	<tr><td><?php echo $lang["parent_group"]; ?>: 
+	<tr><td><?php echo "Parent Group"; ?>: 
 		<select name="sub_of" id="sub_of">
 		<?php group_tree_find(0,$cat["sub_of"]); ?>
 		</select>
@@ -107,7 +107,7 @@ function editGroup($id) {
 	
 
 </table>
-<p><input type="submit" name="mode" value="<?php echo $id == "add" ? $lang["add_group"] : $lang["edit_group"] ; ?>"></p>
+<p><input type="submit" name="mode" value="<?php echo $id == "add" ? "Add Group" : "Edit Group" ; ?>"></p>
 </form>
 <?php
 }
@@ -123,7 +123,7 @@ if (!$_SESSION["user_id"]) {
 	if ($row[0] == 1) {
 		$edit = true;
 	} else {
-		echo "<p class=\"warning\">".$lang["not_authorized_edit_groups"]."</p>\n";
+		echo "<p class=\"warning\">"."You are not authorized to edit groups."."</p>\n";
 	} 
 }
 if ($edit) {

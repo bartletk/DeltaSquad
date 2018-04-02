@@ -166,7 +166,7 @@ if (($supergroup) && ($supercategory)) {
 			$canview = true;
 			
 		} else {
-			$msg .= "<p>".$lang["no_permission_to_view_category"]."</p>";
+			$msg .= "<p>"."Sorry, you do not have permission to view events in this category"."</p>";
 			$canview = false;
 			
 		}
@@ -179,7 +179,7 @@ if (($supergroup) && ($supercategory)) {
 			$canview = true;
 			
 		} else {
-			$msg .= "<p>".$lang["no_permission_to_view_group"]."</p>";
+			$msg .= "<p>"."Sorry, you do not have permission to view events in this group calendar"."</p>";
 			$canview = false;
 			
 		}
