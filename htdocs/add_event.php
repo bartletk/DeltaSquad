@@ -409,7 +409,7 @@ if (!$superview) {
 <table>
 	<tr>
 		<th><?php echo "Delete?";?></th>
-		<th><?php echo "Date";?></th><th><?php echo $lang["all_day"];?> / <?php echo "TBA";?> / <?php echo $lang["enter_time"];?></th><th><?php echo "Start Time";?></th>
+		<th><?php echo "Date";?></th><th><?php echo "All Day";?> / <?php echo "TBA";?> / <?php echo "Enter Time";?></th><th><?php echo "Start Time";?></th>
 		<th><?php echo "End Time";?></th>
 		
 	</tr>
