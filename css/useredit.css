@@ -1,0 +1,29 @@
+/*nav bar css*/
+.nav-wrapper{
+		  background-color: #660000;
+      height:80px;
+		  }
+		
+.logo{
+
+width:57px;
+   }
+
+   h5{
+   	color:#600 !important; 
+   }
+   h6{
+   	color:#600 !important; 
+   }
+
+   .btn{
+   	background-color:#600 !important;
+
+   }
+   .row1{
+padding: 10px !important;   }
+
+.card1{
+   margin:70px;
+   margin-top:70px;
+} 
