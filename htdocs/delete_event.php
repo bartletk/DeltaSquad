@@ -1,6 +1,6 @@
 <?php
 include "include/start.php";
-$page_title = $lang["title_delete_event"];
+$page_title = "Delete Event";
 $id = $_REQUEST["id"];
 $edit=false;
 
@@ -10,7 +10,7 @@ if (!$_SESSION["user_id"]) {
 	header("Location: ".$path."login.php?return_to=".$PHP_SELF);
 } elseif (!$_REQUEST["id"]) {
 	mysql_close($link);
-	header("Location: ".$path."index.php?msg=".$lang["no_event_selected"]);
+	header("Location: ".$path."index.php?msg="."No Event Selected to Edit");
 } else {
 	$q = "SELECT * from events where event_id =".$_REQUEST["id"];
 	$query = mysql_query($q);
@@ -40,8 +40,8 @@ if (!$_SESSION["user_id"]) {
 		$cat = mysql_fetch_array($query);
 		
 ?>
-<h3><?php echo $lang["delete"]; ?>: <?php echo strip_tags($cat["title"]); ?>?</h3>
-<p class="warning"><?php echo $lang["sure_delete_event"]; ?></p>
+<h3><?php echo "Delete"; ?>: <?php echo strip_tags($cat["title"]); ?>?</h3>
+<p class="warning"><?php echo "Are you sure you want to delete this event?"; ?></p>
 <form action="admin_actions.php" method="post">
 <?php include "include/hidden_fields.php"; ?>
 <input type="hidden" name="id" id="id" value="<?php echo $cat["event_id"]; ?>">

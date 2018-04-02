@@ -33,7 +33,7 @@ if ($row[3] == 1) {
 }
 if ($row[4] == 1) echo "<a href=\"edit_groups.php?".$common_get."\">".$lang["top_nav_groups"]."</a> | ";
 if ($row[0] == 1) {
-	echo "<a href=\"edit_users.php?".$common_get."\">".$lang["top_nav_users"]."</a> | <a href=\"modules.php?".$common_get."\">".$lang["title_modules"]."</a> | ";
+	echo "<a href=\"edit_users.php?".$common_get."\">".$lang["top_nav_users"]."</a> | <a href=\"modules.php?".$common_get."\">"."Modules"."</a> | ";
 } elseif ($_SESSION["user_id"] != 1) {
 	echo "<a href=\"user_profile.php?".$common_get."\">".$lang["top_nav_profile"]."</a> | ";
 }

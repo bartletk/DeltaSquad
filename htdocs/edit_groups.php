@@ -23,7 +23,7 @@ function group_tree_edit($group_id) {
 		if (mysql_num_rows($query) > 0) {
 			echo "<ul>\n";
 			while ($row=mysql_fetch_row($query)) {
-				echo "<li>".$row[1]." [<a href=\"".$PHP_SELF."?mode=edit_group&id=".$row[0]."&".$common_get."\">".$lang["edit"]."</a>]";
+				echo "<li>".$row[1]." [<a href=\"".$PHP_SELF."?mode=edit_group&id=".$row[0]."&".$common_get."\">"."Edit"."</a>]";
 				if ($row[0] != 1) echo "&nbsp;&nbsp;[<a href=\"".$PHP_SELF."?mode=delete_group&id=".$row[0]."&".$common_get."\">Delete</a>]\n";
 				group_tree_edit($row[0]);
 				echo "</li>\n";
@@ -85,7 +85,7 @@ function editGroup($id) {
 		$query = mysql_query($q);
 		if (!$query) echo "Database Error : ".$q;
 		else $cat = mysql_fetch_array($query);
-		echo "<h3>".$lang["edit"].": ".$cat["name"]."</h3>\n";
+		echo "<h3>"."Edit".": ".$cat["name"]."</h3>\n";
 	} else {
 		echo "<h3>".$lang["add_new_group"]."</h3>\n";
 	}
@@ -101,7 +101,7 @@ function editGroup($id) {
 		<?php group_tree_find(0,$cat["sub_of"]); ?>
 		</select>
 		</td>
-		<td><?php echo $lang["sequence"]; ?>: <input type="text" name="sequence" value="<?php echo $cat["sequence"]; ?>" size="2" maxlength="2"></td>
+		<td><?php echo "Sequence"; ?>: <input type="text" name="sequence" value="<?php echo $cat["sequence"]; ?>" size="2" maxlength="2"></td>
 	</tr>
 	
 	

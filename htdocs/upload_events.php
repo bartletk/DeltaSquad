@@ -1,7 +1,7 @@
 <?php
 
 include "include/start.php";
-$page_title = $lang["title_upload_events"];
+$page_title = "Upload Events";
 $id = $_REQUEST["id"];
 $edit=false;
 
@@ -147,11 +147,11 @@ function uploadForm() {
 global $table_prefix, $lang;
 ?>
 <div class="sidebar">
-<h4><?php echo $lang["csv_upload_instructions_title"]; ?></h4>
-<?php echo $lang["csv_upload_instructions"]; ?>
+<h4><?php echo "CSV Upload Instructions"; ?></h4>
+<?php echo '<p>This form provides for uploading of event data in a <strong>Comma Separated Values (CSV)</strong> text file to the SuperCali Calendar.</p><p>Order of columns is; title, venue id, contact id, category id, date, start time, end time and description.  The first row of the CSV file, used for column descriptions, is ignored.</p><p>A sample CSV file can be downloaded <a href="files/supercali_import_template.csv" target="_blank">here</a>.  </p>; ?>
 <table class="grid" style="margin: 10px 0px;">
-<tr><th style="width:auto;"><?php echo $lang["id"]; ?></th><th style="width:auto;"><?php echo $lang["city"]; ?></th><th style="width:auto;"><?php echo $lang["state"]; ?></th><th style="width:auto;"><?php echo $lang["company"]; ?></th></tr>
-<tr><td style="text-align:center">1</td><td colspan="3"><?php echo $lang["default_information_shown_event_description"]; ?></td></tr>
+<tr><th style="width:auto;"><?php echo "ID"; ?></th><th style="width:auto;"><?php echo "City"; ?></th><th style="width:auto;"><?php echo "State"; ?></th><th style="width:auto;"><?php echo "Company"; ?></th></tr>
+<tr><td style="text-align:center">1</td><td colspan="3"><?php echo "Default: Information shown in event description."; ?></td></tr>
 <?php
 	$q = "SELECT link_id, state, city, company from links where state !='' and city != '' order by state, city, company";
 	$query = mysql_query($q);
@@ -163,16 +163,16 @@ global $table_prefix, $lang;
 	}
 ?>
 </table>
-<h4><?php echo $lang["table_categories_title"]; ?></h4>
-<?php echo $lang["table_categories"]; ?>
+<h4><?php echo "Table of Categories"; ?></h4>
+<?php echo '<p>The CSV file also uses id numbers to specify categories.  These correspond to entries in the <strong>Categories</strong> section.  For your calendar, the table of Categories is as follows:</p>'; ?>
 <table class="grid" style="margin: 10px 0px;">
 <tr><th style="width:auto;">ID</th><th style="width:auto;">Category</th></tr>
 <?php
 category_table(0);
 ?>
 </table>
-<h4><?php echo $lang["table_groups_title"]; ?></h4>
-<?php echo $lang["table_groups"]; ?>
+<h4><?php echo "Table of Groups"; ?></h4>
+<?php echo '<p>The CSV file also uses id numbers to specify groups.  These correspond to entries in the <strong>Groups</strong> section.  For your calendar, the table of Groups is as follows:</p>'; ?>
 <table class="grid" style="margin: 10px 0px;">
 <tr><th style="width:auto;">ID</th><th style="width:auto;">Group</th></tr>
 <?php
@@ -181,12 +181,12 @@ group_table(0);
 </table>
 </div>
 <form action="<?php echo $PHP_SELF; ?>" method="post" enctype="multipart/form-data">
-<h3><?php echo $lang["upload_csv_file"]; ?></h3>
+<h3><?php echo "Upload CSV File"; ?></h3>
 
 <?php include "include/hidden_fields.php"; ?>
 <input type="hidden" name="MAX_FILE_SIZE" value="5120000">
 <table>
-<tr><td><?php echo $lang["file"]; ?>:</td><td><input name="data" type="file" size="30"></td></tr>
+<tr><td><?php echo "File"; ?>:</td><td><input name="data" type="file" size="30"></td></tr>
 <tr><td><?php echo $lang["fields_separated_by"]; ?>:</td><td><input type="text" name="separator" id="separator" value="," size="2"></td></tr>
 <tr><td><?php echo $lang["default_group"]; ?>:</td><td><select name="group" id="group" size="1">
 <?php group_tree(0,1); ?></select></td></tr>
@@ -197,7 +197,7 @@ group_table(0);
 <tr><td><?php echo $lang["default_contact"]; ?>:</td><td><select name="contact" id="contact" size="1"><option value="1"><?php echo "None"; ?></option>
 <?php select_place(1); ?></select></td></tr>
 </table>
-<input type="submit" NAME="mode" VALUE="<?php echo $lang["upload_csv_file"]; ?>">
+<input type="submit" NAME="mode" VALUE="<?php echo "Upload CSV File"; ?>">
 </form>
 <div style="clear:right"></div>
 <?php
@@ -215,7 +215,7 @@ fgetcsv($fp, 10000, $_POST["separator"])  //dump first line headers
 <h3><?php echo $lang["verify_event_listings_title"]; ?></h3>
 <?php echo $lang["verify_event_listings"]; ?>
 <table>
-<tr><th><?php echo "Title"; ?></th><th><?php echo "Venue/Location"; ?></th><th><?php echo "Contact/Sponsor"; ?></th><th><?php echo "Category"; ?></th><th><?php echo $lang["group"]; ?></th><th><?php echo "Date"; ?></th><th><?php echo "Start Time"; ?></th><th><?php echo "End Time"; ?></th><th><?php echo "Description"; ?></th></tr>
+<tr><th><?php echo "Title"; ?></th><th><?php echo "Venue/Location"; ?></th><th><?php echo "Contact/Sponsor"; ?></th><th><?php echo "Category"; ?></th><th><?php echo "Group"; ?></th><th><?php echo "Date"; ?></th><th><?php echo "Start Time"; ?></th><th><?php echo "End Time"; ?></th><th><?php echo "Description"; ?></th></tr>
 <?php
 
 
@@ -299,7 +299,7 @@ if ($verify) {
 <h3><?php echo $lang["verify_event_listings_title"]; ?></h3>
 <p><?php echo $lang["errors_in_listings"]; ?> <?php echo $verify; ?></p>
 <table>
-<tr><th><?php echo "Title"; ?></th><th><?php echo "Venue/Location"; ?></th><th><?php echo "Contact/Sponsor"; ?></th><th><?php echo "Category"; ?></th><th><?php echo $lang["group"]; ?></th><th><?php echo "Date"; ?></th><th><?php echo "Start Time"; ?></th><th<?php echo "End Time"; ?></th><th><?php echo "Description"; ?></th></tr>
+<tr><th><?php echo "Title"; ?></th><th><?php echo "Venue/Location"; ?></th><th><?php echo "Contact/Sponsor"; ?></th><th><?php echo "Category"; ?></th><th><?php echo "Group"; ?></th><th><?php echo "Date"; ?></th><th><?php echo "Start Time"; ?></th><th<?php echo "End Time"; ?></th><th><?php echo "Description"; ?></th></tr>
 <?php
 	while (list($k,$v) = each($start)) {
 		$dstart = preg_replace("/([0-9]{1,2}:[0-9]{2}):[0-9]{2}([ ]?[a|p]m)/i","\\1\\2",$v);
@@ -394,7 +394,7 @@ if (!$superpost) {
 	
 	
 	switch ($_REQUEST["mode"]) {
-	case $lang["upload_csv_file"];
+	case "Upload CSV File";
 			include "header.php";
 		processUpload();
 		break;

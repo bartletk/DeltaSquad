@@ -1,16 +1,16 @@
 <?php
 
 include "include/start.php";
-$page_title = $lang["title_event"];
+$page_title = "Event";
 $id = mysql_real_escape_string($_REQUEST["id"]);
 
 if ((!$id) or (!ctype_digit($id))) {
-	echo "<p class=\"warning\">".$lang["no_event_selected"]."</p>\n";
+	echo "<p class=\"warning\">"."No Event Selected to Edit"."</p>\n";
 } else {
 	$q = "SELECT * from events where event_id =".$id;
 	$query = mysql_query($q);
 	if (mysql_num_rows($query) < 1) {
-		echo "<p class=\"warning\">".$lang["event_not_found"]."</p>\n";
+		echo "<p class=\"warning\">"."Event Not Found"."</p>\n";
 	} else {
 		$row = mysql_fetch_array($query);
 		if (!$query) echo "<p class=\"warning\">Database Error : ".$q."</p>\n";
