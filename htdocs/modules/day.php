@@ -1,19 +1,7 @@
 <?php
-/*
-<?xml version="1.0" encoding="utf-8"?>
-<module>
-        <name>Day View</name>
-        <author>Dana C. Hutchins</author>
-        <url>http://supercali.inforest.com/</url>
-        <version>1.0.0</version>
-        <link_name>Day</link_name>
-        <description>Shows a day on one screen.</description>
-        <image></image>
-		<install_script></install_script>     
-</module>
-*/
+
 include "modules/day_week_functions.php";
-	include "header.php";
+	include "top_header.php";
 ?>
 
 <?php
@@ -30,5 +18,5 @@ showDay($y,$m,$a,"Events");
 echo "</td>";
 echo "</tr></table></td></tr></table>";
 echo "</div>\n";
-include "includes/footer.php";
+
 ?>

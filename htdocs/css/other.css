@@ -1,0 +1,13 @@
+select { 
+	display: block !important;
+     position: relative !important; 
+    width: 100% !important;  
+     height: 100% !important; 
+    opacity: 100 !important;
+	pointer-events:auto !important;
+	
+	}
+
+.noshow {
+	display:none;
+}

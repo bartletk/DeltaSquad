@@ -1,5 +1,5 @@
 <?php
-define("BASEURL", "http://18.219.59.60/");
+define("BASEURL", "http://18.219.124.71/");
 
 /**
  * Database Constants - these constants are required
@@ -9,7 +9,7 @@ define("BASEURL", "http://18.219.59.60/");
  */
 define("DB_SERVER", "localhost");
 define("DB_USER", "root");
-define("DB_PASS", "wp8dqoJzgg9x");
+define("DB_PASS", "gcLIvSDlyxV5");
 define("DB_NAME", "nursing");
 
 /**
@@ -17,12 +17,14 @@ define("DB_NAME", "nursing");
  * hold the names of all the database tables used
  * in the script.
  */
-define("TBL_USERS", "users");
+define("TBL_USERS", "user");
 define("TBL_MAIL", "mail");
 define("TBL_COURSE", "course");
-define("TBL_ROOMS", "rooms");
-define("TBL_TYPES", "types");
-
+define("TBL_ROOMS", "room");
+define("TBL_EVENTS", "event");
+define("TBL_CRN", "section");
+define("TBL_DEADLINES", "deadline");
+define("TBL_SCHED", "personal_schedule");
 /**
  * Special Names and Level Constants - the admin
  * page will only be accessible to the user with
@@ -112,7 +114,7 @@ $week_titles_ss[] = "S";
 $start_category_id = 1;
 
 // Language File
-$language = "lang/en_us.php";
+$language = "lang/en_us.php"; // I H8 U
 
 // Day/week view start hour
 $day_week_start_hour = 8;

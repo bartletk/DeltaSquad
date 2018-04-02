@@ -5,7 +5,8 @@ table.grid, table.grid th, table.grid td {
 	
 }
 table.grid {
-	margin: 20px 0px;
+	margin: 20px auto;
+	     box-shadow: 10px 10px 5px grey;
 }
 
 table.grid th, table.grid td {
@@ -13,28 +14,21 @@ table.grid th, table.grid td {
 }
 
 table.grid th {
-	background: #ffe4b5;
+	background: #DCDCDC	;
 }
 
 
 
 table.grid th.cal_top {
-	background: #B0E0E6;
-	font-size: 16pt;
+	background: #600;
+	font-size: 25pt;
 }
 
 table.grid td {
-	background: #FFF;
+	background: #F0F0F0	;
 }
 
 
-
-BODY {
-	font: 12px Arial, Helvetica, sans-serif;
-	background-color : #F0FFF0;
-	color: #000;
-	margin: 0px;
-}
 
 A {
 	color: #369;
@@ -61,7 +55,7 @@ A {
 	text-decoration: none;
 }
 .nav A, .cal_top A {
-	color: #c60;
+	color: white;
 }
 .nav A {
 	padding: 2px;
@@ -178,6 +172,7 @@ form.top_form {
 }
 td, th {
 	vertical-align: top;
+	color:#600;
 }
 .sidebar {
 	width: 300px;
@@ -287,7 +282,7 @@ div.cal_top {
 	background: #ffc;
 }
 .day_of_month a, .day_of_month_s a, .week a {
-	color: #999;
+	color: #A39058;
 	text-decoration: none;
 }
 th.cal_top_s a {
@@ -333,4 +328,16 @@ td.single_day {
 }
 .code {
 	font-family: Courier New;
+}
+
+.cal_top{
+	text-align:center !important;
+	padding:50px !important;
+	color:white !important;
+	font-family: 'Orbitron', sans-serif !important;
+	text-transform: uppercase;
+}
+
+table{
+	width:90% !important;
 }

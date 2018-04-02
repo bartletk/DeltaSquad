@@ -1,19 +1,4 @@
 <?php
-/*
-<?xml version="1.0" encoding="utf-8"?>
-<module>
-        <name>Year View</name>
-        <author>Chris McDonald</author>
-        <url>http://supercali.inforest.com/</url>
-        <version>1.0.0</version>
-        <link_name>Year</link_name>
-        <description>Shows an entire year on one screen.  Each event is shown as a 10x10 pixel box.  Mouse over to see title.</description>
-        <image></image>
-		<install_script></install_script>     
-</module>
-
-Year View - Created by Chris McDonald
-*/
 
 function showGrid($date) {
 	global $title, $niceday, $start_time, $end_time, $venue, $city, $state, $cat, $color, $background, $ed, $usr, $o, $c, $m, $a, $y, $w, $lang;
@@ -131,9 +116,9 @@ function showYear ($calyear) {
 		echo "</table>";
 	
 }
-	include "header.php";
+	include "top_header.php";
 grab($y."-01-01",$y."-12-31",$c);
 showYear($y);
 
-include "includes/footer.php";
+
 ?>
