@@ -42,7 +42,7 @@ if ((!$id) or (!ctype_digit($id))) {
 		else {
 			while ($srow = mysql_fetch_row($squery)) {
 				if (($srow[1] == " - 12:00 AM") && ($srow[2] == " - 11:59 PM")) $nicedate[] = $srow[0]." - ".$lang["all_day"];
-				elseif (($srow[1] == " - 12:00 AM") && ($srow[2] == " - 12:00 AM")) $nicedate[] = $srow[0]." - ".$lang["tba"];
+				elseif (($srow[1] == " - 12:00 AM") && ($srow[2] == " - 12:00 AM")) $nicedate[] = $srow[0]." - "."TBA";
 				elseif ($srow[2]) $nicedate[] = $srow[0].$srow[1].$srow[2];
 				else $nicedate[] = $srow[0].$srow[1];
 				
@@ -60,14 +60,14 @@ if ($_REQUEST["size"] == "small") $javascript = "<base target=\"_blank\">\n";
 ?>
 
 <?php
-echo $lang["category"].": \n";
+echo "Category".": \n";
 $cate = mysql_result(mysql_query("select name from categories where category_id = ".$category_id),0,0);
 echo "<strong>".$cate."</strong><br />\n";
 if ($venue_id > 1) {
 	$q = "select url, company, description, address1, address2, city, state, zip, phone, fax  FROM links where link_id = ".$venue_id;
 	$lq = mysql_query($q);
 	
-	echo $lang["venue"].": \n";
+	echo "Venue/Location".": \n";
 	$li = mysql_fetch_row($lq);
 	if ($li[0]) { 
 		echo "<strong><a href=\"".$li[0]."\">".$li[1]."</a></strong>";
@@ -85,7 +85,7 @@ if ($contact_id > 1) {
 	$q = "select url, company, description, address1, address2, city, state, zip, phone, fax  FROM links where link_id = ".$contact_id;
 	$lq = mysql_query($q);
 	
-	echo $lang["contact_sponsor"].": \n";
+	echo "Contact/Sponsor".": \n";
 	$li = mysql_fetch_row($lq);
 	if ($li[0]) { 
 		echo "<strong><a href=\"".$li[0]."\">".$li[1]."</a></strong>";
@@ -100,13 +100,13 @@ if ($contact_id > 1) {
 	echo "<br />\n";
 }
 if ($nicedate[1]) {
-	echo $lang["dates"].":<ul>\n";
+	echo "Dates".":<ul>\n";
 	while (list($k,$v) = each($nicedate)) {
 		echo "<strong><li>".$v."</li></strong>\n";
 	}
 	echo "</ul>\n";
 } elseif ($nicedate[0]) {
-	echo $lang["date"].": <strong>".$nicedate[0]."</strong><br />";
+	echo "Date".": <strong>".$nicedate[0]."</strong><br />";
 }
 
 echo "<p>".$description."</p>\n";

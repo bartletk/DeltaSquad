@@ -45,7 +45,7 @@ function category_tree_edit($category_id) {
 			echo "<ul>\n";
 			while ($row=mysql_fetch_row($query)) {
 				echo "<li>".$row[1]." [<a href=\"".$PHP_SELF."?mode=edit_category&id=".$row[0]."&".$common_get."\">".$lang["edit"]."</a>]";
-				if ($row[0] != 1) echo "&nbsp;&nbsp;[<a href=\"".$PHP_SELF."?mode=delete_category&id=".$row[0]."&".$common_get."\">".$lang["delete"]."</a>]\n";
+				if ($row[0] != 1) echo "&nbsp;&nbsp;[<a href=\"".$PHP_SELF."?mode=delete_category&id=".$row[0]."&".$common_get."\">Delete</a>]\n";
 				category_tree_edit($row[0]);
 				echo "</li>\n";
 			}
@@ -129,7 +129,7 @@ function editCategory($id) {
 		<td><?php echo $lang["background"]; ?>: <input type="text" name="background" value="<?php echo $cat["background"]; ?>" size="10" maxlength="255" onChange="this.form.name.style.background=this.value;">  <A HREF="#" onClick="cp.select(cate.background,'pick2');return false;" NAME="pick2" ID="pick2">Pick</A></td>
 	</tr>
 	<tr>
-		<td colspan="2"><?php echo $lang["description"]; ?>:<br />
+		<td colspan="2"><?php echo "Description"; ?>:<br />
 <?php if ($fck_editor_path) {
 	include($fck_editor_path."fckeditor.php") ;
 	$oFCKeditor = new FCKeditor('description') ;

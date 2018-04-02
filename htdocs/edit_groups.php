@@ -45,7 +45,7 @@ function group_tree_edit($group_id) {
 			echo "<ul>\n";
 			while ($row=mysql_fetch_row($query)) {
 				echo "<li>".$row[1]." [<a href=\"".$PHP_SELF."?mode=edit_group&id=".$row[0]."&".$common_get."\">".$lang["edit"]."</a>]";
-				if ($row[0] != 1) echo "&nbsp;&nbsp;[<a href=\"".$PHP_SELF."?mode=delete_group&id=".$row[0]."&".$common_get."\">".$lang["delete"]."</a>]\n";
+				if ($row[0] != 1) echo "&nbsp;&nbsp;[<a href=\"".$PHP_SELF."?mode=delete_group&id=".$row[0]."&".$common_get."\">Delete</a>]\n";
 				group_tree_edit($row[0]);
 				echo "</li>\n";
 			}
