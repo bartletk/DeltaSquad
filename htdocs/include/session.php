@@ -15,6 +15,7 @@
 		var $referrer;     //Last recorded site page viewed
 		var $id;
 		var $CWID;
+		var $studentCourses;
 		/**
 			* Note: referrer should really only be considered the actual
 			* page referrer in process.php, any other time it may be
@@ -456,7 +457,7 @@
 			$this->userlevel == ADMIN_LEVEL);
 		}
 		
-				/**
+		/**
 			* isStudent - Returns true if currently logged in user is
 			* a student, false otherwise.
 		*/
@@ -465,7 +466,7 @@
 		}
 		
 		
-						/**
+		/**
 			* getCWID - gets CWID of logged in user
 		*/
 		function getCWID(){
@@ -514,7 +515,7 @@
 		function addEventA($title, $type, $course, $seats, $notes, $date, $starttime, $endtime){
 			header("Location: /addevent.php?t=$title&ty=$type&c=$course&s=$seats&n=$notes&d=$date&st=$starttime&et=$endtime");  
 		}
-				function addEventAA($title, $type, $course, $seats, $notes, $date, $starttime, $endtime, $repeat, $repeatm, $repeatt, $repeatw, $repeatth, $repeatf, $re){
+		function addEventAA($title, $type, $course, $seats, $notes, $date, $starttime, $endtime, $repeat, $repeatm, $repeatt, $repeatw, $repeatth, $repeatf, $re){
 			header("Location: /addevent.php?t=$title&ty=$type&c=$course&s=$seats&n=$notes&d=$date&st=$starttime&et=$endtime&repeat=$repeat&repeatm=$repeatm&repeatt=$repeatt&repeatw=$repeatw&repeatth=$repeatth&repeatf=$repeatf&re=$re");  
 		}
 		function addEventB($title, $type, $course, $crn, $seats, $notes, $date, $starttime, $endtime){
@@ -523,7 +524,7 @@
 			}
 			header("Location: /addevent.php?t=$title&ty=$type&c=$course&crn=$crns&s=$seats&n=$notes&d=$date&st=$starttime&et=$endtime");  
 		}
-				function addEventBA($title, $type, $course, $crn, $seats, $notes, $date, $starttime, $endtime, $repeat, $repeatm, $repeatt, $repeatw, $repeatth, $repeatf, $re){
+		function addEventBA($title, $type, $course, $crn, $seats, $notes, $date, $starttime, $endtime, $repeat, $repeatm, $repeatt, $repeatw, $repeatth, $repeatf, $re){
 			foreach ($crn as $c){
 				$crns = $crns . "+" . $c;			
 			}
@@ -545,25 +546,40 @@
 			$result = $database->addEvent2A($title, $type, $course, $crn, $seats, $notes, $dateStart, $dateEnd, $room, $CWID, $series, $time, $repeat, $repeatm, $repeatt, $repeatw, $repeatth, $repeatf, $re);
 			if ($result){return TRUE;}			
 		}
-		function chooseSemester($semester){
-			header("Location: /class_select.php?sem=$semester");  
+		function chooseSemester($CWID, $semester){
+			header("Location: /class_select.php?cwid=$CWID&sem=$semester");  
 		}
 		
-		function chooseCourse($course, $sem){
+		function chooseCourse($CWID, $course, $sem){
 			$courses = "";
 			foreach ($course as $c){
 				$courses = $courses . "+" . $c;		
 			}
-			header("Location: /class_select.php?sem=$sem&c=$courses");  
+			header("Location: /class_select.php?cwid=$CWID&sem=$sem&c=$courses");  
 		}
-		
 		function chooseCrn($crn){
-			
+					
 			foreach ($crn as $c){
 				$crns = $crns . "+" . $c;			
 			}
 			header("Location: /index.php?crn=$crns");  
 		}
+		
+		function studentAdd($CWID, $crn){
+			global $database, $form;
+			$database->studentAdd($CWID, $crn);
+			studentLogin($CWID);
+		}
+		function studentLogin($CWID){
+		global $database, $form;
+			if(!$database->studentCourses($CWID)){
+				header("Location: /class_select.php?cwid=$CWID");
+				} else {
+				setcookie("studentClasses", $this->studentCourses, time()+COOKIE_EXPIRE, COOKIE_PATH);
+				header("Location: /index.php");
+			}
+		}
+		
 	};
 	
 	

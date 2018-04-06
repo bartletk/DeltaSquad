@@ -1,5 +1,5 @@
 <?php
-	include("header.php");
+	include("top_header.php");
 $page = "mail.php";
 	
 	if(!$session->logged_in){
@@ -124,7 +124,7 @@ $page = "mail.php";
 					<tr>
 						<input type="hidden" name="mail_id" value="<?php echo $mail['mail_id']; ?>" />
 						<td align="center"><input type="submit" name="mailAction" value='View' /></td>
-						<td align="center"><input type="submit" name="mailAction" value="Delete" /></td>
+						<td align="center"><input type="submit" name="mailAction" value='Delete' /></td>
 						<td><?php echo $mail['status']; ?></td>
 						<td><?php echo $mail['UserFrom']; ?></td>
 						<td><?php echo $mail['Subject']; ?></td>
@@ -145,7 +145,7 @@ $page = "mail.php";
 		
 		$mail_id = $_POST['mail_id'];
 		$user = $session->username;
-		$q = sprintf("SELECT * FROM mail WHERE UserTo = '%s' AND mail_id = '%s'",
+		$q = sprintf("SELECT * FROM mail WHERE UserTo = '%s' AND mail_id = '%s' AND NOT deleted = 1",
 		      mysql_real_escape_string($user),
 		      mysql_real_escape_string($mail_id));
 		$result = $database->query($q) or die (mysql_error());
@@ -184,6 +184,7 @@ $page = "mail.php";
 		}
 	}
 
+	include "footer.php";
 ?>
 
 </div>

@@ -117,7 +117,7 @@ $start_category_id = 1;
 $language = "lang/en_us.php"; // I H8 U
 
 // Day/week view start hour
-$day_week_start_hour = 8;
+$day_week_start_hour = 0;
 
 // display sub-category events along with events in selected category
 $include_child_categories = true;

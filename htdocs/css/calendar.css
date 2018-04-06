@@ -5,7 +5,8 @@ table.grid, table.grid th, table.grid td {
 	
 }
 table.grid {
-	margin: 20px 0px;
+	margin: 20px auto;
+	     box-shadow: 10px 10px 5px grey;
 }
 
 table.grid th, table.grid td {
@@ -13,18 +14,18 @@ table.grid th, table.grid td {
 }
 
 table.grid th {
-	background: #ffe4b5;
+	background: #DCDCDC	;
 }
 
 
 
 table.grid th.cal_top {
-	background: #B0E0E6;
-	font-size: 16pt;
+	background: #600;
+	font-size: 25pt;
 }
 
 table.grid td {
-	background: #FFF;
+	background: #F0F0F0	;
 }
 
 
@@ -54,7 +55,7 @@ A {
 	text-decoration: none;
 }
 .nav A, .cal_top A {
-	color: #c60;
+	color: white;
 }
 .nav A {
 	padding: 2px;
@@ -171,6 +172,7 @@ form.top_form {
 }
 td, th {
 	vertical-align: top;
+	color:#600;
 }
 .sidebar {
 	width: 300px;
@@ -207,7 +209,7 @@ table.grid td.holder {
 }
 /* Added v0.4.1 */
 .cell {
-	height:29px;
+	height:28px;
 	border-bottom: 1px dashed #ccc;
 	color: #999;
 }
@@ -280,7 +282,7 @@ div.cal_top {
 	background: #ffc;
 }
 .day_of_month a, .day_of_month_s a, .week a {
-	color: #999;
+	color: #A39058;
 	text-decoration: none;
 }
 th.cal_top_s a {
@@ -288,7 +290,6 @@ th.cal_top_s a {
 	text-decoration: underline;
 }
 table.day {
-	width: 100%;
 	border-collapse: collapse;
 	border: 0px;
 	padding: 0px;
@@ -326,4 +327,12 @@ td.single_day {
 }
 .code {
 	font-family: Courier New;
+}
+
+.cal_top{
+	text-align:center !important;
+	padding:50px !important;
+	color:white !important;
+	font-family: 'Orbitron', sans-serif !important;
+	text-transform: uppercase;
 }

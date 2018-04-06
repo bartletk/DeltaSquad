@@ -1,0 +1,58 @@
+/*nav bar css*/
+.nav-wrapper{
+		  background-color: #660000;
+      height:80px;
+		  }
+		
+.logo{
+
+width:57px;
+   }
+
+   h5{
+   	color:white !important; 
+   	background-color:#A39058 !important ;
+   }
+
+
+   	hr { 
+  border : 0;
+  height: 1px; 
+  background-image: linear-gradient(to right, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0)); 
+}
+
+
+.card1{
+   margin:40px;
+   margin-top:40px;
+} 
+
+.btn, .picker__date-display {
+  background-color: #600 !important;
+}
+
+
+
+.picker__close, .picker__today, .clockpicker-tick{
+  color:#600 !important;
+}
+
+.drop{
+	padding:20px;
+}
+
+hr.style13 {
+	height: 10px;
+	border: 0;
+	box-shadow: 0 10px 10px -10px #8c8b8b inset;
+}
+
+.tabs .tab a  {
+	color:#600 !important;
+
+}
+
+.heading{
+	color:white !important; 
+   	background-color:#A39058 !important ;
+}

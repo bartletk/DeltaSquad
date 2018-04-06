@@ -297,7 +297,7 @@
 					}
 				} 
 				if ($repeatw == 1){
-				
+					
 					$dateStartA = clone $dateStartOriginal;
 					$dateEndA = clone $dateEndOriginal;
 					$dateStartA->modify('next wednesday');
@@ -353,7 +353,23 @@
 			return TRUE;
 			
 		}
-		
+		function studentCourses($CWID){
+			
+			$q = sprintf("SELECT * FROM ".TBL_SCHED."WHERE CWID=$CWID");
+			$result = mysql_query($q, $this->connection);
+			if(!$result || (mysql_num_rows($result) < 1)){
+				return FALSE;
+				} else {
+				$dbarray = mysql_fetch_array($result);
+				return $dbarray;
+			}
+		}
+		function studentAdd($CWID, $crn){
+			foreach ($crn as $c){
+				$q = sprintf("INSERT INTO 'personal_schedule' ('CWID', 'crn') VALUES ($CWID, $c);");
+				$result = mysql_query($q, $this->connection);
+			}
+		}
 		
 		
 		

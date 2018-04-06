@@ -7,7 +7,8 @@
         <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/css/materialize.min.css">
 		<link rel="stylesheet" type="text/css" href="css/loginAndRegister.css">
-        
+          <link href="https://fonts.googleapis.com/css?family=Lobster" rel="stylesheet">
+
 	</head>
 	<body>
 	</body>
@@ -33,6 +34,8 @@
 
 <!-- Main body begins-->
 <main>
+	
+</div>
 <div class="container white z-depth-2">
 	<div class="tablist" >
 	<ul class="tabs teal">

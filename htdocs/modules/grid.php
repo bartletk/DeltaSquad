@@ -16,8 +16,8 @@
 					} else {
 					// EVENTS
 					while($row = mysql_fetch_assoc($result)) {
-						echo $row['title'];
-						echo "<br> ".substr($row[dateStart], 10, -3)." -".substr($row[dateEnd], 10, -3)."<br> Room:";
+						echo "<a href='/showevent.php?e=".$row['event_id']."&s=".$row['series']."'>".$row['title']."</a>";
+						echo "<br> ".date('g:i a',strtotime($row[dateStart]))."-".date('g:i a',strtotime($row[dateEnd]))."<br> Room:";
 						echo $row['room_number'];
 						echo "<br><br>";
 					}
@@ -34,8 +34,8 @@
 					} else {
 					// EVENTS
 					while($row = mysql_fetch_assoc($result)) {
-						echo $row['title'];
-						echo "<br> ".substr($row[date_start], 10, -3)." -".substr($row[date_end], 10, -3)."<br> Room:";
+						echo "<a href='/showevent.php?e=".$row['event_id']."&s=".$row['series']."'>".$row['title']."</a>";
+						echo "<br> ".date('g:i a',strtotime($row[dateStart]))."-".date('g:i a',strtotime($row[dateEnd]))."<br> Room:";
 						echo $row['room_number'];
 						echo "<br><br>";
 					}
@@ -55,8 +55,8 @@
 				} else {
 				// EVENTS
 				while($row = mysql_fetch_assoc($result)) {
-					echo $row['title'];
-					echo "<br> ".substr($row[dateStart], 10, -3)." -".substr($row[dateEnd], 10, -3)."<br> Room:";
+					echo "<a href='/showevent.php?e=".$row['event_id']."&s=".$row['series']."'>".$row['title']."</a>";
+					echo "<br> ".date('g:i a',strtotime($row[dateStart]))."-".date('g:i a',strtotime($row[dateEnd]))."<br> Room:";
 					echo $row['room_number'];
 					echo "<br><br>";
 				}
@@ -73,8 +73,8 @@
 				} else {
 				// EVENTS
 				while($row = mysql_fetch_assoc($result)) {
-					echo $row['title'];
-					echo "<br> ".substr($row[dateStart], 10, -3)." -".substr($row[dateEnd], 10, -3)."<br> Room:";
+					echo "<a href='/showevent.php?e=".$row['event_id']."&s=".$row['series']."'>".$row['title']."</a>";
+					echo "<br> ".date('g:i a',strtotime($row[dateStart]))."-".date('g:i a',strtotime($row[dateEnd]))."<br> Room:";
 					echo $row['room_number'];
 					echo "<br><br>";
 				}
@@ -98,8 +98,13 @@
 		/* build table */
 		echo '<table width="100%" class="grid""><tr>'; 
 		echo '<th colspan="7" class="cal_top"><a href="',$PHP_SELF,'?o=',$o,'&w=',$w,'&c=',$c,'&m=',$prev["month"]["m"],'&a=1&y=',$prev["month"]["y"],'">&lt;</a> ',date('F', mktime(0,0,0,$calmonth,1,$calyear)),'&nbsp;',date('Y', mktime(0,0,0,$calmonth,1,$calyear)),' <a href="',$PHP_SELF,'?o=',$o,'&w=',$w,'&c=',$c,'&m=',$next["month"]["m"],'&a=1&y=',$next["month"]["y"],'">&gt;</a></th></tr><tr>';
-		for ( $x = 0; $x < 7; $x++ )
+		for ( $x = 0; $x < 7; $x++ ){
+		if ($week_titles[$x] == "Sunday" || $week_titles[$x] == "Saturday"){
+		echo '<th class="noshow">', $week_titles[ $x ], '</th>';
+		} else {
 		echo '<th>', $week_titles[ $x ], '</th>';
+		}
+		}
 		
 		/* ensure that a number of blanks are put in so that the first day of the month
 		lines up with the proper day of the week */
@@ -112,19 +117,34 @@
 				$offyear = date( "Y", mktime( 0, 0, 0, $calmonth, $calday-$off, $calyear ) );
 				$offmonth = date( "m", mktime( 0, 0, 0, $calmonth, $calday-$off, $calyear ) );
 				$offday = date( "d", mktime( 0, 0, 0, $calmonth, $calday-$off, $calyear ) );
-				echo '<td class="day"><div class="week"><a href="index.php?o=',$le,'&w=',$w,'&c=',$c,'&m=',$offmonth,'&a=',$offday,'&y=',$offyear,'">week</a></div></td>';
+				echo '<td class="day noshow"><div class="week"><a href="index.php?o=',$le,'&w=',$w,'&c=',$c,'&m=',$offmonth,'&a=',$offday,'&y=',$offyear,'">week</a></div></td>';
+				} else {
+				if ($offset == 6 || $offset == 0){
+				echo '<td class="day noshow">&nbsp;</td>';
 				} else {
 				echo '<td class="day">&nbsp;</td>';
-			}
+				}
+				}
 		}
 		/* start entering in the information */
 		for ( $d = 1; $d <= $totaldays; $d++ )
 		{
 			if (($d == date('j')) && ($calmonth == date('m')) && ($calyear == date('Y'))) {
-				echo '<td class="day" id="today"><div class="day_of_month"><a href="index.php?o=',$la,'&w=',$w,'&c=',$c,'&m=',$calmonth,'&a=',$d,'&y=',$calyear,'">', $d, '</a></div>';
+				
+				if ($offset == 0 || $offset == 6){
+				echo '<td class="day noshow" id="today"><div class="day_of_month"><a href="index.php?o=',$la,'&w=',$w,'&c=',$c,'&m=',$calmonth,'&a=',$d,'&y=',$calyear,'">', $d, '</a></div>';
+				
 				} else {
-				echo '<td class="day"><div class="day_of_month"><a href="index.php?o=',$la,'&w=',$w,'&c=',$c,'&m=',$calmonth,'&a=',$d,'&y=',$calyear,'">', $d, '</a></div>';
-				if ($offset == 0) echo '<div class="week"><a href="index.php?o=',$le,'&w=',$w,'&c=',$c,'&m=',$calmonth,'&a=',$d,'&y=',$calyear,'">week</a></div>';
+				echo '<td class="day" id="today"><div class="day_of_month"><a href="index.php?o=',$la,'&w=',$w,'&c=',$c,'&m=',$calmonth,'&a=',$d,'&y=',$calyear,'">', $d, '</a></div>';
+				}
+				} else {
+				if ($offset == 0 || $offset == 6){
+					echo '<td class="day noshow"><div class="day_of_month"><a href="index.php?o=',$la,'&w=',$w,'&c=',$c,'&m=',$calmonth,'&a=',$d,'&y=',$calyear,'">', $d, '</a></div>';
+					} else {
+					echo '<td class="day"><div class="day_of_month"><a href="index.php?o=',$la,'&w=',$w,'&c=',$c,'&m=',$calmonth,'&a=',$d,'&y=',$calyear,'">', $d, '</a></div>';
+					}
+					if ($offset == 0) echo '<div class="week"><a href="index.php?o=',$le,'&w=',$w,'&c=',$c,'&m=',$calmonth,'&a=',$d,'&y=',$calyear,'">week</a></div>';
+				
 				
 			}
 			/* correct date format */
@@ -149,7 +169,11 @@
 		$offset = 7 - $offset;
 		
 		for ($t=0; $t < $offset; $t++) {
-			echo "<td>&nbsp;</td>";
+			if ($t == $offset-1){
+				echo '<td class="day noshow">&nbsp;</td>';
+				} else {
+				echo '<td class="day">&nbsp;</td>';
+				}
 		}
 		/* end the table */
 		echo '</tr></table>';

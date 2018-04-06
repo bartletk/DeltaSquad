@@ -46,6 +46,9 @@
 			else if(isset($_POST['choosecrn'])){
 				$this->procCRN();
 			}
+			else if(isset($_POST['studentLogin'])){
+				$this->procStudentLogin();
+			}
 			/**
 				* The only other reason user should be directed here
 				* is if he wants to logout, which means user is
@@ -329,18 +332,20 @@
 		function procSemester(){
 			global $session, $form;
 			$_POST = $session->cleanInput($_POST);
-			$retval = $session->chooseSemester($_POST['semester']);
+			$retval = $session->chooseSemester($_POST['cwid'], $_POST['semester']);
 		}
 		function procCourse(){
 			global $session, $form;
-			//$_POST = $session->cleanInput($_POST);
-			$retval = $session->chooseCourse($_POST['course'], $_POST['sem']);
+			$retval = $session->chooseCourse($_POST['cwid'], $_POST['course'], $_POST['sem']);
 			}
 			function procCrn(){
 				global $session, $form;
-				//header("Location: index.php?t=$_POST['crn']");
 				$retval = $session->chooseCrn($_POST['crn']);
 			}
+			function procStudentLogin(){
+				global $session, $form;
+				$retval = $session->studentLogin($_POST['CWID']);
+			}			
 		};
 	
 /* Initialize process */

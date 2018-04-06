@@ -1,6 +1,6 @@
 <?php
 include "include/start.php";
-$page_title = "Modules";
+$page_title = $lang["title_modules"];
 $id = $_REQUEST["id"];
 $dir = "modules"; 
 
@@ -20,8 +20,8 @@ function showModules() {
 	$q = "select * from modules order by sequence";
 	$query = mysql_query($q);
 	if (mysql_num_rows($query) > 0) {
-		echo "<h3>"."Installed Modules"."</h3><form action=\"admin_actions.php\" method=\"post\"><table>\n";
-		echo "<tr><th>"."Delete?"."</th><th>"."ID"."</th><th>"."Module Heading"."</th><th>"."Link Name"."</th><th>"."File Name"."</th><th>"."Active"."</th><th>"."Sequence"."</th></th><th>"."Year Link"."</th></th><th>"."Month Link"."</th></th><th>"."Week Link"."</th></th><th>"."Day Link"."</th></tr>\n";
+		echo "<h3>".$lang["module_installed_modules"]."</h3><form action=\"admin_actions.php\" method=\"post\"><table>\n";
+		echo "<tr><th>"."Delete?"."</th><th>".$lang["module_id"]."</th><th>".$lang["module_name"]."</th><th>".$lang["module_link_name"]."</th><th>".$lang["module_script"]."</th><th>".$lang["module_active"]."</th><th>".$lang["sequence"]."</th></th><th>".$lang["link_year"]."</th></th><th>".$lang["link_month"]."</th></th><th>".$lang["link_week"]."</th></th><th>".$lang["link_day"]."</th></tr>\n";
 		while ($row = mysql_fetch_row($query)) {
 			echo "<tr><td><input type=\"checkbox\" name=\"delete[".$row[0]."]\" value=\"1\"></td><td>".$row[0]."<td><input name=\"name[".$row[0]."]\" type=\"text\" size=\"30\" value=\"".$row[2]."\"></td><td><input name=\"link_name[".$row[0]."]\" type=\"text\" size=\"20\" value=\"".$row[1]."\"></td><td>".$row[5]."</td><td><input type=\"checkbox\" name=\"active[".$row[0]."]\" value=\"1\"";
 			if ($row[3] == 1) echo " checked";
@@ -29,15 +29,15 @@ function showModules() {
 			$installed_files[] = $row[5];
 		}
 		echo "</table>\n";
-		echo "<p><input type=\"submit\" name=\"mode\" value=\""."Update Modules"."\"></p></form>\n";
+		echo "<p><input type=\"submit\" name=\"mode\" value=\"".$lang["update modules"]."\"></p></form>\n";
 	
 	} else {
-		echo "No modules installed";
+		echo $lang["no_modules_installed"];
 	}
 	
 	$uninstalled = array_diff($files, $installed_files);
 	if ($uninstalled) {
-		echo "<h3>"."Uninstalled Modules"."</h3>";
+		echo "<h3>".$lang["module_uninstalled_modules"]."</h3>";
 		while (list($key, $val) = each($uninstalled)) {
 			unset($mod);
 			$script = file_get_contents($dir."/".$val);
@@ -77,7 +77,7 @@ if (!$_SESSION["user_id"]) {
 	if ($row[0] == 1) {
 		$edit = true;
 	} else {
-		echo "<p class=\"warning\">"."You are not authorized to edit users or modules."."</p>\n";
+		echo "<p class=\"warning\">".$lang["not_authorzied_edit_users"]."</p>\n";
 	} 
 }
 if ($edit) {

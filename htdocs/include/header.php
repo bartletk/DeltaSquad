@@ -48,7 +48,7 @@ http://supercali.inforest.com/
 <div class="top_nav">
 <?php 
 if ($_REQUEST["size"] == "small") {
-	echo "<a href=\"javascript:self.close()\" target=\"_self\">"."Close Window"."</a>\n";
+	echo "<a href=\"javascript:self.close()\" target=\"_self\">".$lang["close_window"]."</a>\n";
 }
 
 ?>
