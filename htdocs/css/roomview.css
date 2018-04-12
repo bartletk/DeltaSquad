@@ -1,0 +1,17 @@
+.scrollable { 
+	overflow: scroll; 
+	width: 100%; 
+	padding: 20px;
+	overflow-x:auto;
+
+ }
+ 
+.roomInner { 
+	width: 100%;
+    box-shadow: 5px 10px;
+	
+ }
+
+.listHead{
+	display:none;
+}

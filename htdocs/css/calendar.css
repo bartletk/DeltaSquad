@@ -209,7 +209,7 @@ table.grid td.holder {
 }
 /* Added v0.4.1 */
 .cell {
-	height:28px;
+	height:29px;
 	border-bottom: 1px dashed #ccc;
 	color: #999;
 }
@@ -290,6 +290,7 @@ th.cal_top_s a {
 	text-decoration: underline;
 }
 table.day {
+	width: 100%;
 	border-collapse: collapse;
 	border: 0px;
 	padding: 0px;
@@ -335,4 +336,8 @@ td.single_day {
 	color:white !important;
 	font-family: 'Orbitron', sans-serif !important;
 	text-transform: uppercase;
+}
+
+table{
+	width:90% !important;
 }

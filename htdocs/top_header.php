@@ -6,24 +6,23 @@
 <html>
 	
 	<head>
-
-		<!--Import Google Icon Font-->
 		<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-		<!--Import materialize.css-->
 		<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/css/materialize.min.css">
 		<link rel="stylesheet" type="text/css" href="css/other.css">
 		<link rel="stylesheet" type="text/css" href="../css/other.css">
-		<!--Let browser know website is optimized for mobile-->
+		<link rel="stylesheet" href="css/print.css" type="text/css" media="print" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		    <link href="https://fonts.googleapis.com/css?family=Lobster" rel="stylesheet">
-
+		<link href="https://fonts.googleapis.com/css?family=Lobster" rel="stylesheet">
 		<script src="https://code.jquery.com/jquery-2.2.4.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.8/js/materialize.js"></script>
-		              <link rel="stylesheet" type="text/css" href="addevent.css">
-
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.js"></script>
+		<link rel="stylesheet" type="text/css" href="css/addevent.css">
 		<link rel="stylesheet" type="text/css" href="css/userinfo.css">
 		<link rel="stylesheet" type="text/css" href="css/navbar.css">
-		<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.min.js"></script>
+		<link rel="stylesheet" type="text/css" href="css/loginAndRegister.css">
+		<link rel="stylesheet" type="text/css" href="css/mycourse.css">
+		<link rel="stylesheet" type="text/css" href="css/useredit.css">
+		<link rel="stylesheet" type="text/css" href="css/form.css">
+		<link rel="stylesheet" type="text/css" href="css/roomview.css">
 		<script type="text/javascript">
 			jQuery(function($){
 				<?php
@@ -52,18 +51,17 @@
 			});
 		</script>
 		<link rel="stylesheet" type="text/css" href="/css/calendar.css">
-		<script language="JavaScript" src="/js/CalendarPopup.js"></script>
-		<script language="JavaScript">document.write(getCalendarStyles());</script>
-		<script language="JavaScript" src="/js/ColorPicker2.js"></script>
-		<script language="JavaScript" src="/js/miscfunctions.js"></script>
-		<script language="JavaScript" src="/js/miscfunctions.js"></script>
 	</head>
 	
 	<body>
-		
+		<?php
+		$q = "SELECT mail_id FROM ".TBL_MAIL." WHERE UserTo = '$session->username' and status = 'unread'";
+						$numUnreadMail = $database->query($q) or die(mysql_error());
+						$numUnreadMail = mysql_num_rows($numUnreadMail);
+						?>
 		<nav>
 			<div class="nav-wrapper">
-				<a href="#!" class="brand-logo"><img src="ulmlogo.png" alt="logo" class="logo" ></a>
+				<a href="#!" class="brand-logo"><img src="/img/ulmlogo.png" alt="logo" class="logo" ></a>
 				<a href="#" data-activates="mobile-demo" class="button-collapse"><i class="material-icons">menu</i></a>
 				<ul class="right hide-on-med-and-down">
 					<?php
@@ -80,8 +78,8 @@
 							<?php } 
 							if ($session->isInstructor() || $session->isAdmin()){ ?>
 							<li><a href="/addevent.php">Add Event</a></li>
-							<li><a href="/mycourse.php">My Courses</a></li>
-							<li><a href="/mail.php">Messages</a></li>
+							<li><a href="/mycourse.php">My Courses </a></li>
+							<li><a href="/mail.php">Messages<?php if ($numUnreadMail > 0){echo " ($numUnreadMail)"; } ?></a></li>
 						<?php } ?>
 						<li><a href="index.php">Calendar</a></li>
 						<li><a href="process.php">Logout</a></li>
@@ -109,7 +107,7 @@
 							if ($session->isInstructor() || $session->isAdmin()){ ?>
 							<li><a href="/addevent.php">Add Event</a></li>
 							<li><a href="/mycourse.php">My Courses</a></li>
-							<li><a href="/mail.php">Messages</a></li>
+							<li><a href="/mail.php">Messages<?php if ($numUnreadMail > 0){echo " ($numUnreadMail)"; } ?></a></li>
 						<?php } ?>
 						<li><a href="index.php">Calendar</a></li>
 						<li><a href="process.php">Logout</a></li>
@@ -132,6 +130,11 @@
 			<div class="card card-2">
 				<h6><strong>Logged In.</strong></h6>
 				Welcome <strong><?php echo $session->username; ?></strong>, you are logged in.
+				<?php
+				if ($page == "index.php"){
+					echo '<a href="javascript:window.print()"><img src="/img/print.png" alt="Print" id="print-button" /></a>';
+					}
+				?>
 			</div>
 		<?php } ?>
 		<!--Import jQuery before materialize.js-->
