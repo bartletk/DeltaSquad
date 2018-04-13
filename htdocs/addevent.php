@@ -1,23 +1,17 @@
 <?php
-	// When uncommented, the php doesnot shows
 	include("top_header.php");
-	//include("header.php");
 	$page = "addevent.php";
 	if(!$session->isInstructor() && !$session->isAdmin()){
 		header("Location: index.php");
 		} else {
 		global $database;
-		
-		
-		
 		$q = "select CASE WHEN COUNT(*) > 0 THEN 1 ELSE 0 END AS tail FROM ".TBL_DEADLINES." WHERE (CURRENT_TIME() BETWEEN open AND close) AND type='schedule'";
 		$result = $database->query($q);
 		$tail = mysql_result($result,0,"tail");
-		if ($tail == 0 || $session->isAdmin()) {
 		?>
 		<div class="Card card1">
 			
-			<h5><strong>Add Event</strong></h5>
+			<h5><strong>Add Event<?php if ($tail==0){ echo " - Note: Only requests can be made during this time period."; } ?></strong></h5>
 			
 			<div class="row">
 				<?php
@@ -34,11 +28,11 @@
 						
 						<div class="row">
 							<div class="input-field col s12">
-							<input type="text" name="title" maxlength="30" value="<?php if (isset($_GET['t'])) echo $_GET['t']; ?>"></p>
+							<input type="text" name="title" maxlength="30"  value="<?php if (isset($_GET['t'])) echo $_GET['t']; ?>"></p>
 							<label for="title">Title</label>
 						</div>
 						
-						<label for="eveny_type">Event Type:<label>
+						<label for="event_type">Event Type:<label>
 							
 							<p>
 								<input type="radio" id="class1" name="type" value="0" <?php if (isset($_GET['ty']) && $_GET['ty'] == 0){echo "checked";} ?> />
@@ -63,27 +57,27 @@
 						
 						<div class="row">
 							<div class="input-field col s12">
-								<input placeholder="seats needed" id="seats" type="text"  maxlength="30" value="<?php if (isset($_GET['s'])) echo $_GET['s']; ?>">
+								<input placeholder="Seats Needed" id="seats" type="text"  name="seats" maxlength="3" value="<?php if (isset($_GET['s'])) echo $_GET['s']; ?>">
 							</div>
 						</div>
 						
 						<div class="row">
 							<div class="input-field col s12">
-								<input placeholder="note" id="notes" type="text" name="notes" maxlength="255" value="<?php if (isset($_GET['n'])) echo $_GET['n']; ?>" >
+								<input placeholder="Note" id="notes" type="text" name="notes" maxlength="255" value="<?php if (isset($_GET['n'])) echo $_GET['n']; ?>" >
 							</div>
 						</div>
 						<div class="row col s12" >
-							<input type="text" placeholder="date" class="datepicker" name="date">
+							<input type="date" placeholder="Date" class = "datepicker" >
 							
 						</div>
 						
 						<div class="row col s12">
-							<input placeholder="start time" type="text" class="timepicker" name="starttime" maxlength="30" >
+							<input placeholder="Start Time" type="time" name="starttime" maxlength="30" >
 							
 						</div>
 						
 						<div class="row col s12">
-							<input placeholder="end time" type="text" class="timepicker" name="endtime" maxlength="30" >
+							<input placeholder="end time" type="time" name="endtime" maxlength="30" >
 							
 						</div>
 						
@@ -92,7 +86,7 @@
 							
 							<p>
 								<input type="checkbox" id="repeat" name="repeat" maxlength="30" value="1" <?php if (isset($_GET['repeat']) && $_GET['repeat']== 1){echo "checked";}?> />
-								<label for="repeat">check if you want to repeat</label>
+								<label for="repeat">Check if you would like this to repeat.</label>
 							</p>
 							
 							<p>
@@ -126,7 +120,7 @@
 						<br>
 						<div>
 							<div class="row col s12" >
-								<input name="re" value="<?php if (isset($_GET['re'])) echo $_GET['re']; ?>" type="text" placeholder="Repeat Until" class="datepicker">
+								<input name="re" value="<?php if (isset($_GET['re'])) echo $_GET['re']; ?>" type="date" placeholder="Repeat Until" class="datepicker">
 								
 							</div>
 							
@@ -155,7 +149,6 @@
 						</div>
 						
 						<input type="hidden" name="addeventA" value="1">
-						<input type="button" name="submit" value="Submit">
 						<button class="btn waves-effect waves-light" type="submit" name="action">Next
 							<i class="material-icons right">send</i>
 						</button>
@@ -220,93 +213,118 @@
 						?>
 						
 						<form action="process.php" method="POST" id="addeventC">
-							<div class="input-field col s12">
+							<div class="fudge">
+								<div class="input-field col s12">
+									<?php
+										$datetimeStart = "".$_GET['d']." ".$_GET['st'].":00";
+										$datetimeEnd = "".$_GET['d']." ".$_GET['et'].":00";
+										$seats=0;
+										if (isset($_GET['s']) && $_GET['s'] != NULL) { 
+											$seats =  $_GET['s']; 
+										}
+										// capacity & no conflicts
+										$q = "SELECT DISTINCT room_number, description FROM ".TBL_ROOMS." WHERE capacity >= $seats AND (room_number = 'Offsite' OR NOT EXISTS (SELECT * FROM ".TBL_ROOMS.", ".TBL_EVENTS." where ".TBL_EVENTS.".dateStart >= STR_TO_DATE('$datetimeStart', '%Y-%m-%d %H:%i:%s') AND ".TBL_EVENTS.".dateStart <= STR_TO_DATE('$datetimeEnd', '%Y-%m-%d %H:%i:%s') AND ".TBL_ROOMS.".room_number = ".TBL_EVENTS.".room_number))";
+										$result = $database->query($q);
+										//$myfile = fopen("error.txt", "a") or die(print_r($q));
+										$num_rows = mysql_numrows($result);
+										for($i=0; $i<$num_rows; $i++){
+											$num  = mysql_result($result,$i,"room_number");
+											$desc = mysql_result($result,$i,"description");
+											$msg = "No conflicts!";
+											$date = date("Y-m-d",strtotime($datetimeStart));
+											makeTable($num, $desc, $msg, 2, $date, 0);
+										}
+										// capacity, but conflicts, in order of least 2 most conflicts ( i hope )
+										$q2 = "SELECT COUNT(room_number) 'Conflicts',room_number, description FROM ".TBL_ROOMS." WHERE capacity >= $seats AND room_number != 'Offsite' AND EXISTS (SELECT * FROM ".TBL_ROOMS.", ".TBL_EVENTS." where ".TBL_EVENTS.".dateStart >= STR_TO_DATE('$datetimeStart', '%Y-%m-%d %H:%i:%s') AND ".TBL_EVENTS.".dateStart <= STR_TO_DATE('$datetimeEnd', '%Y-%m-%d %H:%i:%s') AND ".TBL_ROOMS.".room_number = ".TBL_EVENTS.".room_number) GROUP BY room_number ORDER BY COUNT(room_number)";
+										//$myfile = fopen("error.txt", "a") or die(print_r($q2));
+										$result2 = $database->query($q2);
+										$num_rows2 = mysql_numrows($result2);
+										for($j=0; $j<$num_rows2; $j++){
+											$num  = mysql_result($result2,$j,"room_number");
+											$desc = mysql_result($result2,$j,"description");
+											$conflicts = mysql_result($result2, $j, "Conflicts");
+											$msg = $conflicts." conflicts";
+											$date = date("Y-m-d",strtotime($datetimeStart));
+											makeTable($num, $desc, $msg, 2, $date, 1);
+										}
+										// not capacity, but no conflicts, not sorted yet?
+										$q3 = "SELECT DISTINCT room_number, description, capacity FROM ".TBL_ROOMS." WHERE capacity < $seats AND (room_number = 'Offsite' OR NOT EXISTS (SELECT * FROM ".TBL_ROOMS.", ".TBL_EVENTS." where ".TBL_EVENTS.".dateStart >= STR_TO_DATE('$datetimeStart', '%Y-%m-%d %H:%i:%s') AND ".TBL_EVENTS.".dateStart <= STR_TO_DATE('$datetimeEnd', '%Y-%m-%d %H:%i:%s') AND ".TBL_ROOMS.".room_number = ".TBL_EVENTS.".room_number)) ORDER BY capacity ASC";									//$myfile = fopen("error.txt", "a") or die(print_r($q3));
+										$result3 = $database->query($q3);
+										$num_rows3 = mysql_numrows($result3);
+										for($k=0; $k<$num_rows3; $k++){
+											$num  = mysql_result($result3,$k,"room_number");
+											$desc = mysql_result($result3,$k,"description");
+											$capacity = mysql_result($result3, $k, "capacity");
+											$msg = "Not enough capacity: ".$capacity;
+											$date = date("Y-m-d",strtotime($datetimeStart));
+											makeTable($num, $desc, $msg, 2, $date, 2);
+										}
+										// not capacity
+										$q4 = "SELECT COUNT(room_number) 'Conflicts',room_number, description, capacity FROM ".TBL_ROOMS." WHERE capacity < $seats AND room_number != 'Offsite' AND EXISTS (SELECT * FROM ".TBL_ROOMS.", ".TBL_EVENTS." where ".TBL_EVENTS.".dateStart >= STR_TO_DATE('$datetimeStart', '%Y-%m-%d %H:%i:%s') AND ".TBL_EVENTS.".dateStart <= STR_TO_DATE('$datetimeEnd', '%Y-%m-%d %H:%i:%s') AND ".TBL_ROOMS.".room_number = ".TBL_EVENTS.".room_number) GROUP BY room_number ORDER BY COUNT(room_number)";
+										//$myfile = fopen("error.txt", "a") or die(print_r($q4));
+										$result4 = $database->query($q4);
+										$num_rows4 = mysql_numrows($result4);
+										for($l=0; $l<$num_rows4; $l++){
+											$num  = mysql_result($result4,$l,"room_number");
+											$desc = mysql_result($result4,$l,"description");
+											$conflicts = mysql_result($result4, $l, "Conflicts");
+											$capacity = mysql_result($result4, $l, "capacity");
+											$msg = $conflicts." conflicts and not enough capacity: ".$capacity;
+											$date = date("Y-m-d",strtotime($datetimeStart));
+											makeTable($num, $desc, $msg, 2, $date, 3);
+											
+										}
+									?>
+								</div></div>
+								
 								<?php
-									$datetimeStart = "".$_GET['d']." ".$_GET['st'].":00";
-									$datetimeEnd = "".$_GET['d']." ".$_GET['et'].":00";
-									$q = "SELECT DISTINCT room_number, description FROM ".TBL_ROOMS." WHERE room_number = 'Offsite' OR NOT EXISTS (SELECT * FROM ".TBL_ROOMS.", ".TBL_EVENTS." where ".TBL_EVENTS.".dateStart >= STR_TO_DATE('$datetimeStart', '%Y-%m-%d %H:%i:%s') AND ".TBL_EVENTS.".dateStart <= STR_TO_DATE('$datetimeEnd', '%Y-%m-%d %H:%i:%s') AND ".TBL_ROOMS.".room_number = ".TBL_EVENTS.".room_number)";
+									
+									$q = sprintf("select MAX(series) AS Max from ".TBL_EVENTS." where series<9000");
 									$result = $database->query($q);
 									$num_rows = mysql_numrows($result);
 									for($i=0; $i<$num_rows; $i++){
-										$num  = mysql_result($result,$i,"room_number");
-										$desc = mysql_result($result,$i,"description");
-										$msg = "";
-										makeTable($num, $desc, $msg, 0);
+										$max  = mysql_result($result,$i,"Max")+1;
+										echo "<input type='hidden' name='series' value='".$max."'>";
 									}
-									$q2 = "SELECT COUNT(room_number) 'Conflicts',room_number, description FROM ".TBL_ROOMS." WHERE room_number != 'Offsite' AND EXISTS (SELECT * FROM ".TBL_ROOMS.", ".TBL_EVENTS." where ".TBL_EVENTS.".dateStart >= STR_TO_DATE('$datetimeStart', '%Y-%m-%d %H:%i:%s') AND ".TBL_EVENTS.".dateStart <= STR_TO_DATE('$datetimeEnd', '%Y-%m-%d %H:%i:%s') AND ".TBL_ROOMS.".room_number = ".TBL_EVENTS.".room_number) GROUP BY room_number ORDER BY COUNT(room_number)";
-									$myfile = fopen("error.txt", "a") or die(print_r($q2));
-									$result2 = $database->query($q2);
-									$num_rows2 = mysql_numrows($result2);
-									for($j=0; $j<$num_rows2; $j++){
-										$num  = mysql_result($result2,$j,"room_number");
-										$desc = mysql_result($result2,$j,"description");
-										$conflicts = mysql_result($result2, $j, "Conflicts");
-										$msg = $conflicts." conflicts";
-										makeTable($num, $desc, $msg, 1);
-									}	
+									
+										if ($tail == 0 && !$session->isAdmin()){
+											echo '<input type="hidden" name="conflict" value="1">';
+										}
 								?>
+								<input type="hidden" name="addeventC" value="1">
+								<input type="hidden" name="title" value="<?php echo $_GET['t']; ?>">
+								<input type="hidden" name="type" value="<?php echo $_GET['ty']; ?>">
+								<input type="hidden" name="course" value="<?php echo $_GET['c']; ?>">
+								<input type="hidden" name="crn" value="<?php echo $_GET['crn']; ?>">
+								<input type="hidden" name="seats" value="<?php echo $_GET['s']; ?>">
+								<input type="hidden" name="notes" value="<?php echo $_GET['n']; ?>">
+								<input type="hidden" name="dateStart" value="<?php echo $datetimeStart; ?>">
+								<input type="hidden" name="dateEnd" value="<?php echo $datetimeEnd; ?>">
+								<input type="hidden" name="repeat" value="<?php echo $_GET['repeat']?>">
+								<input type="hidden" name="repeatm" value="<?php echo $_GET['repeatm']?>">
+								<input type="hidden" name="repeatt" value="<?php echo $_GET['repeatt']?>">
+								<input type="hidden" name="repeatw" value="<?php echo $_GET['repeatw']?>">
+								<input type="hidden" name="repeatth" value="<?php echo $_GET['repeatth']?>">
+								<input type="hidden" name="repeatf" value="<?php echo $_GET['repeatf']?>">
+								<input type="hidden" name="re" value="<?php echo $_GET['re']?>">
 								
-								<label>Room</label>
-							</div>
-							
-							<?php
 								
-								$q = sprintf("select MAX(series) AS Max from ".TBL_EVENTS." where series<9000");
-								$result = $database->query($q);
-								$num_rows = mysql_numrows($result);
-								for($i=0; $i<$num_rows; $i++){
-									$max  = mysql_result($result,$i,"Max")+1;
-									echo "<input type='hidden' name='series' value='".$max."'>";
-								}
-							?>
-							<input type="hidden" name="addeventC" value="1">
-							<input type="hidden" name="title" value="<?php echo $_GET['t']; ?>">
-							<input type="hidden" name="type" value="<?php echo $_GET['ty']; ?>">
-							<input type="hidden" name="course" value="<?php echo $_GET['c']; ?>">
-							<input type="hidden" name="crn" value="<?php echo $_GET['crn']; ?>">
-							<input type="hidden" name="seats" value="<?php echo $_GET['s']; ?>">
-							<input type="hidden" name="notes" value="<?php echo $_GET['n']; ?>">
-							<input type="hidden" name="dateStart" value="<?php echo $datetimeStart; ?>">
-							<input type="hidden" name="dateEnd" value="<?php echo $datetimeEnd; ?>">
-							<input type="hidden" name="repeat" value="<?php echo $_GET['repeat']?>">
-							<input type="hidden" name="repeatm" value="<?php echo $_GET['repeatm']?>">
-							<input type="hidden" name="repeatt" value="<?php echo $_GET['repeatt']?>">
-							<input type="hidden" name="repeatw" value="<?php echo $_GET['repeatw']?>">
-							<input type="hidden" name="repeatth" value="<?php echo $_GET['repeatth']?>">
-							<input type="hidden" name="repeatf" value="<?php echo $_GET['repeatf']?>">
-							<input type="hidden" name="re" value="<?php echo $_GET['re']?>">
-							
-							
-							<button class="btn waves-effect waves-light" type="submit" name="action">Add Event
-								<i class="material-icons right">send</i>
-							</button>								
+								<button class="btn waves-effect waves-light" type="submit" name="action">Add Event
+									<i class="material-icons right">send</i>
+								</button>								
 						</form>
 						<?php
 							
 						}
-						} else {
-						echo "This form is not available at the current time. Requests will be implemented later. We apologize for the inconvenience.";
-					?>
-				</div>
-			</div>
-			
-			
-			
-			
-			
-		</body>
-	</html>
-	<?php
-	} 
 }
 
 
-function makeTable($num, $desc, $msg, $bg){
+function makeTable($num, $desc, $msg, $bg, $date, $conflict){
 	if ($bg == 1){ $style = 'style="background-color:#eee;"'; }
-	else if ($bg == 0){ $style = ''; }
+	else { $style = ''; }
 	echo '<div class="room" '.$style.'>';
-	echo '<div class="cutoff"><input type="radio" name="room" value="'.$num.'"><label>Room Number: '.$num.' </label>';
-	echo '<br> <label>Description: '.$desc.' </label><br> <label>'.$msg.'</label></div>';
+	echo '<div class="cutoff"><input type="radio" name="room" value="'.$num.'#'.$conflict.'"><label>Room: '.$num.'';
+	echo '<br>Desc: '.$desc.'<br>'.$msg.'</label></div>';
 	echo '<table width="500px" class="single_day">
 	<tr data-time="00:00:00">
 	<td class="cell"  style="width: 42px; height:20px;"><span>12am</span></td>
@@ -523,11 +541,99 @@ function makeTable($num, $desc, $msg, $bg){
 	<td class="cell"  style="width: 42px; height:20px;"></td>
 	<td class="cell" ></td>
 	</tr>
-	</table>'.'placeholder'.'</div>';
+	</table>'.showRoomGrid($date, $num).'</div>';
 	
+
+
+
 }
 
+
+function showRoomGrid($date, $room) {
+	$link = mysql_connect (DB_SERVER, DB_USER, DB_PASS) or die ("Could not connect to database, try again later");
+	mysql_select_db(DB_NAME,$link);
+	$q = sprintf("SELECT * FROM ".TBL_EVENTS." WHERE CAST(dateStart AS DATE) = CAST('$date' AS DATE) AND room_number = '$room' ORDER BY dateStart");
+	//$myfile = fopen("error.txt", "a") or die(print_r($q));
+	$result = mysql_query($q, $link);
+	$previousEvents[] = "";
+	if(!$result || (mysql_num_rows($result) < 1)){
+		// NO EVENTS
+		} else {
+		// EVENTS
+		for ($i=0; $i < mysql_num_rows($result); $i++){
+			$start_timeF = date("h:i A",strtotime(mysql_result($result,$i,"dateStart")));
+			$end_timeF = date("h:i A",strtotime(mysql_result($result,$i,"dateEnd")));
+			$start_timeH = date("H",strtotime(mysql_result($result,$i,"dateStart")));
+			$end_timeH = date("H",strtotime(mysql_result($result,$i,"dateEnd")));
+			$start_timeM = date("i",strtotime(mysql_result($result,$i,"dateStart")));
+			$end_timeM = date("i",strtotime(mysql_result($result,$i,"dateEnd")));
+			$start_time = date("H:i",strtotime(mysql_result($result,$i,"dateStart")));
+			$end_time = date("H:i",strtotime(mysql_result($result,$i,"dateEnd")));
+			$event = mysql_result($result,$i,"event_id");
+			$series = mysql_result($result,$i,"series");
+			$title = mysql_result($result,$i,"title");
+			$room = mysql_result($result,$i,"room_number");
+			$crn = mysql_result($result,$i,"crn");
+			$fromTop = ((($start_timeH) + ($start_timeM / 60)) * (28*2))+24;
+			$length = ((strtotime($end_time) - strtotime($start_time))/(60*60))*(28*2);
+			$current[] = "";
+			$current[0] = $start_timeF;
+			$current[1] = $end_timeF;
+			$current[2] = $title;
+			$current[3] = $room;
+			$current[4] = $fromTop;
+			$current[5] = $length;
+			$current[6] = $end_time;
+			$current[7] = $event;
+			$current[8] = $series;
+			$current[9] = $crn;
+			$previousEvents[$i]=$current;
+		}
+		
+		// put the remaining array on the calendar once all events are added to it
+		
+	}
+	if ($previousEvents[0] != ""){
+		for($z = 0; $z < sizeof($previousEvents); $z++){
+			$i = 1;
+			for($y = 1; $y < sizeof($previousEvents); $y++){
+				if ($previousEvents[$z][6] <= $previousEvents[$y][6]){
+					// start time falls within previous time's range	
+					$i++;
+					} else {
+					// start time is outside of previous time's range
+					for ($j = 0; $j <= $i; $j++){
+						$removed = array_shift($previousEvents);
+						echo "<div class=\"wrap\"><div class=\"date\" style=\"";
+						echo "height: ".$removed[5]."px; top: ".$removed[4]."px; width: ".(100 / $i)."%; left:".((100/$i)*$j)."%;";
+						echo "\"><div class=\"inner\">";
+						echo "<div class=\"title\"><a href='/showevent.php?e=".$removed[7]."&s=".$removed[8]."'>";
+						echo $removed[2]."</a><br>".$removed[9]."<br>".$removed[3]."</div>\n";
+						echo "<span class=\"time\">".$removed[0];
+						echo " - ".$removed[1];
+						echo "</span>\n";
+						echo "</div></div></div>\n";
+					}
+				}
+			}
+			for ($f = 0; $f <= sizeof($previousEvents); $f++){
+				$removed = array_shift($previousEvents);
+				echo "<div class=\"wrap\"><div class=\"date\" style=\"";
+				echo "height: ".$removed[5]."px; top: ".$removed[4]."px; width: ".(100 / $i)."%; left:".(100/$i)*$f."%;";
+				echo "\"><div class=\"inner\">";
+				echo "<div class=\"title\"><a href='/showevent.php?e=".$removed[7]."&s=".$removed[8]."'>";
+				echo $removed[2]."</a><br>".$removed[9]."<br>".$removed[3]."</div>\n";
+				echo "<span class=\"time\">".$removed[0];
+				echo " - ".$removed[1];
+				echo "</span>\n";
+				echo "</div></div></div>\n";
+			}
+		}
+	}
+}
 ?>		
+
+
 <script>
 	
 	$( document ).ready(function(){
@@ -541,7 +647,8 @@ function makeTable($num, $desc, $msg, $bg){
 			clear: 'Clear',
 			close: 'Ok',
 			closeOnSelect: false, // Close upon selecting a date,
-			formatSubmit: 'yyyy/mm/dd'
+			format: "dd/mm/yyyy"
+			
 			
 		})
 		$('.timepicker').pickatime({
@@ -559,4 +666,4 @@ function makeTable($num, $desc, $msg, $bg){
 	
 	
 	
-	</script>			
+	</script>				
