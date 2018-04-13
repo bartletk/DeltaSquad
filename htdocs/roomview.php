@@ -1,5 +1,24 @@
+
 <?php
-	 include("top_header.php");
+	include("top_header.php");
+	echo '<script type = "text/javascript">
+		function displayDetails(){
+			var cell = document.querySelectorAll(".cell");
+			var display = window.getComputedStyle(cell[0], null).getPropertyValue("display");			
+			
+			for (var i=0;i<cell.length;i+=1){	
+
+			
+				if (display==="none"){
+					cell[i].style.display = \'block\';
+				}
+				if (display === "block"){
+					cell[i].style.display = \'none\';
+				}
+			}
+		}
+			
+	</script>';
 	 $page = "roomview.php";
 	
 	 global $database;	
@@ -14,224 +33,229 @@
 								$num = mysql_result($result,$i,"room_number");
 								$desc = mysql_result($result,$i,"description");
 								echo '<div class="room">';
+								
 								echo '<div class="cutoff"><label>Room Number: '.$num.' </label>';
-								echo '<br> <label style="">Description: '.$desc.' </label></div>';
+								
+								echo '<br> <label style="">Description: '.$desc.' </label>
+								<br><button class= "informationButton" 
+								onclick = "displayDetails()">Info</button>
+								</div>';
 								echo '<table width="500px" class="single_day">
-		<tr data-time="00:00:00">
-			<td class="cell"  style="width: 42px; height:20px;"><span>12am</span></td>
-			<td class="cell"></td>
-		</tr>
-		<tr data-time="00:30:00" >
-			<td class="cell"  style="width: 42px; height:20px;"></td>
-			<td class="cell" ></td>
-		</tr>
+		<ul class="listHead" data-time="00:00:00">
+			<li class="cell"  style="width: 42px; height:20px;"><span>12am</span></li>
+			<li class="cell"></li>
+		</ul>
+		<ul class="listHead" data-time="00:30:00" >
+			<li class="cell"  style="width: 42px; height:20px;"></li>
+			<li class="cell" ></li>
+		</ul>
 		
-		<tr data-time="01:00:00">
-			<td class="cell"  style="width: 42px; height:20px;"><span>1am</span></td>
-			<td class="cell"></td>
-		</tr>
-		<tr data-time="01:30:00" >
-			<td class="cell"  style="width: 42px; height:20px;"></td>
-			<td class="cell" ></td>
-		</tr>
+		<ul class="listHead" data-time="01:00:00">
+			<li class="cell"  style="width: 42px; height:20px;"><span>1am</span></li>
+			<li class="cell"></li>
+		</ul>
+		<ul class="listHead" data-time="01:30:00" >
+			<li class="cell"  style="width: 42px; height:20px;"></li>
+			<li class="cell" ></li>
+		</ul>
 		
-		<tr data-time="02:00:00">
-			<td class="cell"  style="width: 42px; height:20px;"><span>2am</span></td>
-			<td class="cell"></td>
-		</tr>
-		<tr data-time="02:30:00" >
-			<td class="cell"  style="width: 42px; height:20px;"></td>
-			<td class="cell" ></td>
-		</tr>
+		<ul class="listHead" data-time="02:00:00">
+			<li class="cell"  style="width: 42px; height:20px;"><span>2am</span></li>
+			<li class="cell"></li>
+		</ul>
+		<ul class="listHead" data-time="02:30:00" >
+			<li class="cell"  style="width: 42px; height:20px;"></li>
+			<li class="cell" ></li>
+		</ul>
 		
-		<tr data-time="03:00:00">
-			<td class="cell"  style="width: 42px; height:20px;"><span>3am</span></td>
-			<td class="cell"></td>
-		</tr>
-		<tr data-time="03:30:00" >
-			<td class="cell"  style="width: 42px; height:20px;"></td>
-			<td class="cell" ></td>
-		</tr>
+		<ul class="listHead" class="listHead" data-time="03:00:00">
+			<li class="cell"  style="width: 42px; height:20px;"><span>3am</span></li>
+			<li class="cell"></li>
+		</ul>
+		<ul class="listHead" data-time="03:30:00" >
+			<li class="cell"  style="width: 42px; height:20px;"></li>
+			<li class="cell" ></li>
+		</ul>
 		
-		<tr data-time="04:00:00">
-			<td class="cell"  style="width: 42px; height:20px;"><span>4am</span></td>
-			<td class="cell"></td>
-		</tr>
-		<tr data-time="04:30:00" >
-			<td class="cell"  style="width: 42px; height:20px;"></td>
-			<td class="cell" ></td>
-		</tr>
+		<ul class="listHead" data-time="04:00:00">
+			<li class="cell"  style="width: 42px; height:20px;"><span>4am</span></li>
+			<li class="cell"></li>
+		</ul>
+		<ul class="listHead" data-time="04:30:00" >
+			<li class="cell"  style="width: 42px; height:20px;"></li>
+			<li class="cell" ></li>
+		</ul>
 		
-		<tr data-time="05:00:00">
-			<td class="cell"  style="width: 42px; height:20px;"><span>5am</span></td>
-			<td class="cell"></td>
-		</tr>
-		<tr data-time="05:30:00" >
-			<td class="cell"  style="width: 42px; height:20px;"></td>
-			<td class="cell" ></td>
-		</tr>
+		<ul class="listHead" data-time="05:00:00">
+			<li class="cell"  style="width: 42px; height:20px;"><span>5am</span></li>
+			<li class="cell"></li>
+		</ul>
+		<ul class="listHead" data-time="05:30:00" >
+			<li class="cell"  style="width: 42px; height:20px;"></li>
+			<li class="cell" ></li>
+		</ul>
 		
-		<tr data-time="06:00:00">
-			<td class="cell"  style="width: 42px; height:20px;"><span>6am</span></td>
-			<td class="cell"></td>
-		</tr>
-		<tr data-time="06:30:00" >
-			<td class="cell"  style="width: 42px; height:20px;"></td>
-			<td class="cell" ></td>
-		</tr>
+		<ul class="listHead" data-time="06:00:00">
+			<li class="cell"  style="width: 42px; height:20px;"><span>6am</span></li>
+			<li class="cell"></li>
+		</ul>
+		<ul class="listHead" data-time="06:30:00" >
+			<li class="cell"  style="width: 42px; height:20px;"></li>
+			<li class="cell" ></li>
+		</ul>
 		
-		<tr data-time="06:00:00">
-			<td class="cell"  style="width: 42px; height:20px;"><span>7am</span></td>
-			<td class="cell"></td>
-		</tr>
-		<tr data-time="07:30:00" >
-			<td class="cell"  style="width: 42px; height:20px;"></td>
-			<td class="cell" ></td>
-		</tr>
+		<ul class="listHead" data-time="06:00:00">
+			<li class="cell"  style="width: 42px; height:20px;"><span>7am</span></li>
+			<li class="cell"></li>
+		</ul>
+		<ul class="listHead" data-time="07:30:00" >
+			<li class="cell"  style="width: 42px; height:20px;"></li>
+			<li class="cell" ></li>
+		</ul>
 		
-		<tr data-time="08:00:00">
-			<td class="cell"  style="width: 42px; height:20px;"><span>8am</span></td>
-			<td class="cell"></td>
-		</tr>
-		<tr data-time="08:30:00" >
-			<td class="cell"  style="width: 42px; height:20px;"></td>
-			<td class="cell" ></td>
-		</tr>
+		<ul class="listHead" data-time="08:00:00">
+			<li class="cell"  style="width: 42px; height:20px;"><span>8am</span></li>
+			<li class="cell"></li>
+		</ul>
+		<ul class="listHead" data-time="08:30:00" >
+			<li class="cell"  style="width: 42px; height:20px;"></li>
+			<li class="cell" ></li>
+		</ul>
 		
-		<tr data-time="09:00:00">
-			<td class="cell"  style="width: 42px; height:20px;"><span>9am</span></td>
-			<td class="cell"></td>
-		</tr>
-		<tr data-time="09:30:00" >
-			<td class="cell"  style="width: 42px; height:20px;"></td>
-			<td class="cell" ></td>
-		</tr>
+		<ul class="listHead" data-time="09:00:00">
+			<li class="cell"  style="width: 42px; height:20px;"><span>9am</span></li>
+			<li class="cell"></li>
+		</ul>
+		<ul class="listHead" data-time="09:30:00" >
+			<li class="cell"  style="width: 42px; height:20px;"></li>
+			<li class="cell" ></li>
+		</ul>
 		
-		<tr data-time="10:00:00">
-			<td class="cell"  style="width: 42px; height:20px;"><span>10am</span></td>
-			<td class="cell"></td>
-		</tr>
-		<tr data-time="10:30:00" >
-			<td class="cell"  style="width: 42px; height:20px;"></td>
-			<td class="cell" ></td>
-		</tr>
+		<ul class="listHead" data-time="10:00:00">
+			<li class="cell"  style="width: 42px; height:20px;"><span>10am</span></li>
+			<li class="cell"></li>
+		</ul>
+		<ul class="listHead" data-time="10:30:00" >
+			<li class="cell"  style="width: 42px; height:20px;"></li>
+			<li class="cell" ></li>
+		</ul>
 		
-		<tr data-time="11:00:00">
-			<td class="cell"  style="width: 42px; height:20px;"><span>11am</span></td>
-			<td class="cell"></td>
-		</tr>
-		<tr data-time="11:30:00" >
-			<td class="cell"  style="width: 42px; height:20px;"></td>
-			<td class="cell" ></td>
-		</tr>
+		<ul class="listHead" data-time="11:00:00">
+			<li class="cell"  style="width: 42px; height:20px;"><span>11am</span></li>
+			<li class="cell"></li>
+		</ul>
+		<ul class="listHead" data-time="11:30:00" >
+			<li class="cell"  style="width: 42px; height:20px;"></li>
+			<li class="cell" ></li>
+		</ul>
 		
-		<tr data-time="12:00:00">
-			<td class="cell"  style="width: 42px; height:20px;"><span>12pm</span></td>
-			<td class="cell"></td>
-		</tr>
-		<tr data-time="12:30:00" >
-			<td class="cell"  style="width: 42px; height:20px;"></td>
-			<td class="cell" ></td>
-		</tr>
+		<ul class="listHead" data-time="12:00:00">
+			<li class="cell"  style="width: 42px; height:20px;"><span>12pm</span></li>
+			<li class="cell"></li>
+		</ul>
+		<ul class="listHead" data-time="12:30:00" >
+			<li class="cell"  style="width: 42px; height:20px;"></li>
+			<li class="cell" ></li>
+		</ul>
 		
-		<tr data-time="13:00:00">
-			<td class="cell"  style="width: 42px; height:20px;"><span>1pm</span></td>
-			<td class="cell"></td>
-		</tr>
-		<tr data-time="13:30:00" >
-			<td class="cell"  style="width: 42px; height:20px;"></td>
-			<td class="cell" ></td>
-		</tr>
+		<ul class="listHead" data-time="13:00:00">
+			<li class="cell"  style="width: 42px; height:20px;"><span>1pm</span></li>
+			<li class="cell"></li>
+		</ul>
+		<ul class="listHead" data-time="13:30:00" >
+			<li class="cell"  style="width: 42px; height:20px;"></li>
+			<li class="cell" ></li>
+		</ul>
 		
-		<tr data-time="14:00:00">
-			<td class="cell"  style="width: 42px; height:20px;"><span>2pm</span></td>
-			<td class="cell"></td>
-		</tr>
-		<tr data-time="14:30:00" >
-			<td class="cell"  style="width: 42px; height:20px;"></td>
-			<td class="cell" ></td>
-		</tr>
+		<ul class="listHead" data-time="14:00:00">
+			<li class="cell"  style="width: 42px; height:20px;"><span>2pm</span></li>
+			<li class="cell"></li>
+		</ul>
+		<ul class="listHead" data-time="14:30:00" >
+			<li class="cell"  style="width: 42px; height:20px;"></li>
+			<li class="cell" ></li>
+		</ul>
 		
-		<tr data-time="15:00:00">
-			<td class="cell"  style="width: 42px; height:20px;"><span>3pm</span></td>
-			<td class="cell"></td>
-		</tr>
-		<tr data-time="15:30:00" >
-			<td class="cell"  style="width: 42px; height:20px;"></td>
-			<td class="cell" ></td>
-		</tr>
+		<ul class="listHead" data-time="15:00:00">
+			<li class="cell"  style="width: 42px; height:20px;"><span>3pm</span></li>
+			<li class="cell"></li>
+		</ul>
+		<ul class="listHead" data-time="15:30:00" >
+			<li class="cell"  style="width: 42px; height:20px;"></li>
+			<li class="cell" ></li>
+		</ul>
 		
-		<tr data-time="16:00:00">
-			<td class="cell"  style="width: 42px; height:20px;"><span>4pm</span></td>
-			<td class="cell"></td>
-		</tr>
-		<tr data-time="16:30:00" >
-			<td class="cell"  style="width: 42px; height:20px;"></td>
-			<td class="cell" ></td>
-		</tr>
+		<ul class="listHead" data-time="16:00:00">
+			<li class="cell"  style="width: 42px; height:20px;"><span>4pm</span></li>
+			<li class="cell"></li>
+		</ul>
+		<ul class="listHead" data-time="16:30:00" >
+			<li class="cell"  style="width: 42px; height:20px;"></li>
+			<li class="cell" ></li>
+		</ul>
 		
-		<tr data-time="17:00:00">
-			<td class="cell"  style="width: 42px; height:20px;"><span>5pm</span></td>
-			<td class="cell"></td>
-		</tr>
-		<tr data-time="17:30:00" >
-			<td class="cell"  style="width: 42px; height:20px;"></td>
-			<td class="cell" ></td>
-		</tr>
+		<ul class="listHead" data-time="17:00:00">
+			<li class="cell"  style="width: 42px; height:20px;"><span>5pm</span></li>
+			<li class="cell"></li>
+		</ul>
+		<ul class="listHead" data-time="17:30:00" >
+			<li class="cell"  style="width: 42px; height:20px;"></li>
+			<li class="cell" ></li>
+		</ul>
 		
-		<tr data-time="18:00:00">
-			<td class="cell"  style="width: 42px; height:20px;"><span>6pm</span></td>
-			<td class="cell"></td>
-		</tr>
-		<tr data-time="18:30:00" >
-			<td class="cell"  style="width: 42px; height:20px;"></td>
-			<td class="cell" ></td>
-		</tr>
+		<ul class="listHead" data-time="18:00:00">
+			<li class="cell"  style="width: 42px; height:20px;"><span>6pm</span></li>
+			<li class="cell"></li>
+		</ul>
+		<ul class="listHead" data-time="18:30:00" >
+			<li class="cell"  style="width: 42px; height:20px;"></li>
+			<li class="cell" ></li>
+		</ul>
 		
-		<tr data-time="19:00:00">
-			<td class="cell"  style="width: 42px; height:20px;"><span>7pm</span></td>
-			<td class="cell"></td>
-		</tr>
-		<tr data-time="19:30:00" >
-			<td class="cell"  style="width: 42px; height:20px;"></td>
-			<td class="cell" ></td>
-		</tr>
+		<ul class="listHead" data-time="19:00:00">
+			<li class="cell"  style="width: 42px; height:20px;"><span>7pm</span></li>
+			<li class="cell"></li>
+		</ul>
+		<ul class="listHead" data-time="19:30:00" >
+			<li class="cell"  style="width: 42px; height:20px;"></li>
+			<li class="cell" ></li>
+		</ul>
 		
-		<tr data-time="20:00:00">
-			<td class="cell"  style="width: 42px; height:20px;"><span>8pm</span></td>
-			<td class="cell"></td>
-		</tr>
-		<tr data-time="20:30:00" >
-			<td class="cell"  style="width: 42px; height:20px;"></td>
-			<td class="cell" ></td>
-		</tr>
+		<ul class="listHead" data-time="20:00:00">
+			<li class="cell"  style="width: 42px; height:20px;"><span>8pm</span></li>
+			<li class="cell"></li>
+		</ul>
+		<ul class="listHead" data-time="20:30:00" >
+			<li class="cell"  style="width: 42px; height:20px;"></li>
+			<li class="cell" ></li>
+		</ul>
 		
-		<tr data-time="21:00:00">
-			<td class="cell"  style="width: 42px; height:20px;"><span>9pm</span></td>
-			<td class="cell"></td>
-		</tr>
-		<tr data-time="21:30:00" >
-			<td class="cell"  style="width: 42px; height:20px;"></td>
-			<td class="cell" ></td>
-		</tr>
+		<ul class="listHead" data-time="21:00:00">
+			<li class="cell"  style="width: 42px; height:20px;"><span>9pm</span></li>
+			<li class="cell"></li>
+		</ul>
+		<ul class="listHead" data-time="21:30:00" >
+			<li class="cell"  style="width: 42px; height:20px;"></li>
+			<li class="cell" ></li>
+		</ul>
 		
-		<tr data-time="22:00:00">
-			<td class="cell"  style="width: 42px; height:20px;"><span>10pm</span></td>
-			<td class="cell"></td>
-		</tr>
-		<tr data-time="22:30:00" >
-			<td class="cell"  style="width: 42px; height:20px;"></td>
-			<td class="cell" ></td>
-		</tr>
+		<ul class="listHead" data-time="22:00:00">
+			<li class="cell"  style="width: 42px; height:20px;"><span>10pm</span></li>
+			<li class="cell"></li>
+		</ul>
+		<ul class="listHead" data-time="22:30:00" >
+			<li class="cell"  style="width: 42px; height:20px;"></li>
+			<li class="cell" ></li>
+		</ul>
 		
-		<tr data-time="23:00:00">
-			<td class="cell"  style="width: 42px; height:20px;"><span>11pm</span></td>
-			<td class="cell"></td>
-		</tr>
-		<tr data-time="23:30:00" >
-			<td class="cell" style="width: 42px; height:20px;"></td>
-			<td class="cell" ></td>
-		</tr>
+		<ul class="listHead" data-time="23:00:00">
+			<li class="cell"  style="width: 42px; height:20px;"><span>11pm</span></li>
+			<li class="cell"></li>
+		</ul>
+		<ul class="listHead" data-time="23:30:00" >
+			<li class="cell" style="width: 42px; height:20px;"></li>
+			<li class="cell" ></li>
+		</ul>
 	</table>'.showRoomGrid($date, $num).'</div>';
 
 							}
@@ -326,8 +350,11 @@
 			}
 		}
 	}
+			
 	?>
 
 <?php
 	include "footer.php";
 	?>
+	
+	
