@@ -145,7 +145,7 @@
 								?>		
 							</select>
 							
-							<label>Course</label>
+							<label id = "courseLabel">Course</label>
 						</div>
 						
 						<input type="hidden" name="addeventA" value="1">
