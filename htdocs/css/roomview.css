@@ -12,6 +12,17 @@
 	
  }
 
-.listHead{
+.cell{
 	display:none;
+}
+
+.informationButton{
+	margin-left: 1px;
+	border: none;
+	transition: color 1s;
+}
+
+.informationButton:hover{
+	background-color: black;
+	color: white;
 }
