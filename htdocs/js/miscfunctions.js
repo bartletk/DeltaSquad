@@ -24,3 +24,6 @@ function pickColor(color) {
 	}
 var topcal = new CalendarPopup("testdiv2");
 var cp = new ColorPicker();
+
+
+

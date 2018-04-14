@@ -69,6 +69,5 @@ function showWeek() {
 $thisday = $y."-".$m."-".$a;
 $nextseven =  $next["seven"]["y"]."-".$next["seven"]["m"]."-".$next["seven"]["a"];
 
-grab($thisday,$nextseven,$c);
 showWeek();
 ?>

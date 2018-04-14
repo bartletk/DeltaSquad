@@ -1,3 +1,11 @@
+
+<html>
+<head>
+	<title></title>
+</head>
+<link rel="stylesheet" type="text/css" href="css/footer.css">
+
+
 <?php
 	 include("top_header.php");
 	 $page = "class_select.php";
@@ -10,7 +18,7 @@
 	</div>
 
 	<div class="parallax-container">
-    	 <div class="parallax"><img src="library1.jpg"></div>
+    	 <div class="parallax"><img src="/img/library1.jpg"></div>
  		</div>
 		<div class="section white">
 	</div>
@@ -138,17 +146,18 @@
 </form>
 
 <div class="parallax-container">
-    	 <div class="parallax"><img src="anurse.jpg"></div>
+    	 <div class="parallax"><img src="/img/anurse.jpg"></div>
  		</div>
 		<div class="section white">
 	</div>
+
 <?php
 	//include "footer.php";
 	?>
 </main>
 
 <footer class="page-footer">
-          <div class="container">
+          <div class="footercontainer">
             <div class="row">
               <div class="col l6 s12">
                 <h4 class="white-text">ULM Nursing Calendar</h4>
@@ -158,12 +167,13 @@
             </div>
           </div>
           <div class="footer-copyright">
-            <div class="container">
+            <div class="footercontainer">
             © 2018 DeltaSquad
             <a class="grey-text text-lighten-4 right" href="https://www.ulm.edu">ULM</a>
             </div>
-          </div>
-        </footer>
+    </div>
+</footer>
+    
 
 
 <!--Import jQuery before materialize.js-->

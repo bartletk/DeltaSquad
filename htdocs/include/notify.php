@@ -88,7 +88,7 @@ $gq = mysql_query($q);
 while ($grow = mysql_fetch_row($gq)) {
 	if (($grow[1] == 3)|| ($grow[2] == 1)) $sendmessage = $message.$nextmessage;
 	else $sendmessage = $message;
-	mail($grow[0],$lang["title_event"]." ".$status.": ".$page_title, $sendmessage, "From: \"SuperCali\" <".$use.">");
+	mail($grow[0],$lang["title_event"]." ".$status.": ".$page_title, $sendmessage, "From: \"Nursing\" <".$use.">");
 	
 }
 }

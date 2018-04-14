@@ -530,20 +530,20 @@
 			}
 			header("Location: /addevent.php?t=$title&ty=$type&c=$course&crn=$crns&s=$seats&n=$notes&d=$date&st=$starttime&et=$endtime&repeat=$repeat&repeatm=$repeatm&repeatt=$repeatt&repeatw=$repeatw&repeatth=$repeatth&repeatf=$repeatf&re=$re");  
 		}
-		function addEventC($title, $type, $course, $crn, $seats, $notes, $dateStart, $dateEnd, $room, $series){
+		function addEventC($title, $type, $course, $crn, $seats, $notes, $dateStart, $dateEnd, $room, $series, $conflict){
 			global $database, $form; 
 			$user = $this->id;
 			$CWID = $this->CWID;
 			$time= date("Y/m/d H:i:s");
-			$result = $database->addEvent2($title, $type, $course, $crn, $seats, $notes, $dateStart, $dateEnd, $room, $CWID, $series, $time);
+			$result = $database->addEvent2($title, $type, $course, $crn, $seats, $notes, $dateStart, $dateEnd, $room, $CWID, $series, $time, $conflict);
 			if ($result){return TRUE;}			
 		}
-		function addEventCA($title, $type, $course, $crn, $seats, $notes, $dateStart, $dateEnd, $room, $series, $repeat, $repeatm, $repeatt, $repeatw, $repeatth, $repeatf, $re){
+		function addEventCA($title, $type, $course, $crn, $seats, $notes, $dateStart, $dateEnd, $room, $series, $repeat, $repeatm, $repeatt, $repeatw, $repeatth, $repeatf, $re, $conflict){
 			global $database, $form; 
 			$user = $this->id;
 			$CWID = $this->CWID;
 			$time= date("Y/m/d H:i:s");
-			$result = $database->addEvent2A($title, $type, $course, $crn, $seats, $notes, $dateStart, $dateEnd, $room, $CWID, $series, $time, $repeat, $repeatm, $repeatt, $repeatw, $repeatth, $repeatf, $re);
+			$result = $database->addEvent2A($title, $type, $course, $crn, $seats, $notes, $dateStart, $dateEnd, $room, $CWID, $series, $time, $repeat, $repeatm, $repeatt, $repeatw, $repeatth, $repeatf, $re, $conflict);
 			if ($result){return TRUE;}			
 		}
 		function chooseSemester($CWID, $semester){
@@ -558,7 +558,7 @@
 			header("Location: /class_select.php?cwid=$CWID&sem=$sem&c=$courses");  
 		}
 		function chooseCrn($crn){
-					
+			
 			foreach ($crn as $c){
 				$crns = $crns . "+" . $c;			
 			}
@@ -571,7 +571,7 @@
 			studentLogin($CWID);
 		}
 		function studentLogin($CWID){
-		global $database, $form;
+			global $database, $form;
 			if(!$database->studentCourses($CWID)){
 				header("Location: /class_select.php?cwid=$CWID");
 				} else {
@@ -579,6 +579,58 @@
 				header("Location: /index.php");
 			}
 		}
+		
+		
+		
+		
+		
+		
+		function editEventA($title, $type, $seats, $notes, $date, $starttime, $endtime, $eventid){
+			header("Location: /editevent.php?t=$title&ty=$type&s=$seats&n=$notes&d=$date&st=$starttime&et=$endtime&e=$eventid");  
+		}
+		
+		
+		function editEventB($title, $type, $seats, $notes, $dateStart, $dateEnd, $room, $conflict, $eventid){
+			global $database, $form; 
+			$result = $database->editEventB($title, $type, $seats, $notes, $dateStart, $dateEnd, $room, $conflict, $eventid);
+			if ($result){return TRUE;}			
+		}
+		
+		
+		function editEventC($eventid, $notes){
+			global $database, $form; 
+			$result = $database->editEventC($eventid, $notes);
+			if ($result){return TRUE;}			
+		}
+		
+		
+		function deleteEvent($eventID){
+			global $database, $form; 
+			$result = $database->deleteEvent($eventID);
+			if ($result){return TRUE;}			
+		}
+		
+		
+		function approve($eventID){
+			global $database, $form; 
+			$result = $database->approve($eventID);
+			if ($result){return TRUE;}			
+		}
+		
+		function approveAll($eventID){
+			global $database, $form; 
+			$result = $database->approveAll($eventID);
+			if ($result){return TRUE;}			
+		}
+		
+		function reject($eventID){
+			global $database, $form; 
+			$result = $database->reject($eventID);
+			if ($result){return TRUE;}			
+		}
+		
+		
+		
 		
 	};
 	

@@ -1,9 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<link rel="stylesheet" type="text/css" href="css/mycourse.css">
+<link rel="stylesheet" type="text/css" href="css/footer.css">
+
+</head>
+<body>
+
+
+<header>
 <?php
 	include("top_header.php");
 	$page = "mycourse.php";
 	$CWID = $session->getCWID();
 ?>
-<link rel="stylesheet" type="text/css" href="css/mycourse.css">
+</header>
+<main>
 <div class="card wrap">
 	<h5>My Courses</h5>
 	<?php
@@ -71,6 +84,12 @@
 	?>
 	
 </div>
+</main>
+<footer>
 <?php
 	include("footer.php");
-?>			
+?>	
+</footer>	
+
+</body>
+</html>	

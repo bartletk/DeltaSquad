@@ -1,5 +1,7 @@
 <!DOCTYPE html>
-<html>
+<?php
+	
+	/*<html>
 	<head>
 		<title></title>
 		<!-- <link rel="stylesheet" type="text/css" href="css/form.css"> -->
@@ -15,7 +17,7 @@
 	<header>
 <nav>
             <div class="nav-wrapper">
-              <a href="#!" class="brand-logo"><img src="ulmlogo.png" alt="logo" class="logo" ></a>
+              <a href="#!" class="brand-logo"><img src="/img/ulmlogo.png" alt="logo" class="logo" ></a>
               <a href="#" data-activates="mobile-demo" class="button-collapse"><i class="material-icons">menu</i></a>
               <ul class="right hide-on-med-and-down">
                 <li><a href="">Home</a></li>
@@ -36,6 +38,10 @@
 <main>
 	
 </div>
+*/
+include "top_header.php";
+?>
+
 <div class="container white z-depth-2">
 	<div class="tablist" >
 	<ul class="tabs teal">
@@ -156,7 +162,7 @@
           <div class="footercontainer">
             <div class="row">
               <div class="col l6 s12">
-                <h5 class="white-text">ULM Nursing Calendar</h5>
+                <h4 class="white-text">ULM Nursing Calendar</h4>
                 <p class="grey-text text-lighten-4">Never miss a class because we got you covered!</p>
               </div>
              

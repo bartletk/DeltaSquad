@@ -10,29 +10,13 @@ if (!$_SESSION['user_id']) $_SESSION['user_id'] = 1;
 $link = mysql_connect (DB_SERVER, DB_USER, DB_PASS) or die ("Could not connect to database, try again later");
 mysql_select_db(DB_NAME,$link);
 
-//	this area to set superpermission levels
-$query = mysql_query("SELECT view, post, add_categories, add_groups, add_users from users where user_id = ".$_SESSION["user_id"]." limit 1");
-$row = mysql_fetch_row($query);
-$supergroup = false;
-$supercategory = false;
-
-if ($row[4]) $supergroup = true;
-if ($row[4]) $supercategory = true;
-if ($row[4]) $superpost = true;
-if ($row[4]) $superview = true;
-if ($row[3]) $supergroup = true;
-if ($row[3]) $superpost = true;
-if ($row[3]) $superview = true;
-if ($row[2]) $supercategory = true;
-if ($row[2]) $superpost = true;
-if ($row[2]) $superview = true;
-if ($row[1]) $superpost = true;
-if ($row[1]) $superview = true;
-if ($row[0]) $superview = true;
+$supergroup = true;
+$supercategory = true;
 
 
 
-if (!$calendar_title) $calendar_title = "SuperCali Event Calendar";
+
+if (!$calendar_title) $calendar_title = "Nursing Calendar";
 
 if ((is_numeric($_REQUEST["m"]))&& ($_REQUEST["m"]!= 0)) {
 	$_SESSION["m"] = $_REQUEST["m"];
@@ -155,5 +139,5 @@ if (!$o) {
 	}
 
 }
-$common_get = "o=".$o."&c=".$c."&m=".$m."&a=".$a."&y=".$y."&w=".$w;
+$common_get = "o=".$o."&c=".$c."&m=".$m."&a=".$a."&y=".$y."&w=".$w."&sem=".$sem;
 ?>

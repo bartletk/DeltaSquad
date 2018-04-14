@@ -26,6 +26,29 @@
 		}
 	?> 
 	<a href="<?php echo "./editevent.php?e=$event";  ?>">Edit Event</a>
+	
+	<?php
+		if($session->isAdmin()){
+		?>
+		<form action="process.php" method="POST" id="approve" class="col s12">
+			<input type="hidden" name="approve" value="1">
+			<input type="hidden" name="eventid" value="<?php echo $event; ?>">
+			<button class="btn waves-effect waves-light" type="submit" name="action">Approve this event
+				<i class="material-icons right">send</i>
+			</button>
+		</form>
+		
+		<form action="process.php" method="POST" id="approveall" class="col s12">
+			<input type="hidden" name="approveall" value="1">
+			<input type="hidden" name="seriesid" value="<?php echo $series; ?>">
+			<button class="btn waves-effect waves-light" type="submit" name="action">Approve all events in series
+				<i class="material-icons right">send</i>
+			</button>
+		</form>
+		<?php
+		}
+	?>
+	
 	Title: <?php echo $title; ?> <br>
 	Date: <?php echo $date; ?><br>
 	Start time: <?php echo $timeStart; ?><br>
@@ -75,4 +98,4 @@
 	<?php
 	}
 	include("footer.php");
-			?>					
+?>					

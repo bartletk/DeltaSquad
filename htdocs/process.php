@@ -49,6 +49,27 @@
 			else if(isset($_POST['studentLogin'])){
 				$this->procStudentLogin();
 			}
+			else if(isset($_POST['editeventA'])){
+				$this->procEditA();
+			}
+			else if(isset($_POST['editeventB'])){
+				$this->procEditB();
+			}
+			else if(isset($_POST['editeventC'])){
+				$this->procEditC();
+			}
+			else if(isset($_POST['deleteEvent'])){
+				$this->procDeleteEvent();
+			}
+			else if(isset($_POST['approve'])){
+				$this->procApprove();
+			}
+			else if(isset($_POST['reject'])){
+				$this->procReject();
+			}
+			else if(isset($_POST['approveall'])){
+				$this->procApproveAll();
+			}
 			/**
 				* The only other reason user should be directed here
 				* is if he wants to logout, which means user is
@@ -135,60 +156,6 @@
 				header("Location: ".$session->referrer);
 			}
 		}
-		
-		/**
-			* procForgotPass - Validates the given username then if
-			* everything is fine, a new password is generated and
-			* emailed to the address the user gave on sign up.
-		*/
-		function procForgotPass(){
-			global $database, $session, $mailer, $form;
-			$_POST = $session->cleanInput($_POST);
-			/* Username error checking */
-			$subuser = $_POST['user'];
-			$field = "user";  //Use field name for username
-			if(!$subuser || strlen($subuser = trim($subuser)) == 0){
-				$form->setError($field, "* Username not entered<br>");
-			}
-			else{
-				/* Make sure username is in database */
-				$subuser = stripslashes($subuser);
-				if(strlen($subuser) < 5 || strlen($subuser) > 30 ||
-				!ctype_alnum($subuser) ||
-				(!$database->usernameTaken($subuser))){
-					$form->setError($field, "* Username does not exist<br>");
-				}
-			}
-			
-			/* Errors exist, have user correct them */
-			if($form->num_errors > 0){
-				$_SESSION['value_array'] = $_POST;
-				$_SESSION['error_array'] = $form->getErrorArray();
-			}
-			/* Generate new password and email it to user */
-			else{
-				/* Generate new password */
-				$newpass = $session->generateRandStr(8);
-				
-				/* Get email of user */
-				$usrinf = $database->getUserInfo($subuser);
-				$email  = $usrinf['email'];
-				
-				/* Attempt to send the email with new password */
-				if($mailer->sendNewPass($subuser,$email,$newpass)){
-					/* Email sent, update database */
-					$database->updateUserField($subuser, "password", md5($newpass));
-					$_SESSION['forgotpass'] = true;
-				}
-				/* Email failure, do not change password */
-				else{
-					$_SESSION['forgotpass'] = false;
-				}
-			}
-			
-			header("Location: ".$session->referrer);
-		}
-		
 		/**
 			* procEditAccount - Attempts to edit the user's account
 			* information, including the password, which must be verified
@@ -213,63 +180,6 @@
 			}
 		}
 		
-		/**
-			* procSendConfirm - only needs to be used if the administrator
-			* changes the EMAIL_WELCOME from false to true and wants
-			* the users to confirm themselves. (why not?!)
-		*/
-		function procSendConfirm(){
-			global $session, $form, $database, $mailer;
-			$_POST = $session->cleanInput($_POST);
-			
-			$user	=	$_POST['user'];
-			$pass	=	$_POST['pass'];
-			
-			/* Checks that username is in database and password is correct */
-			$user = stripslashes($user);
-			$result = $database->confirmUserPass($user, md5($pass));
-			
-			/* Check error codes */
-			if($result == 1){
-				$field = "user";
-				$form->setError($field, "* Username not found");
-			}
-			elseif($result == 2){
-				$field = "pass";
-				$form->setError($field, "* Invalid password");
-			}
-			
-			/* Check to see if the user is already valid */
-			$q = "SELECT valid FROM ".TBL_USERS." WHERE username='$user'";
-			$valid = $database->query($q);
-			$valid = mysql_fetch_array($valid);
-			$valid = $valid['valid'];
-			
-			if($valid == 1){
-				$field = 'user';
-				$form->setError($field, "* Username already confirmed.");
-			}
-			
-			/* Return if form errors exist */
-			if($form->num_errors > 0){
-				$_SESSION['value_array'] = $_POST;
-				$_SESSION['error_array'] = $form->getErrorArray();
-				header("Location: ".$session->referrer);
-			}
-			else{
-				$q = "SELECT username, user_id, email FROM ".TBL_USERS." WHERE username='$user'";
-				$info = $database->query($q) or die(mysql_error());
-				$info = mysql_fetch_array($info);
-				
-				$username = $info['username'];
-				$user_id = $info['user_id'];
-				$email = $info['email'];
-				
-				if($mailer->sendConfirmation($username,$user_id,$email)){
-					echo "Your confirmation email has been sent! Back to <a href='index.php'>Main</a>";
-				}
-			}
-		}
 		
 		function procHashLogin($hash){
 			global $session, $database;
@@ -320,10 +230,15 @@
 		}
 		function procAddC(){
 			global $session, $form;
+			$room = 0;
+			$conflict = 0;
+			$explode = explode('#', $_POST['room']);
+			$room = $explode[0];
+			$conflict = $explode[1];
 			if (isset($_POST['repeat']) && $_POST['repeat']==1){
-				$retval = $session->addEventCA($_POST['title'], $_POST['type'], $_POST['course'], $_POST['crn'], $_POST['seats'], $_POST['notes'],  $_POST['dateStart'], $_POST['dateEnd'], $_POST['room'], $_POST['series'], $_POST['repeat'], $_POST['repeatm'], $_POST['repeatt'], $_POST['repeatw'], $_POST['repeatth'], $_POST['repeatf'], $_POST['re']);
+				$retval = $session->addEventCA($_POST['title'], $_POST['type'], $_POST['course'], $_POST['crn'], $_POST['seats'], $_POST['notes'],  $_POST['dateStart'], $_POST['dateEnd'], $room, $_POST['series'], $_POST['repeat'], $_POST['repeatm'], $_POST['repeatt'], $_POST['repeatw'], $_POST['repeatth'], $_POST['repeatf'], $_POST['re'], $conflict);
 				} else {
-			$retval = $session->addEventC($_POST['title'], $_POST['type'], $_POST['course'], $_POST['crn'], $_POST['seats'], $_POST['notes'],  $_POST['dateStart'], $_POST['dateEnd'], $_POST['room'], $_POST['series']);			
+				$retval = $session->addEventC($_POST['title'], $_POST['type'], $_POST['course'], $_POST['crn'], $_POST['seats'], $_POST['notes'],  $_POST['dateStart'], $_POST['dateEnd'], $room, $_POST['series'], $conflict);			
 			}
 			header("Location: index.php");
 			
@@ -337,18 +252,67 @@
 		function procCourse(){
 			global $session, $form;
 			$retval = $session->chooseCourse($_POST['cwid'], $_POST['course'], $_POST['sem']);
-			}
-			function procCrn(){
-				global $session, $form;
-				$retval = $session->chooseCrn($_POST['crn']);
-			}
-			function procStudentLogin(){
-				global $session, $form;
-				$retval = $session->studentLogin($_POST['CWID']);
-			}			
-		};
-	
-/* Initialize process */
-$process = new Process;
+		}
+		function procCrn(){
+			global $session, $form;
+			$retval = $session->chooseCrn($_POST['crn']);
+		}
+		function procStudentLogin(){
+			global $session, $form;
+			$retval = $session->studentLogin($_POST['CWID']);
+		}			
 
+		function procEditA(){
+			global $session, $form;
+			$retval = $session->editEventA($_POST['title'], $_POST['type'], $_POST['seats'], $_POST['notes'], $_POST['date'], $_POST['starttime'], $_POST['endtime'], $_POST['eventid']);
+		}
+		
+		function procEditB(){
+			global $session, $form;
+			$room = 0;
+			$conflict = 0;
+			$explode = explode('#', $_POST['room']);
+			$room = $explode[0];
+			$conflict = $explode[1];
+			$retval = $session->editEventB($_POST['title'], $_POST['type'], $_POST['seats'], $_POST['notes'], $_POST['dateStart'], $_POST['dateEnd'], $room, $conflict, $_POST['eventid']);
+			header("Location: editevent.php?e=".$_POST['eventid']);
+		}
+		
+		
+		function procEditC(){
+			global $session, $form;
+			$retval = $session->editEventC($_POST['eventid'], $_POST['notes']);
+			header("Location: editevent.php?e=".$_POST['eventid']);
+		}
+		
+		function procDeleteEvent(){
+			global $session, $form;
+			$retval = $session->deleteEvent($_POST['eventid']);
+			header("Location: index.php");
+		}
+		
+		function procApprove(){
+			global $session, $form;
+			$retval = $session->approve($_POST['eventid']);
+			header("Location: editevent.php?e=".$_POST['eventid']);
+		}
+		
+		function procApproveAll(){
+			global $session, $form;
+			$retval = $session->approveAll($_POST['seriesid']);
+			header("Location: ".$session->referrer);
+		}
+		
+		function procReject(){
+			global $session, $form;
+			$retval = $session->reject($_POST['eventid']);
+			header("Location: editevent.php?e=".$_POST['eventid']);
+		}
+		
+	};
+	
+	
+	/* Initialize process */
+	$process = new Process;
+	
 ?>

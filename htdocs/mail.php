@@ -1,3 +1,12 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+</head>
+<body>
+
+
+
 <?php
 	include("top_header.php");
 $page = "mail.php";
@@ -100,8 +109,9 @@ $page = "mail.php";
 		$user = $session->username;
 		$q = sprintf("SELECT * FROM mail WHERE UserTo = '%s' ORDER BY SentDate DESC",
 		      mysql_real_escape_string($user));
+			  
 		$getMail = $database->query($q) or die(mysql_error());
-
+//$myfile = fopen("error.txt", "a") or die(print_r($getMail));
 		echo "<div id='inbox'>";
 		
 		if(mysql_num_rows($getMail) == 0){
@@ -114,7 +124,7 @@ $page = "mail.php";
 					<td>Status</td>
 					<td>From</td>
 					<td>Subject</td>
-					<td>Time</td>
+					<td>Body</td>
 				</tr>
 			</div>
 			<?php
@@ -128,7 +138,7 @@ $page = "mail.php";
 						<td><?php echo $mail['status']; ?></td>
 						<td><?php echo $mail['UserFrom']; ?></td>
 						<td><?php echo $mail['Subject']; ?></td>
-						<td><?php echo $mail['SentDate']; ?></td>
+						<td><?php echo $mail['Message']; ?></td>
 					</tr>
 				<?php
 			}
@@ -157,14 +167,15 @@ $page = "mail.php";
 			exit;
 		}
 		$q = "UPDATE mail SET status='read' WHERE UserTo='$session->username' AND mail_id='$row[mail_id]'";
+		//$myfile = fopen("error.txt", "a") or die(print_r($q));
 		$database->query($q) or die("An error occurred resulting that this message has not been marked read.");
 		
 		?>
 			<form method="post" action="mail.php">
 				<div id="single">
-					<p>From: </p><p><?php echo $row['UserFrom']; ?><input type="hidden" name="mailFrom" value="<?php echo $row['UserFrom']; ?>" /></p>
-					<p>Subject: </p><p><?php echo $row['Subject']; ?><input type="hidden" name="mailSubject" value="<?php echo$row['Subject']; ?>" /></p>
-					<p>body: <br /><?php echo $row['Message']; ?><br /></p>
+					<p>From: <?php echo $row['UserFrom']; ?><input type="hidden" name="mailFrom" value="<?php echo $row['UserFrom']; ?>" /></p>
+					<p>Subject: <?php echo $row['Subject']; ?><input type="hidden" name="mailSubject" value="<?php echo$row['Subject']; ?>" /></p>
+					<p>Body: <br /><?php echo $row['Message']; ?><br /></p>
 					<p><input type="submit" name="mailAction" value="Reply" /></p>
 				</div>
 			</form>

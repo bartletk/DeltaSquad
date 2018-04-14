@@ -27,6 +27,11 @@
 				$crn = mysql_result($result,$i,"crn");
 				$fromTop = ((($start_timeH) + ($start_timeM / 60)) * (28*2))+24;
 				$length = ((strtotime($end_time) - strtotime($start_time))/(60*60))*(28*2);
+				if (mysql_result($result,$i,"status") != 'approved') {
+					$style = "style='color: white; text-shadow: 1px 1px 2px black, 0 0 25px yellow, 0 0 5px orange;'";
+					} else {
+					$style = "";
+					}
 				$current[] = "";
 				$current[0] = $start_timeF;
 				$current[1] = $end_timeF;
@@ -38,6 +43,7 @@
 				$current[7] = $event;
 				$current[8] = $series;
 				$current[9] = $crn;
+				$current[10] = $style;
 				$previousEvents[$i]=$current;
 			}
 			
@@ -58,7 +64,7 @@
 							echo "<div class=\"wrap\"><div class=\"date\" style=\"";
 							echo "height: ".$removed[5]."px; top: ".$removed[4]."px; width: ".(100 / $i)."%; left:".((100/$i)*$j)."%;";
 							echo "\"><div class=\"inner\">";
-							echo "<div class=\"title\"><a href='/showevent.php?e=".$removed[7]."&s=".$removed[8]."'>";
+							echo "<div class=\"title\"><a href='/showevent.php?e=".$removed[7]."&s=".$removed[8]."' ".$removed[10].">";
 							echo $removed[2]."</a><br>".$removed[9]."<br>".$removed[3]."</div>\n";
 							echo "<span class=\"time\">".$removed[0];
 							echo " - ".$removed[1];
@@ -72,7 +78,7 @@
 					echo "<div class=\"wrap\"><div class=\"date\" style=\"";
 					echo "height: ".$removed[5]."px; top: ".$removed[4]."px; width: ".(100 / $i)."%; left:".(100/$i)*$f."%;";
 					echo "\"><div class=\"inner\">";
-					echo "<div class=\"title\"><a href='/showevent.php?e=".$removed[7]."&s=".$removed[8]."'>";
+					echo "<div class=\"title\"><a href='/showevent.php?e=".$removed[7]."&s=".$removed[8]."' ".$removed[10].">";
 					echo $removed[2]."</a><br>".$removed[9]."<br>".$removed[3]."</div>\n";
 					echo "<span class=\"time\">".$removed[0];
 					echo " - ".$removed[1];
@@ -323,7 +329,7 @@
 	echo "<div class=\"cell_top\">";
 	if($caption) echo $caption;
 	else {
-	echo '<a href="index.php?o=',$la,'&w=',$w,'&c=',$c,'&m=',$dm,'&a=',$da,'&y=',$dy,'">';
+	echo '<a href="index.php?o=',$la,'&w=',$w,'&c=',$c,'&m=',$dm,'&a=',$da,'&y=',$dy,'&sem=',$sem,'">';
 	echo date('l, F j', mktime(0,0,0,$dm,$da,$dy));
 	echo '</a>';
 	}

@@ -77,7 +77,7 @@
 						</div>
 						
 						<div class="row col s12">
-							<input placeholder="end time" type="time" name="endtime" maxlength="30" >
+							<input placeholder="End Time" type="time" name="endtime" maxlength="30" >
 							
 						</div>
 						
@@ -134,7 +134,7 @@
 						<div class="input-field col s12">
 							<select form="addevent" name="course" value="<?php if (isset($_GET['c'])) echo $_GET['c']?>">
 								<?php
-									$q = "SELECT * FROM ".TBL_COURSE;
+									$q = "SELECT * FROM ".TBL_COURSE." WHERE Lead_Instructor = ".$session->getCWID();
 									$result = $database->query($q);
 									$num_rows = mysql_numrows($result);
 									for($i=0; $i<$num_rows; $i++){
