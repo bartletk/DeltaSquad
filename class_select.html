@@ -1,0 +1,153 @@
+<html>
+
+<head>
+  <!--Import Google Icon Font-->
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <!--Import materialize.css-->
+ <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/css/materialize.min.css">
+
+  <!--Let browser know website is optimized for mobile-->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <link rel="stylesheet" type="text/css" href="addevent.css">
+  <link href="https://fonts.googleapis.com/css?family=Lobster" rel="stylesheet">
+
+</head>
+
+<body>
+
+  <nav>
+            <div class="nav-wrapper">
+              <a href="#!" class="brand-logo"><img src="ulmlogo.png" alt="logo" class="logo" ></a>
+              <a href="#" data-activates="mobile-demo" class="button-collapse"><i class="material-icons">menu</i></a>
+              <ul class="right hide-on-med-and-down">
+              
+          
+                <li><a href="">Calendar</a></li>
+                <li><a href="">Login</a></li>
+               
+              </ul>
+              <ul class="side-nav" id="mobile-demo">
+              
+                <li><a href="">Calendar</a></li>
+                <li><a href="">Login</a></li>
+                
+            </div>
+  </nav>
+
+
+<div class="card card-1">
+  <h3><strong>Welcome to ULM Nursing Calendar</strong>
+    
+  </h3>
+
+   
+</div>
+
+  <div class="parallax-container">
+     <div class="parallax"><img src="anurse.jpg"></div>
+ </div>
+<div class="section white">
+</div>
+
+<div class="card card-2 heading">
+  
+  <h5>Student Login</h5>
+
+  <div class="input-field col s12">
+    <input placeholder="CWID" id="CWID" type="text" >
+
+  </div>
+
+  <form>
+ <div class="input-field col s12">
+    <select>
+      <option value="" disabled selected>Choose your Semester</option>
+      <option value="1">Semester 1</option>
+      <option value="2">Semester 2</option>
+      <option value="3">Semester 3</option>
+      <option value="4">Semester 4</option>
+      <option value="5">Semester 5</option>
+    </select>
+        <button class="btn waves-effect waves-light" type="submit" name="action">Pick Course
+    <i class="material-icons right">send</i>
+  </button>
+  </div>
+
+
+  </form>
+
+  <br>
+
+
+  <form>
+    <div class="input-field col s12">
+    <select multiple>
+      <option value="" disabled selected>Choose your Classes</option>
+      <option value="1">2009 math</option>
+      <option value="2">3000 busn</option>
+      <option value="3">4000 comp</option>
+    </select>
+    <label>Pick Classes</label>
+  </div>
+  <button class="btn waves-effect waves-light" type="submit" name="action">Pick CRN
+    <i class="material-icons right">send</i>
+  </button>
+
+  </form>
+
+  <br>
+
+  <form>
+    <div class="input-field col s12">
+    <select multiple>
+      <option value="" disabled selected>Choose your Classes</option>
+      <option value="1">2009 </option>
+      <option value="2">3000 </option>
+      <option value="3">4000 </option>
+    </select>
+    <label>Pick CRNs</label>
+  </div>
+  <button class="btn waves-effect waves-light" type="submit" name="action">View Schedule
+    
+    <i class="material-icons right">send</i>
+  </button>
+
+  </form>
+
+
+
+</div>
+<div class="parallax-container">
+      <div class="parallax"><img src="schedule.jpg"></div>
+    </div
+
+
+
+  <!--Import jQuery before materialize.js-->
+  <script src="https://code.jquery.com/jquery-2.2.4.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
+        
+          <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script>
+
+          <script>
+              $( document ).ready(function(){
+                $(".button-collapse").sideNav();
+
+                $(document).ready(function() {
+    $('select').material_select();
+  });
+ $(document).ready(function(){
+    $('.parallax').parallax();
+  });
+
+                });
+
+
+          </script>
+</body>
+<hr>
+
+</html>
+
+
+
