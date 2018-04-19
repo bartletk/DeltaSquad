@@ -23,8 +23,8 @@ width:57px;
 
 
 .card1{
-   margin:40px;
-   margin-top:40px;
+   margin:40px !important;
+   margin-top:40px !important;
 } 
 
 .btn, .picker__date-display {
@@ -55,4 +55,9 @@ hr.style13 {
 .heading{
 	color:white !important; 
    	background-color:#A39058 !important ;
+}
+
+h3{
+  text-align:center !important;
+  color:#600 !important;
 }

@@ -1,54 +1,6 @@
 <?php
-include("top_header.php");
+
 include("header.php");
-?>
-<!DOCTYPE html>
-<html>
-<head>
-	<title></title>
-     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/css/materialize.min.css">
-        <link style rel="stylesheet" type="text/css" href="css/navbar.css"></style>
-</head>
-<body>
-<body>
-
-
-<div class="card card1">
-  <h5><strong>User Account Edit: admin</strong></h5>
- <div class="row row1">
-  <form class="col s12">
-    <div class="row">
-      <div class="input-field col s12">
-        <input id="fname" name="fname" type="text" class="validate" required="" aria-required="true">
-        <label for="fname">Name</label>
-      </div>
-      <div class="input-field col s12">
-        <input id="email2" type="email" class="validate" required="" aria-required="true">
-        <label for="email2">Email</label>
-      </div>
-      <div class="input-field col s12">
-        <input id="current-password" name="current-password" type="text" class="validate" required="" aria-required="true">
-        <label for="current-password">Current Password</label>
-      </div>
-      <div class="input-field col s12">
-        <input id="new-password" name="new-passowrd" type="text" class="validate" required="" aria-required="true">
-        <label for="example">New Password</label>
-      </div>
-     
-      <div class="input-field col s12">
-        <button class="btn waves-effect waves-light" type="submit" name="action">Submit</button>
-      </div>
-    </div>	
-  				</form>
-			</div>
-		</div>
-	</body>
-</html>
-
-
-<?php
-
 $page = "useredit.php";
 ?>
 <div>
@@ -136,6 +88,3 @@ if($form->num_errors > 0){
 </div>
 </body>
 </html>
-<?php
-	include("footer.php");
-?>
