@@ -163,7 +163,6 @@
 			return mysql_query($q, $this->connection);
 			$log = "User Created:".$username."";
 			$this->logIt($log);
-			//$logQ = sprintf("INSERT INTO ".TBL_LOG." VALUES (NULL,".$this->CWID.","."'User Created:".$username."',NULL,".$this->referrer.""));
 		}
 		
 		/**
@@ -172,7 +171,6 @@
 		*/
 		function updateUserField($username, $field, $value){
 			$q = sprintf("UPDATE ".TBL_USERS." SET $field = '$value' WHERE username = '$username'");
-			
 			$result = mysql_query($q, $this->connection);
 			$log = "Updated user field: ".$field." of ".$username."";
 			$this->logIt($log);
@@ -241,6 +239,15 @@
 		}
 		
         function addEvent2($title, $type, $course, $crn, $seats, $notes, $dateStart, $dateEnd, $room, $user, $series, $time, $conflict){
+			if ($type == 0){
+				$type = "Class";
+				} else if ($type == 1){
+				$type = "Clinical";
+				} else if ($type == 2){
+				$type = "Exam";
+				} else if ($type == 3){
+				$type = "Event";
+			}
 			$title = str_replace ( "'" , "\'" , $title );
 			$notes = str_replace ( "'" , "\'" , $notes );
 			$crn = substr($crn, 1);
@@ -250,11 +257,11 @@
 				} else {
 				$approval = "pending"; 
 				$date = date('m/d/Y')." at ".date('g:i.s')." ".date('a');
-				$message = "Conflict created at <a href='./editevent.php?e=$eventid'>$eventid - $title</a>";
+				$message = "Conflict created at <a href=\'./editevent.php?e=$eventid\'>$eventid - $title</a>";
 				$this->mailIt($message);
 			}
 			foreach ($crns as $c){
-				$q = sprintf("INSERT INTO ".TBL_EVENTS." VALUES (NULL, '$title', $seats, $type, $c, $user, '$room', '$notes', $series, '$dateStart', '$dateEnd', '$time', '$approval')");
+				$q = sprintf("INSERT INTO ".TBL_EVENTS." VALUES (NULL, '$title', $seats, '$type', $c, $user, '$room', '$notes', $series, '$dateStart', '$dateEnd', '$time', '$approval')");
 				//$myfile = fopen("error.txt", "a") or die(print_r($q));
 				$result = mysql_query($q, $this->connection);
 				//$myfile = fopen("error.txt", "a") or die(print_r($q));
@@ -274,16 +281,25 @@
 			$notes = str_replace ( "'" , "\'" , $notes );
 			$crn = substr($crn, 1);
 			$crns = explode(" ",$crn);
+			if ($type == 0){
+				$type = "Class";
+				} else if ($type == 1){
+				$type = "Clinical";
+				} else if ($type == 2){
+				$type = "Exam";
+				} else if ($type == 3){
+				$type = "Event";
+			}
 			if ($conflict < 1){
 				$approval = "accepted";
 				} else {
 				$approval = "pending"; 
 				$date = date('m/d/Y')." at ".date('g:i.s')." ".date('a');
-				$message = "Conflict created at <a href='./editevent.php?e=$eventid'>$eventid - $title</a>.";
+				$message = "Conflict created at <a href=\'./editevent.php?e=$eventid\'>$eventid - $title</a>.";
 				$this->mailIt($message);
 			}
 			foreach ($crns as $c){
-				$q = sprintf("INSERT INTO ".TBL_EVENTS." VALUES (NULL, '$title', $seats, $type, $c, $user, '$room', '$notes', $series, '$dateStart', '$dateEnd', '$time', '$approval')");				
+				$q = sprintf("INSERT INTO ".TBL_EVENTS." VALUES (NULL, '$title', $seats, '$type', $c, $user, '$room', '$notes', $series, '$dateStart', '$dateEnd', '$time', '$approval')");				
 				$result = mysql_query($q, $this->connection);				
 				//$myfile = fopen("error.txt", "a") or die(print_r($q));
 				$dateStartOriginal = new DateTime($dateStart,new \DateTimeZone('UTC'));
@@ -303,7 +319,7 @@
 					while ($re1 > $dateStartA) {
 						$dateStart1=$dateStartA->format('Y-m-d H:i:s');
 						$dateEnd1=$dateEndA->format('Y-m-d H:i:s');
-						$q = sprintf("INSERT INTO ".TBL_EVENTS." VALUES (NULL, '$title', $seats, $type, $c, $user, '$room', '$notes', $series, '$dateStart1', '$dateEnd1', '$time', '$approval')");
+						$q = sprintf("INSERT INTO ".TBL_EVENTS." VALUES (NULL, '$title', $seats, '$type', $c, $user, '$room', '$notes', $series, '$dateStart1', '$dateEnd1', '$time', '$approval')");
 						//$myfile = fopen("error.txt", "a") or die(print_r($q));
 						$result = mysql_query($q, $this->connection);	
 						$dateStartA->modify('+7 day');
@@ -321,7 +337,7 @@
 					while ($re1 > $dateStartA) {
 						$dateStart1=$dateStartA->format('Y-m-d H:i:s');
 						$dateEnd1=$dateEndA->format('Y-m-d H:i:s');
-						$q = sprintf("INSERT INTO ".TBL_EVENTS." VALUES (NULL, '$title', $seats, $type, $c, $user, '$room', '$notes', $series, '$dateStart1', '$dateEnd1', '$time', '$approval')");
+						$q = sprintf("INSERT INTO ".TBL_EVENTS." VALUES (NULL, '$title', $seats, '$type', $c, $user, '$room', '$notes', $series, '$dateStart1', '$dateEnd1', '$time', '$approval')");
 						$result = mysql_query($q, $this->connection);
 						$dateStartA->modify('+7 day');
 						$dateEndA->modify('+7 day');
@@ -338,7 +354,7 @@
 					while ($re1 > $dateStartA) {
 						$dateStart1=$dateStartA->format('Y-m-d H:i:s');
 						$dateEnd1=$dateEndA->format('Y-m-d H:i:s');
-						$q = sprintf("INSERT INTO ".TBL_EVENTS." VALUES (NULL, '$title', $seats, $type, $c, $user, '$room', '$notes', $series, '$dateStart1', '$dateEnd1', '$time', '$approval')");
+						$q = sprintf("INSERT INTO ".TBL_EVENTS." VALUES (NULL, '$title', $seats, '$type', $c, $user, '$room', '$notes', $series, '$dateStart1', '$dateEnd1', '$time', '$approval')");
 						$result = mysql_query($q, $this->connection);
 						$dateStartA->modify('+7 day');
 						$dateEndA->modify('+7 day');
@@ -354,7 +370,7 @@
 					while ($re1 > $dateStartA) {
 						$dateStart1=$dateStartA->format('Y-m-d H:i:s');
 						$dateEnd1=$dateEndA->format('Y-m-d H:i:s');
-						$q = sprintf("INSERT INTO ".TBL_EVENTS." VALUES (NULL, '$title', $seats, $type, $c, $user, '$room', '$notes', $series, '$dateStart1', '$dateEnd1', '$time', '$approval')");
+						$q = sprintf("INSERT INTO ".TBL_EVENTS." VALUES (NULL, '$title', $seats, '$type', $c, $user, '$room', '$notes', $series, '$dateStart1', '$dateEnd1', '$time', '$approval')");
 						$result = mysql_query($q, $this->connection);
 						$dateStartA->modify('+7 day');
 						$dateEndA->modify('+7 day');
@@ -370,7 +386,7 @@
 					while ($re1 > $dateStartA) {
 						$dateStart1=$dateStartA->format('Y-m-d H:i:s');
 						$dateEnd1=$dateEndA->format('Y-m-d H:i:s');
-						$q = sprintf("INSERT INTO ".TBL_EVENTS." VALUES (NULL, '$title', $seats, $type, $c, $user, '$room', '$notes', $series, '$dateStart1', '$dateEnd1', '$time', '$approval')");
+						$q = sprintf("INSERT INTO ".TBL_EVENTS." VALUES (NULL, '$title', $seats, '$type', $c, $user, '$room', '$notes', $series, '$dateStart1', '$dateEnd1', '$time', '$approval')");
 						$result = mysql_query($q, $this->connection);	
 						$dateStartA->modify('+7 day');
 						$dateEndA->modify('+7 day');
@@ -388,7 +404,7 @@
 		}
 		function studentCourses($CWID){
 			
-			$q = sprintf("SELECT * FROM ".TBL_SCHED."WHERE CWID=$CWID");
+			$q = sprintf("SELECT * FROM ".TBL_SCHED." WHERE CWID=$CWID");
 			$result = mysql_query($q, $this->connection);
 			if(!$result || (mysql_num_rows($result) < 1)){
 				return FALSE;
@@ -399,8 +415,13 @@
 		}
 		function studentAdd($CWID, $crn){
 			foreach ($crn as $c){
-				$q = sprintf("INSERT INTO 'personal_schedule' ('CWID', 'crn') VALUES ($CWID, $c);");
-				$result = mysql_query($q, $this->connection);
+				$q = sprintf("INSERT INTO `".TBL_SCHED."`(`CWID`, `crn`) VALUES ($CWID, $c);");
+				$result = mysql_query($q, $this->connection);	
+			}
+			if ($result){
+				return TRUE;
+				} else {
+				return FALSE;
 			}
 		}
 		
@@ -410,6 +431,15 @@
 		
 		
 		function editEventB($title, $type, $seats, $notes, $dateStart, $dateEnd, $room, $conflict, $eventid){
+			if ($type == 0){
+				$type = "Class";
+				} else if ($type == 1){
+				$type = "Clinical";
+				} else if ($type == 2){
+				$type = "Exam";
+				} else if ($type == 3){
+				$type = "Event";
+			}
 			$title = str_replace ( "'" , "\'" , $title );
 			$notes = str_replace ( "'" , "\'" , $notes );
 			if ($conflict < 0){
@@ -419,7 +449,7 @@
 				$message = "Conflict created at <a href=\'./editevent.php?e=$eventid\'>$eventid - $title</a>.";
 				$this->mailIt($message);
 			}
-			$q = sprintf("Update ".TBL_EVENTS." set title = '$title', type = $type, attendees = $seats, room_number = '$room', notes = '$notes', dateStart = '$dateStart', dateEnd = '$dateEnd', timeCreated = ".time().", status = '$approval'  where event_id = $eventid");
+			$q = sprintf("Update ".TBL_EVENTS." set title = '$title', type = '$type', attendees = $seats, room_number = '$room', notes = '$notes', dateStart = '$dateStart', dateEnd = '$dateEnd', timeCreated = ".time().", status = '$approval'  where event_id = $eventid");
 			//$myfile = fopen("error.txt", "a") or die(print_r($q));
 			$result = mysql_query($q);
 			$log = "Event updated: ".$title."";
@@ -443,7 +473,6 @@
 		
 		
 		function deleteEvent($eventid){
-			
 			$q = sprintf("DELETE FROM ".TBL_EVENTS." where event_id = $eventid");
 			$result = mysql_query($q, $this->connection);
 			$log = "Event deleted: ".$eventid."";
@@ -478,14 +507,14 @@
 		}
 		// WORKS
 		function logIt($msg){
-		global $session;
+			global $session;
 			$logQ = sprintf("INSERT INTO ".TBL_LOG." VALUES (NULL,".$session->CWID.",'$msg',NULL,'".$session->referrer."')");
 			$result = mysql_query($logQ, $this->logCon);
 			return $result;
 		}
 		
 		function mailIt($msg){
-		global $session;
+			global $session;
 			$date = date('m/d/Y')." at ".date('g:i.s')." ".date('a');
 			$q2 = sprintf("INSERT INTO mail (UserTo, UserFrom, Subject, Message, SentDate, status) VALUES ('alyssa','admin','NOTICE! Conflict Created','$msg','$date','unread')");
 			$mail = mysql_query($q2, $this->newCon2);
@@ -493,7 +522,29 @@
 			return $mail;
 		}
 		
+		function deleteMail($mail_id){
+			$q = sprintf("DELETE FROM ".TBL_MAIL." where mail_id = $mail_id");
+			$result = mysql_query($q, $this->connection);
+			return TRUE;
+			
+		}
+		function readMail($mail_id){
+			$q = sprintf("UPDATE ".TBL_MAIL." SET status = 'read' where mail_id = $mail_id");
+			$result = mysql_query($q, $this->connection);
+			if(!$result || (mysql_num_rows($result) < 1)){
+				return NULL;
+			}
+			$dbarray = mysql_fetch_array($result);
+			return TRUE;
+		}
 		
+		function sendReply($mailTo,$mailSubject,$mailBody,$mailFrom){
+			global $session;
+			$date = date('m/d/Y')." at ".date('g:i.s')." ".date('a');
+			$q = "INSERT INTO mail (UserTo, UserFrom, Subject, Message, SentDate, status) VALUES ('$mailTo','$mailFrom','$mailSubject','$mailBody','$date','unread')";
+			$result = mysql_query($q, $this->connection);
+		}
+	
 	};
 	
 	
@@ -501,4 +552,5 @@
 	/* Create database connection */
 	$database = new MySQLDB;
 	
-?>
+	?>
+		

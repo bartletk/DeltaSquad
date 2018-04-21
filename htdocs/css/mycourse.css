@@ -1,4 +1,6 @@
-
+.remove_deadline{
+  margin-top:31px;
+}
 .wrap {
   margin-top: 20px;
   text-align: center;
@@ -129,4 +131,13 @@ h5{
 
 .card-2{
   padding:1em 3em;
+}
+
+.card-3{
+margin-left: 5%;
+    margin-right: 5%;
+    padding: 1em 3em;
+    text-align: center;
+    font-size: 18px;
+    bottom: -28px;
 }

@@ -28,7 +28,9 @@
 
 	<fieldset>
 		<div class="card card-2 heading">
-  
+  		<?php
+		if (!isset($_GET['cwid'])){
+		?>
   			<h5>Student Login</h5>
 		<p>
 		<form action="process.php" method="POST" id="studentLogin">
@@ -42,7 +44,8 @@
   </button>
 		</form>
 		<?php
-		if (isset($_GET['cwid'])){
+		}
+		if (isset($_GET['cwid']) && $_GET['cwid'] != 0 && $_GET['cwid'] != NULL && !isset($_GET['sem']) && !isset($_GET['c'])){
 		?>
 			<form action="process.php" method="POST" id="choosesemester">
 				<div class="input-field col s12">
@@ -64,7 +67,8 @@
 		</div>
 		</form>
 		<?php
-			if (isset($_GET['sem'])){
+		}
+			if (isset($_GET['sem']) && !isset($_GET['c'])){
 				$sem = $_GET['sem']; 
 			?>
 			<form action="process.php" method="POST" id="choosecourse">
@@ -94,6 +98,7 @@
 			</div>
 			</form>
 			<?php
+			}
 				if (isset($_GET['c'])){
 					$courses[] = explode(" ", trim($_GET['c']));
 					
@@ -123,14 +128,14 @@
 						</select>
 					</p> 
 					<input type="hidden" name="choosecrn" value="1">
+					<input type="hidden" name="cwid" value="<?php echo $_GET['cwid']; ?>">
 					<button class="btn waves-effect waves-light" type="submit" value="View Schedule">View Schedule
     
     					<i class="material-icons right">send</i>
  				 	</button>
 				</form>
 				<?php
-				}
-				}
+				
 			}
 		?>
 		

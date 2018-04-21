@@ -14,7 +14,7 @@ showHours();
 echo "<td><table class=\"day\"><tr>";
 
 for ($we=1;$we<6;$we++) {
-	echo "<td width=\"14%\" class=\"single_day\">\n";
+	echo "<td width=\"20%\" class=\"single_day\">\n";
 	showDay($now["week"]["y"][$we],$now["week"]["m"][$we],$now["week"]["a"][$we]);
 	echo "</td>";
 }

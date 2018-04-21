@@ -1,10 +1,38 @@
 <?php
 	
 	function showGrid($date) {
+		GLOBAL $session;
 		$dateNew = substr_replace(substr_replace($date, "-", 6, 0), "-", 4, 0);
+		$CWID = $session->getCWID();
 		$link = mysql_connect (DB_SERVER, DB_USER, DB_PASS) or die ("Could not connect to database, try again later");
 		mysql_select_db(DB_NAME,$link);
-		$q = sprintf("SELECT * FROM ".TBL_EVENTS." WHERE CAST(dateStart AS DATE) = CAST('$dateNew' AS DATE) ORDER BY dateStart");
+				// If student
+		if(!$session->isInstructor() & !$session->isAdmin()){
+			if (isset($_GET['cwid'])&&$_GET['cwid']!=0&&$_GET['cwid']!=NULL){
+			$studentCWID = $_GET['cwid'];
+				$q = sprintf("SELECT DISTINCT ".TBL_EVENTS.".* from ".TBL_EVENTS." join ".TBL_SCHED." on ".TBL_SCHED.".crn = ".TBL_EVENTS.".crn where (".TBL_SCHED.".cwid = $studentCWID OR series=9100) AND CAST(dateStart AS DATE) = CAST('$dateNew' AS DATE) AND status='approved'");
+				} else {
+				header ("Location: class_select.php");
+			}
+			// if teacher
+			} elseif (!$session->isAdmin() & $session->isInstructor()) {
+			
+			if (isset($sem) && ($sem != 0) && ($sem != NULL)){
+				$q = sprintf("select  ".TBL_EVENTS.".* from ".TBL_EVENTS." join ".TBL_CRN." ON ".TBL_EVENTS.".crn = ".TBL_CRN.".crn join ".TBL_COURSE." on ".TBL_COURSE.".course_number = ".TBL_CRN.".course_number where CAST(dateStart AS DATE) = CAST('$dateNew' AS DATE) AND (semester = $sem OR semester=0 OR series=9100)");
+				} else {
+				$q = sprintf("select DISTINCT ".TBL_EVENTS.".* from ".TBL_EVENTS." join ".TBL_CRN." ON ".TBL_EVENTS.".crn = ".TBL_CRN.".crn join ".TBL_COURSE." on ".TBL_COURSE.".course_number = ".TBL_CRN.".course_number where (".TBL_CRN.".instructor = $CWID OR ".TBL_COURSE.".Lead_Instructor = $CWID OR series=9100) AND CAST(dateStart AS DATE) = CAST('$dateNew' AS DATE)");
+			}
+			//if admin
+			} else {
+			$sem = $_GET['sem'];
+			if (isset($sem) && ($sem != 0) && ($sem != NULL)){
+				// change to all of a semester's classes
+				$q = sprintf("select  ".TBL_EVENTS.".* from ".TBL_EVENTS." join ".TBL_CRN." ON ".TBL_EVENTS.".crn = ".TBL_CRN.".crn join ".TBL_COURSE." on ".TBL_COURSE.".course_number = ".TBL_CRN.".course_number where CAST(dateStart AS DATE) = CAST('$dateNew' AS DATE) AND (semester = $sem OR semester=0 OR series=9100)");	
+				//$myfile = fopen("error.txt", "a") or die(print_r($q));
+				} else {
+				$q = sprintf("SELECT DISTINCT ".TBL_EVENTS.".* FROM ".TBL_EVENTS." WHERE CAST(dateStart AS DATE) = CAST('$dateNew' AS DATE)");
+			}
+		}
 		$result = mysql_query($q, $link);
 		$previousEvents[] = "";
 		if(!$result || (mysql_num_rows($result) < 1)){
@@ -29,15 +57,17 @@
 				$length = ((strtotime($end_time) - strtotime($start_time))/(60*60))*(28*2);
 				if (mysql_result($result,$i,"status") != 'approved') {
 					$style = "style='color: white; text-shadow: 1px 1px 2px black, 0 0 25px yellow, 0 0 5px orange;'";
-					} else {
+					} else if (mysql_result($result,$i,"series") ==9100) {
+					$style = "style='color: white; text-shadow: 1px 1px 2px black, 0 0 25px gray, 0 0 5px black;'";
+				} else {	
 					$style = "";
-					}
+				}
 				$current[] = "";
 				$current[0] = $start_timeF;
 				$current[1] = $end_timeF;
 				$current[2] = $title;
 				$current[3] = $room;
-				$current[4] = $fromTop;
+				$current[4] = ($fromTop+24);
 				$current[5] = $length;
 				$current[6] = $end_time;
 				$current[7] = $event;
@@ -93,6 +123,7 @@
 	
 	
 	function showHours() {
+		
 		global $day_week_start_hour, $day_week_end_hour;
 		// build day
 		echo "<td class=\"timex\"><table class=\"day\"><tr><td width=\"100%\"><div class=\"time_frame\">\n";
@@ -100,7 +131,6 @@
 		$i = $day_week_start_hour ? $day_week_start_hour : 0;
 		$j = $day_week_start_hour ? 0 : 30;
 		$max = $day_week_end_hour ? $day_week_end_hour : 24;
-		
 		//echo "<div class=\"cell\">".$h.":".$j." ".$ap."</div>\n";
 		echo '		<tr data-time="00:00:00">
 		<td class="cell"><span>12am</span></td>
@@ -131,330 +161,329 @@
 		
 		<tr data-time="03:00:00">
 		<td class="cell"><span>3am</span></td>
-	<td></td>
-	</tr>
-	<tr data-time="03:30:00" >
-	<td class="cell"></td>
-	<td ></td>
-	</tr>
-	
-	<tr data-time="04:00:00">
-	<td class="cell"><span>4am</span></td>
-	<td></td>
-	</tr>
-	<tr data-time="04:30:00" >
-	<td class="cell"></td>
-	<td ></td>
-	</tr>
-	
-	<tr data-time="05:00:00">
-	<td class="cell"><span>5am</span></td>
-	<td></td>
-	</tr>
-	<tr data-time="05:30:00" >
-	<td class="cell"></td>
-	<td ></td>
-	</tr>
-	
-	<tr data-time="06:00:00">
-	<td class="cell"><span>6am</span></td>
-	<td></td>
-	</tr>
-	<tr data-time="06:30:00" >
-	<td class="cell"></td>
-	<td ></td>
-	</tr>
-	
-	<tr data-time="06:00:00">
-	<td class="cell"><span>7am</span></td>
-	<td></td>
-	</tr>
-	<tr data-time="07:30:00" >
-	<td class="cell"></td>
-	<td ></td>
-	</tr>
-	
-	<tr data-time="08:00:00">
-	<td class="cell"><span>8am</span></td>
-	<td></td>
-	</tr>
-	<tr data-time="08:30:00" >
-	<td class="cell"></td>
-	<td ></td>
-	</tr>
-	
-	<tr data-time="09:00:00">
-	<td class="cell"><span>9am</span></td>
-	<td></td>
-	</tr>
-	<tr data-time="09:30:00" >
-	<td class="cell"></td>
-	<td ></td>
-	</tr>
-	
-	<tr data-time="10:00:00">
-	<td class="cell"><span>10am</span></td>
-	<td></td>
-	</tr>
-	<tr data-time="10:30:00" >
-	<td class="cell"></td>
-	<td ></td>
-	</tr>
-	
-	<tr data-time="11:00:00">
-	<td class="cell"><span>11am</span></td>
-	<td></td>
-	</tr>
-	<tr data-time="11:30:00" >
-	<td class="cell"></td>
-	<td ></td>
-	</tr>
-	
-	<tr data-time="12:00:00">
-	<td class="cell"><span>12pm</span></td>
-	<td></td>
-	</tr>
-	<tr data-time="12:30:00" >
-	<td class="cell"></td>
-	<td ></td>
-	</tr>
-	
-	<tr data-time="13:00:00">
-	<td class="cell"><span>1pm</span></td>
-	<td></td>
-	</tr>
-	<tr data-time="13:30:00" >
-	<td class="cell"></td>
-	<td ></td>
-	</tr>
-	
-	<tr data-time="14:00:00">
-	<td class="cell"><span>2pm</span></td>
-	<td></td>
-	</tr>
-	<tr data-time="14:30:00" >
-	<td class="cell"></td>
-	<td ></td>
-	</tr>
-	
-	<tr data-time="15:00:00">
-	<td class="cell"><span>3pm</span></td>
-	<td></td>
-	</tr>
-	<tr data-time="15:30:00" >
-	<td class="cell"></td>
-	<td ></td>
-	</tr>
-	
-	<tr data-time="16:00:00">
-	<td class="cell"><span>4pm</span></td>
-	<td></td>
-	</tr>
-	<tr data-time="16:30:00" >
-	<td class="cell"></td>
-	<td ></td>
-	</tr>
-	
-	<tr data-time="17:00:00">
-	<td class="cell"><span>5pm</span></td>
-	<td></td>
-	</tr>
-	<tr data-time="17:30:00" >
-	<td class="cell"></td>
-	<td ></td>
-	</tr>
-	
-	<tr data-time="18:00:00">
-	<td class="cell"><span>6pm</span></td>
-	<td></td>
-	</tr>
-	<tr data-time="18:30:00" >
-	<td class="cell"></td>
-	<td ></td>
-	</tr>
-	
-	<tr data-time="19:00:00">
-	<td class="cell"><span>7pm</span></td>
-	<td></td>
-	</tr>
-	<tr data-time="19:30:00" >
-	<td class="cell"></td>
-	<td ></td>
-	</tr>
-	
-	<tr data-time="20:00:00">
-	<td class="cell"><span>8pm</span></td>
-	<td></td>
-	</tr>
-	<tr data-time="20:30:00" >
-	<td class="cell"></td>
-	<td ></td>
-	</tr>
-	
-	<tr data-time="21:00:00">
-	<td class="cell"><span>9pm</span></td>
-	<td></td>
-	</tr>
-	<tr data-time="21:30:00" >
-	<td class="cell"></td>
-	<td ></td>
-	</tr>
-	
-	<tr data-time="22:00:00">
-	<td class="cell"><span>10pm</span></td>
-	<td></td>
-	</tr>
-	<tr data-time="22:30:00" >
-	<td class="cell"></td>
-	<td ></td>
-	</tr>
-	
-	<tr data-time="23:00:00">
-	<td class="cell"><span>11pm</span></td>
-	<td></td>
-	</tr>
-	<tr data-time="23:30:00" >
-	<td class="cell"></td>
-	<td ></td>
-	</tr>';
-	
-	echo "</div></td></tr></table></td>";
-	
+		<td></td>
+		</tr>
+		<tr data-time="03:30:00" >
+		<td class="cell"></td>
+		<td ></td>
+		</tr>
+		
+		<tr data-time="04:00:00">
+		<td class="cell"><span>4am</span></td>
+		<td></td>
+		</tr>
+		<tr data-time="04:30:00" >
+		<td class="cell"></td>
+		<td ></td>
+		</tr>
+		
+		<tr data-time="05:00:00">
+		<td class="cell"><span>5am</span></td>
+		<td></td>
+		</tr>
+		<tr data-time="05:30:00" >
+		<td class="cell"></td>
+		<td ></td>
+		</tr>
+		
+		<tr data-time="06:00:00">
+		<td class="cell"><span>6am</span></td>
+		<td></td>
+		</tr>
+		<tr data-time="06:30:00" >
+		<td class="cell"></td>
+		<td ></td>
+		</tr>
+		
+		<tr data-time="06:00:00">
+		<td class="cell"><span>7am</span></td>
+		<td></td>
+		</tr>
+		<tr data-time="07:30:00" >
+		<td class="cell"></td>
+		<td ></td>
+		</tr>
+		
+		<tr data-time="08:00:00">
+		<td class="cell"><span>8am</span></td>
+		<td></td>
+		</tr>
+		<tr data-time="08:30:00" >
+		<td class="cell"></td>
+		<td ></td>
+		</tr>
+		
+		<tr data-time="09:00:00">
+		<td class="cell"><span>9am</span></td>
+		<td></td>
+		</tr>
+		<tr data-time="09:30:00" >
+		<td class="cell"></td>
+		<td ></td>
+		</tr>
+		
+		<tr data-time="10:00:00">
+		<td class="cell"><span>10am</span></td>
+		<td></td>
+		</tr>
+		<tr data-time="10:30:00" >
+		<td class="cell"></td>
+		<td ></td>
+		</tr>
+		
+		<tr data-time="11:00:00">
+		<td class="cell"><span>11am</span></td>
+		<td></td>
+		</tr>
+		<tr data-time="11:30:00" >
+		<td class="cell"></td>
+		<td ></td>
+		</tr>
+		
+		<tr data-time="12:00:00">
+		<td class="cell"><span>12pm</span></td>
+		<td></td>
+		</tr>
+		<tr data-time="12:30:00" >
+		<td class="cell"></td>
+		<td ></td>
+		</tr>
+		
+		<tr data-time="13:00:00">
+		<td class="cell"><span>1pm</span></td>
+		<td></td>
+		</tr>
+		<tr data-time="13:30:00" >
+		<td class="cell"></td>
+		<td ></td>
+		</tr>
+		
+		<tr data-time="14:00:00">
+		<td class="cell"><span>2pm</span></td>
+		<td></td>
+		</tr>
+		<tr data-time="14:30:00" >
+		<td class="cell"></td>
+		<td ></td>
+		</tr>
+		
+		<tr data-time="15:00:00">
+		<td class="cell"><span>3pm</span></td>
+		<td></td>
+		</tr>
+		<tr data-time="15:30:00" >
+		<td class="cell"></td>
+		<td ></td>
+		</tr>
+		
+		<tr data-time="16:00:00">
+		<td class="cell"><span>4pm</span></td>
+		<td></td>
+		</tr>
+		<tr data-time="16:30:00" >
+		<td class="cell"></td>
+		<td ></td>
+		</tr>
+		
+		<tr data-time="17:00:00">
+		<td class="cell"><span>5pm</span></td>
+		<td></td>
+		</tr>
+		<tr data-time="17:30:00" >
+		<td class="cell"></td>
+		<td ></td>
+		</tr>
+		
+		<tr data-time="18:00:00">
+		<td class="cell"><span>6pm</span></td>
+		<td></td>
+		</tr>
+		<tr data-time="18:30:00" >
+		<td class="cell"></td>
+		<td ></td>
+		</tr>
+		
+		<tr data-time="19:00:00">
+		<td class="cell"><span>7pm</span></td>
+		<td></td>
+		</tr>
+		<tr data-time="19:30:00" >
+		<td class="cell"></td>
+		<td ></td>
+		</tr>
+		
+		<tr data-time="20:00:00">
+		<td class="cell"><span>8pm</span></td>
+		<td></td>
+		</tr>
+		<tr data-time="20:30:00" >
+		<td class="cell"></td>
+		<td ></td>
+		</tr>
+		
+		<tr data-time="21:00:00">
+		<td class="cell"><span>9pm</span></td>
+		<td></td>
+		</tr>
+		<tr data-time="21:30:00" >
+		<td class="cell"></td>
+		<td ></td>
+		</tr>
+		
+		<tr data-time="22:00:00">
+		<td class="cell"><span>10pm</span></td>
+		<td></td>
+		</tr>
+		<tr data-time="22:30:00" >
+		<td class="cell"></td>
+		<td ></td>
+		</tr>
+		
+		<tr data-time="23:00:00">
+		<td class="cell"><span>11pm</span></td>
+		<td></td>
+		</tr>
+		<tr data-time="23:30:00" >
+		<td class="cell"></td>
+		<td ></td>
+		</tr>';
+		echo "</div></td></tr></table></td>";
+		
 	}
 	
 	function showDay($dy,$dm,$da,$caption="") {
-	global $la, $w, $c, $day_week_start_hour, $day_week_end_hour;
-	// build day
-	echo "<div class=\"single_day_frame\">";
-	echo "<div class=\"cell_top\">";
-	if($caption) echo $caption;
-	else {
-	echo '<a href="index.php?o=',$la,'&w=',$w,'&c=',$c,'&m=',$dm,'&a=',$da,'&y=',$dy,'&sem=',$sem,'">';
-	echo date('l, F j', mktime(0,0,0,$dm,$da,$dy));
-	echo '</a>';
-	}
-	echo "</div>";
-	echo "<div class=\"cell\" id=\"0:00:".$dm."/".$da."/".$dy."\"></div>\n";
-	$i = $day_week_start_hour ? $day_week_start_hour : 0;
-	$j = $day_week_start_hour ? 0 : 30;
-	$max = $day_week_end_hour ? $day_week_end_hour : 24;
-	
-	while ($i < $max) {
-	if ($j < 10) {
-	$j = "0".$j;
-	if ($i < 10) $i = $i;
-	}
-	if ($i == 0) {
-	$h = 12;
-	$ap = "am";
-	} elseif ($i == 12) {
-	$h = $i;
-	$ap = "pm";
-	} elseif ($i > 12) {
-	$h = $i - 12;
-	$ap = "pm";
-	} else {
-	$h = $i;
-	$ap = "am";
-	}
-	if ($i < 10) $i = $i;
-	//echo "<div class=\"cell\" id=\"".$i.":".$j."\">".$h.":".$j." ".$ap."</div>\n";
-	echo "<div class=\"cell\" id=\"".$i.":".$j.":".$dm."/".$da."/".$dy."\"></div>\n";
-	$j = $j+30;
-	if ($j >= 60) {
-	$j = "0";
-	$i++;
-	}
-	}
-	
-	
-	
-	$sdate = $dy.$dm.$da;
-	echo "<div id=\"dates\">\n";
-	showGrid($sdate);
-	echo "</div>";
-	echo "</div>";
-	
-	
+		global $la, $w, $c, $day_week_start_hour, $day_week_end_hour;
+		// build day
+		echo "<div class=\"single_day_frame\">";
+		echo "<div class=\"cell_top\">";
+		if($caption) echo $caption;
+		else {
+			echo '<a href="index.php?o=',$la,'&w=',$w,'&c=',$c,'&m=',$dm,'&a=',$da,'&y=',$dy,'&sem=',$sem,'">';
+			echo date('l, F j', mktime(0,0,0,$dm,$da,$dy));
+			echo '</a>';
+		}
+		echo "</div>";
+		echo "<div class=\"cell\" id=\"0:00:".$dm."/".$da."/".$dy."\"></div>\n";
+		$i = $day_week_start_hour ? $day_week_start_hour : 0;
+		$j = $day_week_start_hour ? 0 : 30;
+		$max = $day_week_end_hour ? $day_week_end_hour : 24;
+		
+		while ($i < $max) {
+			if ($j < 10) {
+				$j = "0".$j;
+				if ($i < 10) $i = $i;
+			}
+			if ($i == 0) {
+				$h = 12;
+				$ap = "am";
+				} elseif ($i == 12) {
+				$h = $i;
+				$ap = "pm";
+				} elseif ($i > 12) {
+				$h = $i - 12;
+			$ap = "pm";
+			} else {
+			$h = $i;
+			$ap = "am";
+			}
+			if ($i < 10) $i = $i;
+			//echo "<div class=\"cell\" id=\"".$i.":".$j."\">".$h.":".$j." ".$ap."</div>\n";
+			echo "<div class=\"cell\" id=\"".$i.":".$j.":".$dm."/".$da."/".$dy."\"></div>\n";
+			$j = $j+30;
+			if ($j >= 60) {
+				$j = "0";
+				$i++;
+			}
+		}
+		
+		
+		
+		$sdate = $dy.$dm.$da;
+		echo "<div id=\"dates\">\n";
+		showGrid($sdate);
+		echo "</div>";
+		echo "</div>";
+		
+		
 	}
 	
 	
 	
 	
 	if ($superpost) {
-	$javascript = '<script type="text/javascript">
-	
-	
-	function getElementsByClassName(oElm, strTagName, strClassName){
-	var arrElements = (strTagName == "*" && oElm.all)? oElm.all : oElm.getElementsByTagName(strTagName);
-	var arrReturnElements = new Array();
-	strClassName = strClassName.replace(/-/g, "\-");
-	var oRegExp = new RegExp("(^|\s)" + strClassName + "(\s|$)");
-	var oElement;
-	for(var i=0; i<arrElements.length; i++){
-	oElement = arrElements[i];
-	if(oRegExp.test(oElement.className)){
-	arrReturnElements.push(oElement);
-	}
-	}
-	return (arrReturnElements)
-	}
-	var start;
-	var end;
-	var flagged = Array();
-	window.onload = function () {
-	var x = getElementsByClassName(document, "div", "cell")
-	for (var i=0;i<x.length;i++) {
-	//x[i].onmousedown = function () {this.style.backgroundColor="#cccccc"}
-	x[i].onmousedown = startup
-	x[i].onmouseout = flag
-	x[i].onmouseover = whatadrag
-	x[i].onmouseup = endup
-	//x[i].onmouseout = function () {this.style.backgroundColor="#ffffff"}
-	//x[i].onclick = function () {this.innerHTML = this.id}
-	//x[i].onclick = click
-	}
-	/*
-	var x = getElementsByClassName(document, "div", "date")
-	for (var i=0;i<x.length;i++) {
-	x[i].onmouseout = contract
-	x[i].onmouseover = expand
-	
-	}
-	
-	function expand () {
-	this.oldheight = this.style.height
-	this.style.height ="auto"
-	this.style.zIndex = 2
-	}
-	
-	function contract () {
-	this.style.height = this.oldheight
-	this.style.zIndex = 1
-	}
-	*/
-	}
-	function startup () {
-	start = this.id
-	end = this.id
-	this.style.backgroundColor="#cccccc"
-	
-	}
-	
-	function flag() {
-	var next = Math.abs(start - end)
-	var cur = Math.abs(start - this.id)
-	
-	}
-	
-	function whatadrag() {
-	
-	if (start) {
-	this.style.backgroundColor="#cccccc"
-	var cur = Math.abs(start - this.id)
-	var next = Math.abs(start - end)
-	if (cur < next) {
-	document.getElementById(end).style.backgroundColor="#ffffff";
+		$javascript = '<script type="text/javascript">
+		
+		
+		function getElementsByClassName(oElm, strTagName, strClassName){
+		var arrElements = (strTagName == "*" && oElm.all)? oElm.all : oElm.getElementsByTagName(strTagName);
+		var arrReturnElements = new Array();
+		strClassName = strClassName.replace(/-/g, "\-");
+		var oRegExp = new RegExp("(^|\s)" + strClassName + "(\s|$)");
+		var oElement;
+		for(var i=0; i<arrElements.length; i++){
+		oElement = arrElements[i];
+		if(oRegExp.test(oElement.className)){
+		arrReturnElements.push(oElement);
+		}
+		}
+		return (arrReturnElements)
+		}
+		var start;
+		var end;
+		var flagged = Array();
+		window.onload = function () {
+		var x = getElementsByClassName(document, "div", "cell")
+		for (var i=0;i<x.length;i++) {
+		//x[i].onmousedown = function () {this.style.backgroundColor="#cccccc"}
+		x[i].onmousedown = startup
+		x[i].onmouseout = flag
+		x[i].onmouseover = whatadrag
+		x[i].onmouseup = endup
+		//x[i].onmouseout = function () {this.style.backgroundColor="#ffffff"}
+		//x[i].onclick = function () {this.innerHTML = this.id}
+		//x[i].onclick = click
+		}
+		/*
+		var x = getElementsByClassName(document, "div", "date")
+		for (var i=0;i<x.length;i++) {
+		x[i].onmouseout = contract
+		x[i].onmouseover = expand
+		
+		}
+		
+		function expand () {
+		this.oldheight = this.style.height
+		this.style.height ="auto"
+		this.style.zIndex = 2
+		}
+		
+		function contract () {
+		this.style.height = this.oldheight
+		this.style.zIndex = 1
+		}
+		*/
+		}
+		function startup () {
+		start = this.id
+		end = this.id
+		this.style.backgroundColor="#cccccc"
+		
+		}
+		
+		function flag() {
+		var next = Math.abs(start - end)
+		var cur = Math.abs(start - this.id)
+		
+		}
+		
+		function whatadrag() {
+		
+		if (start) {
+		this.style.backgroundColor="#cccccc"
+		var cur = Math.abs(start - this.id)
+		var next = Math.abs(start - end)
+		if (cur < next) {
+		document.getElementById(end).style.backgroundColor="#ffffff";
 	}
 	end = this.id;
 	}
@@ -531,4 +560,4 @@
 	}
 	</script>';
 	}
-	?>					
+	?>						

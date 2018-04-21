@@ -1,12 +1,5 @@
- <!DOCTYPE html>
- <html>
- <head>
-   <title></title>
-   <link rel="stylesheet" type="text/css" href="css/footer.css">
- </head>
- <body>
- 
- <footer class="page-footer">
+</main>
+<footer class="page-footer">
           <div class="footercontainer">
             <div class="row">
               <div class="col l6 s12">
@@ -24,5 +17,5 @@
     </div>
 </footer>
  </body>
- </html
+ </html>
  

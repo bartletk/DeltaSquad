@@ -26,6 +26,7 @@ define("TBL_CRN", "section");
 define("TBL_DEADLINES", "deadline");
 define("TBL_SCHED", "personal_schedule");
 define("TBL_LOG", "log");
+define("TBL_MODULES", "modules");
 /**
  * Special Names and Level Constants - the admin
  * page will only be accessible to the user with

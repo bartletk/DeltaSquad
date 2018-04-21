@@ -1,9 +1,13 @@
 select { 
-	position: relative !important;
+	position: relative !important; 
+	width: 100% !important;  
+	height: 100% !important; 
 	opacity: 100 !important;
 	pointer-events:auto !important;
-	
 	}
+.picker__header{
+	width: 100% !important;
+}
 
 .noshow {
 	display:none;
@@ -70,13 +74,4 @@ data-time {
 .breaking_css{
 	margin-top: 12px;
 	margin-left:12px;
-}
-
-#viewsright {
-	float:right;
-	width:50%;
-}
-#viewsleft {
-	float:left;
-	width:50%;
 }

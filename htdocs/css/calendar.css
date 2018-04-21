@@ -246,12 +246,13 @@ clear: both;
 	font-size: 6pt;
 }
 .frame {
+
 	background: #fff;
 	border: 1px solid #000;
 }
 
 div.cal_top {
-	background: #B0E0E6;
+	background: #600;
 	font-size: 16pt;
 	font-weight:bold;
 	text-align:center;
@@ -332,12 +333,13 @@ td.single_day {
 
 .cal_top{
 	text-align:center !important;
-	padding:50px !important;
+	padding:50px;
 	color:white !important;
 	font-family: 'Orbitron', sans-serif !important;
 	text-transform: uppercase;
 }
 
 table{
-	width:90% !important;
+	width:90% ;
 }
+

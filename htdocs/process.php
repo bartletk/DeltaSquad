@@ -70,6 +70,18 @@
 			else if(isset($_POST['approveall'])){
 				$this->procApproveAll();
 			}
+			else if(isset($_POST['readMail'])){
+				$this->procReadMail();
+			}
+			else if(isset($_POST['deleteMail'])){
+				$this->procDeleteMail();
+			}
+			else if(isset($_POST['subreply'])){
+				$this->procReply();
+			}
+			else if(isset($_POST['subsendreply'])){
+				$this->procSendReply();
+			}
 			/**
 				* The only other reason user should be directed here
 				* is if he wants to logout, which means user is
@@ -213,17 +225,20 @@
 		
 		function procAddA(){
 			global $session, $form;
+			$timeStart = date('H:i', strtotime($_POST['starttime']));
+			$timeEnd = date('H:i', strtotime($_POST['endtime']));
 			if (isset($_POST['repeat']) && $_POST['repeat']==1){
-				$retval = $session->addEventAA($_POST['title'], $_POST['type'], $_POST['course'], $_POST['seats'], $_POST['notes'], $_POST['date'], $_POST['starttime'], $_POST['endtime'], $_POST['repeat'], $_POST['repeatm'], $_POST['repeatt'], $_POST['repeatw'], $_POST['repeatth'], $_POST['repeatf'], $_POST['re']);
+				$retval = $session->addEventAA($_POST['title'], $_POST['type'], $_POST['course'], $_POST['seats'], $_POST['notes'], $_POST['date_submit'], $timeStart, $timeEnd, $_POST['repeat'], $_POST['repeatm'], $_POST['repeatt'], $_POST['repeatw'], $_POST['repeatth'], $_POST['repeatf'], $_POST['re_submit']);
 				} else {
-				$retval = $session->addEventA($_POST['title'], $_POST['type'], $_POST['course'], $_POST['seats'], $_POST['notes'], $_POST['date'], $_POST['starttime'], $_POST['endtime']);
+				$retval = $session->addEventA($_POST['title'], $_POST['type'], $_POST['course'], $_POST['seats'], $_POST['notes'], $_POST['date_submit'], $timeStart, $timeEnd);
 			}
 		}
 		
 		function procAddB(){
 			global $session, $form;
+			
 			if (isset($_POST['repeat']) && $_POST['repeat']==1){
-				$retval = $session->addEventBA($_POST['title'], $_POST['type'], $_POST['course'], $_POST['crn'], $_POST['seats'], $_POST['notes'], $_POST['date'], $_POST['starttime'], $_POST['endtime'], $_POST['repeat'], $_POST['repeatm'], $_POST['repeatt'], $_POST['repeatw'], $_POST['repeatth'], $_POST['repeatf'], $_POST['re']);
+				$retval = $session->addEventBA($_POST['title'], $_POST['type'], $_POST['course'], $_POST['crn'], $_POST['seats'], $_POST['notes'], $_POST['date'], $_POST['starttime'], $_POST['endtime'], $_POST['repeat'], $_POST['repeatm'], $_POST['repeatt'], $_POST['repeatw'], $_POST['repeatth'], $_POST['repeatf'], $_POST['re_submit']);
 				} else {
 				$retval = $session->addEventB($_POST['title'], $_POST['type'], $_POST['course'], $_POST['crn'], $_POST['seats'], $_POST['notes'], $_POST['date'], $_POST['starttime'], $_POST['endtime']);			
 			}
@@ -255,7 +270,7 @@
 		}
 		function procCrn(){
 			global $session, $form;
-			$retval = $session->chooseCrn($_POST['crn']);
+			$retval = $session->chooseCrn($_POST['crn'], $_POST['cwid']);
 		}
 		function procStudentLogin(){
 			global $session, $form;
@@ -264,7 +279,9 @@
 
 		function procEditA(){
 			global $session, $form;
-			$retval = $session->editEventA($_POST['title'], $_POST['type'], $_POST['seats'], $_POST['notes'], $_POST['date'], $_POST['starttime'], $_POST['endtime'], $_POST['eventid']);
+			$timeStart = date('H:i', strtotime($_POST['starttime']));
+			$timeEnd = date('H:i', strtotime($_POST['endtime']));
+			$retval = $session->editEventA($_POST['title'], $_POST['type'], $_POST['seats'], $_POST['notes'], $_POST['date_submit'], $timeStart, $timeEnd, $_POST['eventid']);
 		}
 		
 		function procEditB(){
@@ -275,14 +292,14 @@
 			$room = $explode[0];
 			$conflict = $explode[1];
 			$retval = $session->editEventB($_POST['title'], $_POST['type'], $_POST['seats'], $_POST['notes'], $_POST['dateStart'], $_POST['dateEnd'], $room, $conflict, $_POST['eventid']);
-			header("Location: editevent.php?e=".$_POST['eventid']);
+			header("Location: index.php");
 		}
 		
 		
 		function procEditC(){
 			global $session, $form;
 			$retval = $session->editEventC($_POST['eventid'], $_POST['notes']);
-			header("Location: editevent.php?e=".$_POST['eventid']);
+			header("Location: index.php");
 		}
 		
 		function procDeleteEvent(){
@@ -309,6 +326,28 @@
 			header("Location: editevent.php?e=".$_POST['eventid']);
 		}
 		
+		
+		
+				
+		function procReadMail(){
+			global $session, $form;
+			$retval = $session->readMail($_POST['mail_id']);
+		}
+		
+		function procDeleteMail(){
+			global $session, $form;
+			$retval = $session->deleteMail($_POST['mail_id']);
+			header("Location: messages.php");
+		}
+		function procReply(){
+			global $session, $form;
+			$retval = $session->reply($_POST['mailFrom'],$_POST['mailSubject']);
+		}
+		function procSendReply(){
+			global $session, $form;
+			$retval = $session->sendReply($_POST['mailTo'],$_POST['mailSubject'],$_POST['mailBody']);
+			header("Location: messages.php");
+		}
 	};
 	
 	

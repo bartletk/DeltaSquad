@@ -557,26 +557,19 @@
 			}
 			header("Location: /class_select.php?cwid=$CWID&sem=$sem&c=$courses");  
 		}
-		function chooseCrn($crn){
-			
-			foreach ($crn as $c){
-				$crns = $crns . "+" . $c;			
-			}
-			header("Location: /index.php?crn=$crns");  
-		}
-		
-		function studentAdd($CWID, $crn){
+		function chooseCrn($crn, $cwid){
 			global $database, $form;
-			$database->studentAdd($CWID, $crn);
-			studentLogin($CWID);
+			$result = $database->studentAdd($cwid, $crn);
+			if ($result){
+			header("Location: /index.php?cwid=$cwid");  
+			}
 		}
 		function studentLogin($CWID){
 			global $database, $form;
-			if(!$database->studentCourses($CWID)){
+			if($database->studentCourses($CWID) == FALSE){
 				header("Location: /class_select.php?cwid=$CWID");
 				} else {
-				setcookie("studentClasses", $this->studentCourses, time()+COOKIE_EXPIRE, COOKIE_PATH);
-				header("Location: /index.php");
+				header("Location: /index.php?cwid=$CWID");
 			}
 		}
 		
@@ -593,14 +586,14 @@
 		function editEventB($title, $type, $seats, $notes, $dateStart, $dateEnd, $room, $conflict, $eventid){
 			global $database, $form; 
 			$result = $database->editEventB($title, $type, $seats, $notes, $dateStart, $dateEnd, $room, $conflict, $eventid);
-			if ($result){return TRUE;}			
+			if ($result){return TRUE;}	
 		}
 		
 		
 		function editEventC($eventid, $notes){
 			global $database, $form; 
 			$result = $database->editEventC($eventid, $notes);
-			if ($result){return TRUE;}			
+			if ($result){return TRUE;}
 		}
 		
 		
@@ -630,8 +623,29 @@
 		}
 		
 		
+		function readMail($mail_id){
+			global $database, $form; 
+			$result = $database->readMail($mail_id);
+			header("Location: /viewmail.php?m=$mail_id");  
+		}
 		
+		function deleteMail($mail_id){
+			global $database, $form; 
+			$result = $database->deleteMail($mail_id);
+			if ($result){return TRUE;}			
+		}
 		
+		function reply($mailFrom, $mailSubject){
+			global $database, $form; 
+			header("Location: /reply.php?f=$mailFrom&s=$mailSubject");  
+		}
+		
+		function sendReply($mailTo,$mailSubject,$mailBody){
+			global $database, $form; 
+			$mailFrom = $this->username;
+			$result = $database->sendReply($mailTo,$mailSubject,$mailBody,$mailFrom);
+			if ($result){return TRUE;}			
+		}
 	};
 	
 	
