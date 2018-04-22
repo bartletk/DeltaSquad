@@ -1,7 +1,6 @@
 <?php
 	include("top_header.php");
 	$page = "messages.php";
-	echo "<main>";
 	if(!$session->logged_in && (!$session->isInstructor() || !$session->isAdmin())){
 		header("Location: ".$session->referrer);
 	}
@@ -82,7 +81,6 @@
 		
 	}
 	echo '</div>';
-		echo "</main>";
 	include "footer.php";
 	
 ?>

@@ -12,7 +12,6 @@
 	
 	 global $database;
 ?>
-	<main>
 	<div class="card card-1">
  	 <h3><strong>Welcome to ULM Nursing Calendar</strong></h3>
 	</div>
@@ -76,6 +75,7 @@
 				<p>
 					<label>Choose Courses: </label><br/>
 					<select multiple name="course[]" size=3>
+					<option value="" disabled selected>Select your courses</option>
 						<?php
 							$q = "SELECT * FROM ".TBL_COURSE." WHERE semester = $sem";
 							$result = $database->query($q);
@@ -110,6 +110,7 @@
 						
 						
 			            <select name="crn[]" size=5 multiple>
+						<option value="" disabled selected>Select your sections</option>
 							<?php
 								
 								foreach ($courses as $c){
@@ -159,7 +160,6 @@
 <?php
 	//include "footer.php";
 	?>
-</main>
 
 <footer class="page-footer">
           <div class="footercontainer">

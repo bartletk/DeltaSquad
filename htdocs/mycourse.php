@@ -16,7 +16,6 @@
 	$CWID = $session->getCWID();
 ?>
 </header>
-<main>
 <div class="card wrap">
 	<h5>My Courses</h5>
 	<?php
@@ -84,7 +83,6 @@
 	?>
 	
 </div>
-</main>
 <footer>
 <?php
 	include("footer.php");

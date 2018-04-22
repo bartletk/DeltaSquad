@@ -238,7 +238,7 @@
 			global $session, $form;
 			
 			if (isset($_POST['repeat']) && $_POST['repeat']==1){
-				$retval = $session->addEventBA($_POST['title'], $_POST['type'], $_POST['course'], $_POST['crn'], $_POST['seats'], $_POST['notes'], $_POST['date'], $_POST['starttime'], $_POST['endtime'], $_POST['repeat'], $_POST['repeatm'], $_POST['repeatt'], $_POST['repeatw'], $_POST['repeatth'], $_POST['repeatf'], $_POST['re_submit']);
+				$retval = $session->addEventBA($_POST['title'], $_POST['type'], $_POST['course'], $_POST['crn'], $_POST['seats'], $_POST['notes'], $_POST['date'], $_POST['starttime'], $_POST['endtime'], $_POST['repeat'], $_POST['repeatm'], $_POST['repeatt'], $_POST['repeatw'], $_POST['repeatth'], $_POST['repeatf'], $_POST['re']);
 				} else {
 				$retval = $session->addEventB($_POST['title'], $_POST['type'], $_POST['course'], $_POST['crn'], $_POST['seats'], $_POST['notes'], $_POST['date'], $_POST['starttime'], $_POST['endtime']);			
 			}
@@ -255,7 +255,7 @@
 				} else {
 				$retval = $session->addEventC($_POST['title'], $_POST['type'], $_POST['course'], $_POST['crn'], $_POST['seats'], $_POST['notes'],  $_POST['dateStart'], $_POST['dateEnd'], $room, $_POST['series'], $conflict);			
 			}
-			header("Location: index.php");
+			header("Location: ./success.php?ref=".$session->referrer);
 			
 			
 		}
@@ -292,38 +292,38 @@
 			$room = $explode[0];
 			$conflict = $explode[1];
 			$retval = $session->editEventB($_POST['title'], $_POST['type'], $_POST['seats'], $_POST['notes'], $_POST['dateStart'], $_POST['dateEnd'], $room, $conflict, $_POST['eventid']);
-			header("Location: index.php");
+			header("Location: ./success.php?ref=".$session->referrer);
 		}
 		
 		
 		function procEditC(){
 			global $session, $form;
 			$retval = $session->editEventC($_POST['eventid'], $_POST['notes']);
-			header("Location: index.php");
+			header("Location: ./success.php?ref=".$session->referrer);
 		}
 		
 		function procDeleteEvent(){
 			global $session, $form;
 			$retval = $session->deleteEvent($_POST['eventid']);
-			header("Location: index.php");
+			header("Location: ./success.php?ref=".$session->referrer);
 		}
 		
 		function procApprove(){
 			global $session, $form;
 			$retval = $session->approve($_POST['eventid']);
-			header("Location: editevent.php?e=".$_POST['eventid']);
+			header("Location: ./success.php?ref=index.php");
 		}
 		
 		function procApproveAll(){
 			global $session, $form;
 			$retval = $session->approveAll($_POST['seriesid']);
-			header("Location: ".$session->referrer);
+			header("Location: ./success.php?ref=".$session->referrer);
 		}
 		
 		function procReject(){
 			global $session, $form;
 			$retval = $session->reject($_POST['eventid']);
-			header("Location: editevent.php?e=".$_POST['eventid']);
+			header("Location: ./success.php?ref=index.php");
 		}
 		
 		
@@ -337,7 +337,7 @@
 		function procDeleteMail(){
 			global $session, $form;
 			$retval = $session->deleteMail($_POST['mail_id']);
-			header("Location: messages.php");
+			header("Location: ./success.php?ref=messages.php");
 		}
 		function procReply(){
 			global $session, $form;
@@ -346,7 +346,7 @@
 		function procSendReply(){
 			global $session, $form;
 			$retval = $session->sendReply($_POST['mailTo'],$_POST['mailSubject'],$_POST['mailBody']);
-			header("Location: messages.php");
+			header("Location: ./success.php?ref=messages.php");
 		}
 	};
 	

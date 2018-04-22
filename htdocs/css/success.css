@@ -1,0 +1,31 @@
+/*@import url('https://fonts.googleapis.com/css?family=Slabo+27px');*/
+
+
+body{
+	background-color:white;
+}
+
+
+#text{
+	font-family: 'Arimo', sans-serif;
+	color:#888;
+	font-size: 100px;
+	word-spacing: 3px;
+	size: 100px;
+	text-align: center;
+	float: center;
+	font-weight:bold;
+	margin-top: 30px;
+	background-color:white;
+}
+#text2{
+	font-family: 'Arimo', sans-serif;
+	color:#555;
+	font-size: 20px;
+	word-spacing: 3px;
+	text-align: center;
+	float: center;
+	font-weight:bold;
+	margin-top:-30px;
+	background-color:white;
+}

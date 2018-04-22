@@ -7,7 +7,9 @@
 	$(".button-collapse").sideNav();
 	
 	
-	$(\'.datepicker\').pickadate({
+	
+	
+	var picker = $(\'.datepicker\').pickadate({
 	selectMonths: true, // Creates a dropdown to control month
 	selectYears: 15, // Creates a dropdown of 15 years to control year,
 	today: \'Today\',
@@ -32,21 +34,18 @@
 	
 	});
 	
-	
-	
+
 	</script>';
+	
+	
 	$page = "editevent.php";
 	if(!isset($_GET['e'])){
 	?>
-	<main>
 	You have made it here by mistake. Please go back to the calendar and select an event to edit.
-	</main>
 	<?php
 		} else if(!$session->isInstructor() && !$session->isAdmin()){
 	?>
-	<main>
 	Only instructors & administrators may edit events. Please contact an administrator if you think you should be able to edit events and you are not able to.
-	</main>
 	<?php
 		} else {
 		global $database;
@@ -70,7 +69,61 @@
 			$status = mysql_result($result, $i, "status");
 		}
 	?> 
-	<main>
+	
+	
+	
+	<script>
+	
+		$( document ).ready(function(){
+	$(".button-collapse").sideNav();
+	
+	
+	
+	
+	var picker = $(\'.datepicker\').pickadate({
+	selectMonths: true, // Creates a dropdown to control month
+	selectYears: 15, // Creates a dropdown of 15 years to control year,
+	today: \'Today\',
+	clear: \'Clear\',
+	close: \'Ok\',
+	closeOnSelect: false, // Close upon selecting a date,
+	format: "mm/dd/yyyy",
+	formatSubmit: "yyyy/mm/dd"
+	
+	$(window).ready(function(){
+		var newDate = "<?php echo $date?>";
+		var sepDate = newDate.split("-");
+		picker.set('select', new Date(sepDate[1], sepDate[2], sepDate[0]));
+		
+		//alert(sepDate);
+		
+	});
+	
+	})
+	$(\'.timepicker\').pickatime({
+	default: \'now\',
+	twelvehour: true, // change to 12 hour AM/PM clock from 24 hour
+	donetext: \'OK\',
+	autoclose: false
+	//vibrate: true // vibrate the device when dragging clock hand
+	})
+	$(document).ready(function() {
+	$(\'select\').material_select();
+	});
+	
+	});
+	
+	
+		
+		
+	
+	
+	
+	
+	
+	
+	
+	</script>
 	<div class="Card card1">
 		<h1>Edit Event</h1>
 		<?php
@@ -99,7 +152,6 @@
 			$instructor = 0;
 			
 			$q2 = "select instructor from ".TBL_CRN." where crn = ".$crn." AND instructor != 0";
-			//$myfile = fopen("error.txt", "a") or die(print_r($q2));
 			$result2 = $database->query($q2);
 			$num_rows2 = mysql_numrows($result2);
 			for($i2=0; $i2<$num_rows2; $i2++){
@@ -112,7 +164,6 @@
 			for($i3=0; $i3<$num_rows3; $i3++){
 				$lead = mysql_result($result3,$i3,"lead_instructor");
 			}
-			//$myfile = fopen("error.txt", "a") or die(print_r($lead." ".$instructor));
 			if ($session->CWID == $lead || $session->isAdmin()){
 				if (!isset($_GET['t'])){
 				?>
@@ -218,7 +269,6 @@
 								)
 								";
 								$result = $database->query($q);
-								//$myfile = fopen("error.txt", "a") or die(print_r($q));
 								$num_rows = mysql_numrows($result);
 								if ($num_rows > 0){
 									for($i=0; $i<$num_rows; $i++){
@@ -324,7 +374,7 @@
 					</form>
 					
 				</div>
-				</main>
+
 				
 				
 				
@@ -333,7 +383,6 @@
 				} elseif ($session->CWID == $instructor){
 				//Edit only notes!!!
 			?>
-			<main>
 			<div class="row col s12" >
 				Title: <?php echo $title; ?> <br>
 			</div>
@@ -366,7 +415,6 @@
 					</button>
 				</p>
 			</form>
-			</main>
 			<?php
 			}
 			
@@ -377,7 +425,6 @@
 		
 		<?php
 		}
-		echo "</main>";
 		include("footer.php");
 		// dont forget to check deadlines for editting!
 		

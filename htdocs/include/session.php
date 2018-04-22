@@ -559,10 +559,9 @@
 		}
 		function chooseCrn($crn, $cwid){
 			global $database, $form;
-			$result = $database->studentAdd($cwid, $crn);
-			if ($result){
+			array_push($crn, 0);
+			$database->studentAdd($cwid, $crn);
 			header("Location: /index.php?cwid=$cwid");  
-			}
 		}
 		function studentLogin($CWID){
 			global $database, $form;

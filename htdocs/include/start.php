@@ -2,7 +2,6 @@
 
 
 include "include/constants.php";
-include $language;
 $msg = $_REQUEST["msg"];
 if (!$_SESSION['user_id']) $_SESSION['user_id'] = 1;
 
@@ -139,5 +138,5 @@ if (!$o) {
 	}
 
 }
-$common_get = "o=".$o."&c=".$c."&m=".$m."&a=".$a."&y=".$y."&w=".$w."&sem=".$sem;
+$common_get = "o=".$o."&c=".$c."&m=".$m."&a=".$a."&y=".$y."&w=".$w."&sem=".$sem."&cwid=".$studentCWID."&rm=".$rm;
 ?>

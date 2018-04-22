@@ -292,16 +292,20 @@
 			}
 			if ($conflict < 1){
 				$approval = "accepted";
+				$log = "Event created with no conflicts:".$title."";
+				$this->logIt($log);
 				} else {
 				$approval = "pending"; 
 				$date = date('m/d/Y')." at ".date('g:i.s')." ".date('a');
 				$message = "Conflict created at <a href=\'./editevent.php?e=$eventid\'>$eventid - $title</a>.";
+				$log = "Event created with conflicts:".$title."";
+				$this->logIt($log);
 				$this->mailIt($message);
 			}
 			foreach ($crns as $c){
 				$q = sprintf("INSERT INTO ".TBL_EVENTS." VALUES (NULL, '$title', $seats, '$type', $c, $user, '$room', '$notes', $series, '$dateStart', '$dateEnd', '$time', '$approval')");				
 				$result = mysql_query($q, $this->connection);				
-				//$myfile = fopen("error.txt", "a") or die(print_r($q));
+				//$myfile = fopen("error.txt", "a") or die(print_r($re));
 				$dateStartOriginal = new DateTime($dateStart,new \DateTimeZone('UTC'));
 				$dateEndOriginal = new DateTime($dateEnd,new \DateTimeZone('UTC'));
 				$re1 = new DateTime($re,new \DateTimeZone('UTC'));
@@ -393,8 +397,6 @@
 					}
 				}
 			}
-			$log = "Event created with no conflicts:".$title."";
-			$this->logIt($log);
 			if(!$result || (mysql_num_rows($result) < 1)){
 				return NULL;
 			}
@@ -403,7 +405,6 @@
 			
 		}
 		function studentCourses($CWID){
-			
 			$q = sprintf("SELECT * FROM ".TBL_SCHED." WHERE CWID=$CWID");
 			$result = mysql_query($q, $this->connection);
 			if(!$result || (mysql_num_rows($result) < 1)){
@@ -413,7 +414,12 @@
 				return $dbarray;
 			}
 		}
+		function clearStudentSched($CWID){
+			$q = sprintf("DELETE FROM ".TBL_SCHED." WHERE CWID=$CWID");
+			$result = mysql_query($q, $this->connection);
+			}
 		function studentAdd($CWID, $crn){
+			$this->clearStudentSched($CWID);
 			foreach ($crn as $c){
 				$q = sprintf("INSERT INTO `".TBL_SCHED."`(`CWID`, `crn`) VALUES ($CWID, $c);");
 				$result = mysql_query($q, $this->connection);	
@@ -516,9 +522,8 @@
 		function mailIt($msg){
 			global $session;
 			$date = date('m/d/Y')." at ".date('g:i.s')." ".date('a');
-			$q2 = sprintf("INSERT INTO mail (UserTo, UserFrom, Subject, Message, SentDate, status) VALUES ('alyssa','admin','NOTICE! Conflict Created','$msg','$date','unread')");
-			$mail = mysql_query($q2, $this->newCon2);
-			//$myfile = fopen("error.txt", "a") or die(print_r($q2));
+			$q2 = "INSERT INTO mail (UserTo, UserFrom, Subject, Message, SentDate, status) VALUES ('alyssa','admin','NOTICE! Conflict Created','$msg','$date','unread')";
+			$mail = mysql_query($q2, $this->mailCon);
 			return $mail;
 		}
 		

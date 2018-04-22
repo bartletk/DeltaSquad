@@ -49,7 +49,9 @@
 			else if (isset($_POST['sublead'])){
 				$this->procAddLeader();
 			}
-			///
+			else if (isset($_POST['subinstruct'])){
+				$this->procAddInstruct();
+			}
 			else if (isset($_POST['subaddcourse'])){
 				$this->procAddCourse();
 			}
@@ -88,7 +90,7 @@
 			$sublevel = $_POST['updlevel'];
 			//$myfile = fopen("error.txt", "a") or die(print_r($sublevel));
 			$database->updateUserField($subuser, "userlevel", (int)$_POST['updlevel']);
-			header("Location: ".$session->referrer);
+			header("Location: ./success.php?ref=".$session->referrer);
 		}
 		
 		/**
@@ -104,7 +106,7 @@
 			if($form->num_errors > 0){
 				$_SESSION['value_array'] = $_POST;
 				$_SESSION['error_array'] = $form->getErrorArray();
-				header("Location: ".$session->referrer);
+				header("Location: ./success.php?ref=".$session->referrer);
 			}
 			/* Delete user from database */
 			else{
@@ -112,7 +114,7 @@
 				$database->query($q);
 				$log = "User Deleted:".$subuser."";
 				$database->logIt($log);
-				header("Location: ".$session->referrer);
+				header("Location: ./success.php?ref=".$session->referrer);
 			}
 		}
 		
@@ -141,7 +143,7 @@
 			return $subuser;
 		}
 		function procDeadline(){
-			global $database, $form;
+			global $database, $form, $session;
 			$dateOpen = $_POST['dateOpen_submit'];
 			$dateClose = $_POST['dateClose_submit'];
 			$type = $_POST['type'];
@@ -149,7 +151,7 @@
 			$database->query($q);
 			$log = "New deadline of type:".$type."";
 			$database->logIt($log);
-			header("Location: admin.php");
+			header("Location: ./success.php?ref=".$session->referrer);
 			
 		}
 		function procDeadlineRemove(){
@@ -159,7 +161,7 @@
 			$database->query($q);
 			$log = "Deadline deleted";
 			$database->logIt($log);
-			header("Location: ".$session->referrer);
+			header("Location: ./success.php?ref=".$session->referrer);
 		}
 		
    		function procRegister(){
@@ -176,23 +178,23 @@
 			if($retval == 0){
 				$_SESSION['reguname'] = $_POST['user'];
 				$_SESSION['regsuccess'] = true;
-				header("Location: ".$session->referrer);
+				header("Location: ./success.php?ref=".$session->referrer);
 			}
 			/* Error found with form */
 			else if($retval == 1){
 				$_SESSION['value_array'] = $_POST;
 				$_SESSION['error_array'] = $form->getErrorArray();
-				header("Location: ".$session->referrer);
+				header("Location: ./success.php?ref=".$session->referrer);
 			}
 			/* Registration attempt failed */
 			else if($retval == 2){
 				$_SESSION['reguname'] = $_POST['user'];
 				$_SESSION['regsuccess'] = false;
-				header("Location: ".$session->referrer);
+				header("Location: ./success.php?ref=".$session->referrer);
 			}
 		}
 		function procAddRoom(){
-			global $database, $form;
+			global $database, $form, $session;
 			$name = $_POST['name'];
 			$cap = $_POST['cap'];
 			$desc = $_POST['desc'];
@@ -200,53 +202,60 @@
 			$database->query($q);
 			$log = "New room created:".$name."";
 			$database->logIt($log);
-			header("Location: admin.php");
+			header("Location: ./success.php?ref=".$session->referrer);
 			
 		}
 		function procDeleteRoom(){
-		global $session, $database, $form;
-		$number = $_POST['number'];
-		$q = "DELETE FROM ".TBL_ROOMS." WHERE room_number = '$number'";
-		$database->query($q);
-		$log = "Room deleted:".$number."";
-		$database->logIt($log);
-		header("Location: ".$session->referrer);
+			global $session, $database, $form;
+			$number = $_POST['rmnumber'];
+			$q = "DELETE FROM ".TBL_ROOMS." WHERE room_number = '$number'";
+			$database->query($q);
+			$log = "Room deleted:".$number."";
+			$database->logIt($log);
+			header("Location: ./success.php?ref=".$session->referrer);
 		}
 		function procAddLeader(){
-		global $session, $database, $form;
-		$q = "UPDATE ".TBL_COURSE." SET Lead_Instructor = ".$_POST['user']." where course_number = ".$_POST['leadcourse'];
-		//$myfile = fopen("error.txt", "a") or die(print_r($q));
-		$database->query($q);
-		$log = "Lead instructor set for:".$_POST['leadcourse']."";
-		$database->logIt($log);
-		header("Location: ".$session->referrer);
+			global $session, $database, $form;
+			$q = "UPDATE ".TBL_COURSE." SET Lead_Instructor = ".$_POST['user']." where course_number = ".$_POST['leadcourse'];
+			//$myfile = fopen("error.txt", "a") or die(print_r($q));
+			$database->query($q);
+			$log = "Lead instructor set for:".$_POST['leadcourse']."";
+			$database->logIt($log);
+			header("Location: ./success.php?ref=".$session->referrer);
 		}
-		////////////////////////////////////////////////////
-		//done?
+		function procAddInstruct(){
+			global $session, $database, $form;
+			$crn = $_POST['crn'];
+			foreach ($crn as $c){
+				$q = "UPDATE ".TBL_CRN." SET Instructor = ".$_POST['user']." where crn = ".$c;
+				$database->query($q);
+				$log = "Instructor set for:".$c."";
+				$database->logIt($log);
+			}
+			header("Location: ./success.php?ref=".$session->referrer);
+		}
 		function procAddCourse(){
-		global $database, $form;
-		$num = $_POST['num'];
-		$title = $_POST['title'];
-		$sem = $_POST['sem'];
-		$q = "INSERT INTO ".TBL_COURSE." VALUES ('".$num."', NURS, '".$title."', NULL,".$sem.");";
-		$database->query($q);
-		$log = "New course created:".$num."";
-		$database->logIt($log);
-		header("Location: admin.php");
+			global $database, $form, $session;
+			$num = $_POST['num'];
+			$title = $_POST['title'];
+			$sem = $_POST['sem'];
+			$q = "INSERT INTO ".TBL_COURSE." VALUES ('".$num."', NURS, '".$title."', NULL,".$sem.");";
+			$database->query($q);
+			$log = "New course created:".$num."";
+			$database->logIt($log);
+			header("Location: ./success.php?ref=".$session->referrer);
 		}
-		//done??
 		function procDelCourse(){
-		global $session, $database, $form;
-		$number = $_POST['course_number'];
-		$q = "DELETE FROM ".TBL_COURSE." WHERE course_number = '$number'";
-		$database->query($q);
+			global $session, $database, $form;
+			$number = $_POST['course_number'];
+			$q = "DELETE FROM ".TBL_COURSE." WHERE course_number = '$number'";
+			$database->query($q);
 		$log = "Course Deleted:".$number."";
 		$database->logIt($log);
-		header("Location: ".$session->referrer);
+		header("Location: ./success.php?ref=".$session->referrer);
 		}
-		//done?
 		function procAddSection(){
-		global $database, $form;
+		global $database, $form, $session;
 		$crn = $_POST['crn'];
 		$course = $_POST['course'];
 		$instructor = $_POST['instructor'];
@@ -254,9 +263,8 @@
 		$database->query($q);
 		$log = "Section Added:".$crn."";
 		$database->logIt($log);
-		header("Location: admin.php");
+		header("Location: ./success.php?ref=".$session->referrer);
 		}
-		//done?
 		function procDelSection(){
 		global $session, $database, $form;
 		$number = $_POST['section'];
@@ -264,34 +272,45 @@
 		$database->query($q);
 		$log = "Section deleted:".$number."";
 		$database->logIt($log);
-		header("Location: ".$session->referrer);
+		header("Location: ./success.php?ref=".$session->referrer);
 		}
-		// hope dis wurk not testing for a long time yo
 		function procBackup(){
 		global $session, $database, $form;
 		$backup = "../archive/".time().".sql";
 		exec('mysqldump --user='.DB_USER.' --password='.DB_PASS.' --host='.DB_SERVER.' '.DB_NAME.' > '.$backup.'');
 		$log = "Backup Created";
 		$database->logIt($log);
-		header("Location: ".$session->referrer);
+		header("Location: ./success.php?ref=".$session->referrer);
+		}
+		function procBackup2(){
+		global $session, $database, $form;
+		$backup = "../archive/".time().".sql";
+		exec('mysqldump --user='.DB_USER.' --password='.DB_PASS.' --host='.DB_SERVER.' '.DB_NAME.' > '.$backup.'');
 		}
 		function procArchive(){
 		global $session, $database, $form;
-		$this->procBackup();
-		
-		// gonna have to do something
-		$log = "Backup Created";
-		$database->logIt($log);
-		header("Location: ".$session->referrer);
+		$this->procBackup2();
+		$this->clearLeads();
+		$this->clearInstructors();
+		$q = "DELETE FROM ".TBL_SCHED.",".TBL_EVENT.",".TBL_MAIL.",".TBL_LOG;
+		$database->query($q);
+		header("Location: ./success.php?ref=".$session->referrer);
 		}
-		//done?
+		function clearLeads(){
+			$q = "UPDATE ".TBL_COURSE." SET Lead_Instructor = NULL";
+			$database->query($q);			
+		}
+		function clearInstructors(){
+			$q = "UPDATE ".TBL_CRN." SET Instructor = NULL";
+			$database->query($q);			
+		}
 		function procClearLog(){
 		global $session, $database, $form;
 		$q = "DELETE FROM ".TBL_LOG;
 		$database->query($q);
 		$log = "Cleared log";
 		$database->logIt($log);
-		header("Location: ".$session->referrer);
+		header("Location: ./success.php?ref=".$session->referrer);
 		}
 		
 		};

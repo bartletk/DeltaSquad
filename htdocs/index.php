@@ -6,8 +6,11 @@
 	if (!isset($sem)){
 	$sem=0;
 	}
-	if (!isset($cwid)){
-	$cwid=0;
+	if (!isset($studentCWID)){
+	$studentCWID=0;
+	}
+	if (!isset($rm)){
+	$rm=0;
 	}
 	include "include/start.php";
 	$canview = true;

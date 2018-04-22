@@ -8,27 +8,34 @@
 		mysql_select_db(DB_NAME,$link);
 		// If student
 		if(!$session->isInstructor() & !$session->isAdmin()){
-			if ($session->isStudent()){
-				$q = sprintf("SELECT DISTINCT ".TBL_EVENTS.".* from ".TBL_EVENTS." join ".TBL_SCHED." on ".TBL_SCHED.".crn = ".TBL_EVENTS.".crn where (".TBL_SCHED.".cwid = $CWID OR series=9100) AND CAST(dateStart AS DATE) = CAST('$dateNew' AS DATE) AND status='approved'");
+			if (isset($_GET['cwid'])&&$_GET['cwid']!=0&&$_GET['cwid']!=NULL){
+				$studentCWID = $_GET['cwid'];
+				$q = sprintf("SELECT DISTINCT ".TBL_EVENTS.".* from ".TBL_EVENTS." join ".TBL_SCHED." on ".TBL_SCHED.".crn = ".TBL_EVENTS.".crn where (".TBL_SCHED.".cwid = $studentCWID OR series=9100) AND CAST(dateStart AS DATE) = CAST('$dateNew' AS DATE) AND status='approved'");
 				} else {
 				header ("Location: class_select.php");
 			}
 			// if teacher
 			} elseif (!$session->isAdmin() & $session->isInstructor()) {
 			$sem = $_GET['sem'];
+			$rm = $_GET['rm'];
 			if (isset($sem) && ($sem != 0) && ($sem != NULL)){
 				$q = sprintf("select  ".TBL_EVENTS.".* from ".TBL_EVENTS." join ".TBL_CRN." ON ".TBL_EVENTS.".crn = ".TBL_CRN.".crn join ".TBL_COURSE." on ".TBL_COURSE.".course_number = ".TBL_CRN.".course_number where CAST(dateStart AS DATE) = CAST('$dateNew' AS DATE) AND (semester = $sem OR semester=0 OR series=9100)");
+				} else if (isset($rm) && ($rm != 0) && ($rm != NULL)){
+				$q = sprintf("select  ".TBL_EVENTS.".* from ".TBL_EVENTS." join ".TBL_CRN." ON ".TBL_EVENTS.".crn = ".TBL_CRN.".crn join ".TBL_COURSE." on ".TBL_COURSE.".course_number = ".TBL_CRN.".course_number where CAST(dateStart AS DATE) = CAST('$dateNew' AS DATE) AND (room_number = $rm)");
 				} else {
 				$q = sprintf("select DISTINCT ".TBL_EVENTS.".* from ".TBL_EVENTS." join ".TBL_CRN." ON ".TBL_EVENTS.".crn = ".TBL_CRN.".crn join ".TBL_COURSE." on ".TBL_COURSE.".course_number = ".TBL_CRN.".course_number where (".TBL_CRN.".instructor = $CWID OR ".TBL_COURSE.".Lead_Instructor = $CWID OR series=9100) AND CAST(dateStart AS DATE) = CAST('$dateNew' AS DATE)");
 			}
 			//if admin
 			} else {
 			$sem = $_GET['sem'];
+			$rm = $_GET['rm'];
 			if (isset($sem) && ($sem != 0) && ($sem != NULL)){
 				// change to all of a semester's classes
 				$q = sprintf("select  ".TBL_EVENTS.".* from ".TBL_EVENTS." join ".TBL_CRN." ON ".TBL_EVENTS.".crn = ".TBL_CRN.".crn join ".TBL_COURSE." on ".TBL_COURSE.".course_number = ".TBL_CRN.".course_number where CAST(dateStart AS DATE) = CAST('$dateNew' AS DATE) AND (semester = $sem OR semester=0 OR series=9100)");	
 				//$myfile = fopen("error.txt", "a") or die(print_r($q));
-				} else {
+				} else if (isset($rm) && ($rm != 0) && ($rm != NULL)){
+				$q = sprintf("select  ".TBL_EVENTS.".* from ".TBL_EVENTS." join ".TBL_CRN." ON ".TBL_EVENTS.".crn = ".TBL_CRN.".crn join ".TBL_COURSE." on ".TBL_COURSE.".course_number = ".TBL_CRN.".course_number where CAST(dateStart AS DATE) = CAST('$dateNew' AS DATE) AND (room_number = $rm)");
+				}else {
 				$q = sprintf("SELECT DISTINCT ".TBL_EVENTS.".* FROM ".TBL_EVENTS." WHERE CAST(dateStart AS DATE) = CAST('$dateNew' AS DATE)");
 			}
 		}
@@ -58,6 +65,7 @@
 	}
 	
 	function showYear ($calyear) {
+	global $sem, $studentCWID, $rm;
 		$monthStart = 0;
 		$monthEnd = 0;
 		$q = sprintf("SELECT * FROM ".TBL_DEADLINES." WHERE type = 'semester'");
@@ -95,7 +103,7 @@
 		if (($monthEnd >= $curMonth) && ($monthStart <= $curMonth)){
 		/* build table */
 		echo '<table width="100%" class="grid"><tr>'; 
-		echo '<th colspan="7" class="cal_top_s"><a href="index.php?o=',$lm,'&w=',$w,'&c=',$c,'&m=',$calmonth,'&a=1&y=',$calyear,'&sem=',$sem,'">',date('F', mktime(0,0,0,$calmonth,1,$calyear)),'</a></th></tr><tr>';
+		echo '<th colspan="7" class="cal_top_s"><a href="index.php?o=',$lm,'&w=',$w,'&c=',$c,'&m=',$calmonth,'&a=1&y=',$calyear,'&sem=',$sem,'&cwid=',$studentCWID,'&rm=',$rm,'">',date('F', mktime(0,0,0,$calmonth,1,$calyear)),'</a></th></tr><tr>';
 		for ( $x = 0; $x < 7; $x++ )
 		echo '<th>', $week_titles_ss[ $x ], '</th>';
 		
@@ -110,7 +118,7 @@
 		$offyear = date( "Y", mktime( 0, 0, 0, $calmonth, $calday-$off, $calyear ) );
 		$offmonth = date( "m", mktime( 0, 0, 0, $calmonth, $calday-$off, $calyear ) );
 		$offday = date( "d", mktime( 0, 0, 0, $calmonth, $calday-$off, $calyear ) );
-		echo '<td class="day"><div class="week"><a href="index.php?o=',$le,'&w=',$w,'&c=',$c,'&m=',$offmonth,'&a=',$offday,'&y=',$offyear,'&sem=',$sem,'">week</a></div></td>';
+		echo '<td class="day"><div class="week"><a href="index.php?o=',$le,'&w=',$w,'&c=',$c,'&m=',$offmonth,'&a=',$offday,'&y=',$offyear,'&sem=',$sem,'&cwid=',$studentCWID,'&rm=',$rm,'">week</a></div></td>';
 		} else {
 		echo '<td class="day">&nbsp;</td>';
 		}
@@ -119,10 +127,10 @@
 		for ( $d = 1; $d <= $totaldays; $d++ )
 		{
 		if (($d == date(j)) && ($calmonth == date(m)) && ($calyear == date(Y))) {
-		echo '<td class="day" id="today"><div class="day_of_month_s"><a href="index.php?o=',$la,'&w=',$w,'&c=',$c,'&m=',$calmonth,'&a=',$d,'&y=',$calyear,'">', $d, '</a></div>';
+		echo '<td class="day" id="today"><div class="day_of_month_s"><a href="index.php?o=',$la,'&w=',$w,'&c=',$c,'&m=',$calmonth,'&a=',$d,'&y=',$calyear,'&sem=',$sem,'&cwid=',$studentCWID,'&rm=',$rm,'">', $d, '</a></div>';
 		} else {
-		echo '<TD class="day"><div class="day_of_month_s"><a href="index.php?o=',$la,'&w=',$w,'&c=',$c,'&m=',$calmonth,'&a=',$d,'&y=',$calyear,'&sem=',$sem,'">', $d, '</a></div>';
-		if ($offset == 0) echo '<div class="week"><a href="index.php?o=',$le,'&w=',$w,'&c=',$c,'&m=',$calmonth,'&a=',$d,'&y=',$calyear,'&sem=',$sem,'">week</a></div>';
+		echo '<TD class="day"><div class="day_of_month_s"><a href="index.php?o=',$la,'&w=',$w,'&c=',$c,'&m=',$calmonth,'&a=',$d,'&y=',$calyear,'&sem=',$sem,'&cwid=',$studentCWID,'&rm=',$rm,'">', $d, '</a></div>';
+		if ($offset == 0) echo '<div class="week"><a href="index.php?o=',$le,'&w=',$w,'&c=',$c,'&m=',$calmonth,'&a=',$d,'&y=',$calyear,'&sem=',$sem,'&cwid=',$studentCWID,'&rm=',$rm,'">week</a></div>';
 		
 		}
 		/* correct date format */

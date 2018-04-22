@@ -9,11 +9,12 @@
 		global $database;
 		$event = $_GET['e'];
 		$series = $_GET['s'];
-		$q = "SELECT * FROM ".TBL_EVENTS." JOIN ".TBL_USERS." ON ".TBL_EVENTS.".CWID = ".TBL_USERS.".CWID WHERE event_id=".$event;
+		$q = "SELECT e.title AS etit, e.attendees, e.type, e.room_number, e.notes, e.dateStart, e.dateEnd, e.status, c.course_number, c.title AS ctit, u.name from ".TBL_EVENTS." e JOIN ".TBL_CRN." s on e.crn = s.crn JOIN ".TBL_COURSE." c on s.course_number = c.course_number JOIN ".TBL_USERS." u on e.cwid = u.cwid where e.event_id = $event";
 		$result = $database->query($q);
+		//$myfile = fopen("error.txt", "a") or die(print_r($q));
 		$num_rows = mysql_numrows($result);
 		for($i=0; $i<$num_rows; $i++){
-			$title = mysql_result($result,$i,"title");
+			$title = mysql_result($result,$i,"etit");
 			$dateStart = mysql_result($result,$i,"dateStart");
 			$dateEnd = mysql_result($result,$i,"dateEnd");
 			$date = date('m-d-Y',strtotime($dateStart));
@@ -24,11 +25,17 @@
 			$creator = mysql_result($result,$i,"name");
 			$notes = mysql_result($result,$i,"notes");
 			$status = mysql_result($result,$i,"status");
+			$type = mysql_result($result,$i,"type");
+			$coursenum = mysql_result($result,$i,"course_number");
+			$coursetit = mysql_result($result,$i,"ctit");
 		}
+		if ($session->isInstructor() || $session->isAdmin()){
 	?> 
-	<a href="<?php echo "./editevent.php?e=$event";  ?>">Edit Event</a>
+	
+	<a href="<?php echo "./editevent.php?e=$event";  ?>">Edit Event</a><br>
 	
 	<?php
+		}
 		$q3 = "select count(*) conflicts from ".TBL_EVENTS." where series = $series AND status != 'approved' group by status";
 		$result3 = $database->query($q3);
 		if (mysql_numrows($result3)){
@@ -60,6 +67,8 @@
 	?>
 	
 	Title: <?php echo $title; ?> <br>
+	Type: <?php echo $type; ?> <br>
+	Course: <?php echo $coursenum." - ".$coursetit;  ?><br>
 	Date: <?php echo $date; ?><br>
 	Start time: <?php echo $timeStart; ?><br>
 	End time: <?php echo $timeEnd; ?><br>
@@ -67,7 +76,7 @@
 	Attendees: <?php echo $seats; ?><br>
 	Event Creator: <?php echo $creator; ?><br>
 	Notes: <?php echo $notes; ?><br>
-	
+	<div class="noprint">
 	Other events in this series:
 	<table style="width:100%">
 		<tr>
@@ -105,7 +114,7 @@
 			}
 		?>
 	</table>					
-	
+	</div>
 	<?php
 	}
 	include("footer.php");

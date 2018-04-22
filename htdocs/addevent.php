@@ -10,18 +10,7 @@
 		$result = $database->query($q);
 		$tail = mysql_result($result,0,"tail");
 	
-	echo '<script type = "text/javascript">
-						$("#endTime").change(function () 
-						{
-						var startTime = document.getElementById("startTime").value;
-						var endTime = document.getElementById("endTime").value;
 
-						if (startTime >= endTime) {
-							alert("End date should be greater than Start date");
-							document.getElementById("endTime").value = "";
-							}
-						});
-			</script>';
 	?>
 
 	<div class="Card card1">
@@ -30,9 +19,6 @@
 		
 		<div class="row">
 			<?php
-				if($form->num_errors > 0){
-					echo "<font size=\"2\" color=\"#ff0000\">".$form->num_errors." error(s) found</font>";
-				}
 				if (!isset($_GET['c'])){
 				?>
 				
@@ -70,10 +56,13 @@
 					
 					
 					
-					<div class="row">
-						<div class="input-field col s12">
-							<input placeholder="Seats Needed" id="seats" type="number" onKeyDown="if(this.value.length==3 && event.keyCode!=8) return false;" name="seats"  required value="<?php if (isset($_GET['s'])) echo $_GET['s']; ?>">
+					<div class="row" >
+						<div id = "seatsmessage" hidden = "true" style = "margin-left: 10px; font-family: Times, serif; font-size: 18px;">For an event with no seating requirements, please enter 0</div>
+						<div class="input-field col s12"  onClick="displayMessage()">
+							<input placeholder="Seats Needed" id="seats" type="number" onKeyDown="if(this.value.length==3 && event.keyCode!=8) return false;" name="seats"   required value="<?php if (isset($_GET['s'])) echo $_GET['s']; ?>" >
+							
 						</div>
+						
 					</div>
 					
 					<div class="row">
@@ -82,17 +71,17 @@
 						</div>
 					</div>
 					<div class="row col s12" >
-						<input type="text" placeholder="Date" class = "datepicker" name="date" required>
+						<input type="text" placeholder="Date" class = "datepicker" name="date" required ;>
 						
 					</div>
 					
 					<div class="row col s12">
-						<input placeholder="Start Time" id = "startTime" class="timepicker" type="text" name="starttime" maxlength="30" required >
+						<input placeholder="Start Time" id = "startTime" class="timepicker" type="text"  name="starttime" maxlength="30" required >
 						
 					</div>
 					
 					<div class="row col s12">
-						<input placeholder="End Time" id="endTime" class="timepicker" type="text" name="endtime" maxlength="30" required  >
+						<input placeholder="End Time" id="endTime" class="timepicker" type="text" onchange="validate()" name="endtime" maxlength="30" required  >
 						
 					</div>
 					
@@ -148,6 +137,7 @@
 					<!--dropdown to course-->
 					<div class="input-field col s12">
 						<select form="addevent" name="course" value="<?php if (isset($_GET['c'])) echo $_GET['c']?>">
+						<option value="" disabled selected>Select a course</option>
 							<?php
 							if ($session->isAdmin()){
 								$q = "SELECT * FROM ".TBL_COURSE;
@@ -209,6 +199,7 @@
 					<form action="process.php" method="POST" id="addeventB">
 						<div class="input-field col s12">
 							<select name="crn[]" size=5  multiple> 
+							<option value="" disabled selected>Select sections</option>
 								<?php
 									$q = "SELECT * FROM ".TBL_CRN." WHERE course_number = ".$_GET['c'];
 									$result = $database->query($q);
@@ -294,15 +285,17 @@
 									$seats =  $_GET['s']; 
 								}
 								// capacity & no conflicts
-								$q = "SELECT * FROM ".TBL_ROOMS." r WHERE r.Capacity >= $seats AND r.ROOM_NUMBER != 'Offsite' AND r.ROOM_NUMBER NOT IN (
-SELECT count(*) FROM ".TBL_EVENTS." AS e WHERE series != 9100 AND room_number != 'Offsite' AND (
-(e.dateStart <= STR_TO_DATE('$datetimeStart', '%Y-%m-%d %H:%i:%s') AND e.dateEnd >= STR_TO_DATE('$datetimeStart', '%Y-%m-%d %H:%i:%s'))
+								$q = "SELECT * FROM ".TBL_ROOMS." r WHERE r.capacity >= $seats AND r.room_number != 'Offsite' AND r.room_number NOT IN
+(
+SELECT room_number FROM ".TBL_EVENTS." e WHERE 
+('$datetimeStart' > e.dateStart AND '$datetimeStart' < e.dateEnd)
 OR
-(e.dateStart >= STR_TO_DATE('$datetimeStart', '%Y-%m-%d %H:%i:%s') AND e.dateEnd <= STR_TO_DATE('$datetimeEnd', '%Y-%m-%d %H:%i:%s'))
+('$datetimeEnd' > e.dateStart AND '$datetimeEnd' < e.dateEnd)
 OR
-(e.dateStart >= STR_TO_DATE('$datetimeStart', '%Y-%m-%d %H:%i:%s') AND e.dateStart <= STR_TO_DATE('$datetimeEnd', '%Y-%m-%d %H:%i:%s'))
+('$datetimeStart' < e.dateStart AND '$datetimeEnd' > e.dateEnd)
 OR
-(e.dateStart <= STR_TO_DATE('$datetimeStart', '%Y-%m-%d %H:%i:%s') AND e.dateEnd >= STR_TO_DATE('$datetimeEnd', '%Y-%m-%d %H:%i:%s')))
+('$datetimeStart' > e.dateStart AND '$datetimeEnd' < e.dateEnd)
+AND series != 9100 AND room_number != 'Offsite' 
 )
 ";
 								$result = $database->query($q);
@@ -318,16 +311,16 @@ OR
 								}
 								}
 								// capacity, but conflicts, in order of least 2 most conflicts ( i hope )
-								$q2 = "SELECT *, count(room_number) Conflicts FROM ".TBL_ROOMS." r WHERE r.Capacity >= $seats AND r.ROOM_NUMBER != 'Offsite' AND r.ROOM_NUMBER IN (
-SELECT count(*) FROM ".TBL_EVENTS." AS e WHERE series != 9100 AND room_number != 'Offsite' AND (
-(e.dateStart <= STR_TO_DATE('$datetimeStart', '%Y-%m-%d %H:%i:%s') AND e.dateEnd >= STR_TO_DATE('$datetimeStart', '%Y-%m-%d %H:%i:%s'))
+								$q2 = "SELECT room_number, description, COUNT(room_number) 'Conflicts' FROM ".TBL_EVENTS." NATURAL JOIN ".TBL_ROOMS." WHERE capacity >= $seats AND series != 9100 AND room_number != 'Offsite' AND (
+(dateStart <= '$datetimeStart' AND dateEnd >= '$datetimeStart')
 OR
-(e.dateStart >= STR_TO_DATE('$datetimeStart', '%Y-%m-%d %H:%i:%s') AND e.dateEnd <= STR_TO_DATE('$datetimeEnd', '%Y-%m-%d %H:%i:%s'))
+(dateStart >= '$datetimeStart' AND dateEnd <= '$datetimeEnd')
 OR
-(e.dateStart >= STR_TO_DATE('$datetimeStart', '%Y-%m-%d %H:%i:%s') AND e.dateStart <= STR_TO_DATE('$datetimeEnd', '%Y-%m-%d %H:%i:%s'))
+(dateStart >= '$datetimeStart' AND dateStart <= '$datetimeEnd')
 OR
-(e.dateStart <= STR_TO_DATE('$datetimeStart', '%Y-%m-%d %H:%i:%s') AND e.dateEnd >= STR_TO_DATE('$datetimeEnd', '%Y-%m-%d %H:%i:%s')))
-)";
+(dateStart <= '$datetimeStart' AND dateEnd >= '$datetimeEnd'))
+GROUP BY room_number
+HAVING COUNT(room_number>0)";
 								//$myfile = fopen("error.txt", "a") or die(print_r($q2));
 								$result2 = $database->query($q2);
 								$num_rows2 = mysql_numrows($result2);
@@ -342,15 +335,17 @@ OR
 								}
 								}
 								// not capacity, but no conflicts, not sorted yet?
-								$q3 = "SELECT * FROM ".TBL_ROOMS." r WHERE r.Capacity < $seats AND r.ROOM_NUMBER != 'Offsite' AND r.ROOM_NUMBER NOT IN (
-SELECT count(*) FROM ".TBL_EVENTS." AS e WHERE series != 9100 AND room_number != 'Offsite' AND (
-	(e.dateStart <= STR_TO_DATE('$datetimeStart', '%Y-%m-%d %H:%i:%s') AND e.dateEnd >= STR_TO_DATE('$datetimeStart', '%Y-%m-%d %H:%i:%s'))
+								$q3 = "SELECT * FROM ".TBL_ROOMS." r WHERE r.capacity < $seats AND r.room_number != 'Offsite' AND r.room_number NOT IN
+(
+SELECT room_number FROM ".TBL_EVENTS." e WHERE 
+('$datetimeStart' > e.dateStart AND '$datetimeStart' < e.dateEnd)
 OR
-(e.dateStart >= STR_TO_DATE('$datetimeStart', '%Y-%m-%d %H:%i:%s') AND e.dateEnd <= STR_TO_DATE('$datetimeEnd', '%Y-%m-%d %H:%i:%s'))
+('$datetimeEnd' > e.dateStart AND '$datetimeEnd' < e.dateEnd)
 OR
-(e.dateStart >= STR_TO_DATE('$datetimeStart', '%Y-%m-%d %H:%i:%s') AND e.dateStart <= STR_TO_DATE('$datetimeEnd', '%Y-%m-%d %H:%i:%s'))
+('$datetimeStart' < e.dateStart AND '$datetimeEnd' > e.dateEnd)
 OR
-(e.dateStart <= STR_TO_DATE('$datetimeStart', '%Y-%m-%d %H:%i:%s') AND e.dateEnd >= STR_TO_DATE('$datetimeEnd', '%Y-%m-%d %H:%i:%s')))
+('$datetimeStart' > e.dateStart AND '$datetimeEnd' < e.dateEnd)
+AND series != 9100 AND room_number != 'Offsite' 
 )
 ";
 								//$myfile = fopen("error.txt", "a") or die(print_r($q3));
@@ -368,16 +363,16 @@ OR
 								}
 								// not capacity
 								$q4 = "
-SELECT *, count(room_number) Conflicts FROM ".TBL_ROOMS." r WHERE r.Capacity < $seats AND r.ROOM_NUMBER != 'Offsite' AND r.ROOM_NUMBER IN (
-SELECT count(*) FROM ".TBL_EVENTS." AS e WHERE series != 9100 AND room_number != 'Offsite' AND (
-(e.dateStart <= STR_TO_DATE('$datetimeStart', '%Y-%m-%d %H:%i:%s') AND e.dateEnd >= STR_TO_DATE('$datetimeStart', '%Y-%m-%d %H:%i:%s'))
+SELECT room_number, description, capacity, COUNT(room_number) 'Conflicts' FROM ".TBL_EVENTS." NATURAL JOIN ".TBL_ROOMS." WHERE capacity < $seats AND series != 9100 AND room_number != 'Offsite' AND (
+(dateStart <= '$datetimeStart' AND dateEnd >= '$datetimeStart')
 OR
-(e.dateStart >= STR_TO_DATE('$datetimeStart', '%Y-%m-%d %H:%i:%s') AND e.dateEnd <= STR_TO_DATE('$datetimeEnd', '%Y-%m-%d %H:%i:%s'))
+(dateStart >= '$datetimeStart' AND dateEnd <= '$datetimeEnd')
 OR
-(e.dateStart >= STR_TO_DATE('$datetimeStart', '%Y-%m-%d %H:%i:%s') AND e.dateStart <= STR_TO_DATE('$datetimeEnd', '%Y-%m-%d %H:%i:%s'))
+(dateStart >= '$datetimeStart' AND dateStart <= '$datetimeEnd')
 OR
-(e.dateStart <= STR_TO_DATE('$datetimeStart', '%Y-%m-%d %H:%i:%s') AND e.dateEnd >= STR_TO_DATE('$datetimeEnd', '%Y-%m-%d %H:%i:%s')))
-)";								
+(dateStart <= '$datetimeStart' AND dateEnd >= '$datetimeEnd'))
+GROUP BY room_number
+HAVING COUNT(room_number>0)";								
 								//$myfile = fopen("error.txt", "a") or die(print_r($q4));
 								$result4 = $database->query($q4);
 								$num_rows4 = mysql_numrows($result4);
@@ -765,6 +760,14 @@ OR
 				
 				<script>
 				
+				function validate(){
+					
+				}
+				
+				function displayMessage(){
+					document.getElementById("seatsmessage").hidden = false;
+				}
+				
 				$( document ).ready(function(){
 				$(".button-collapse").sideNav();
 				
@@ -777,22 +780,25 @@ OR
 				close: 'Ok',
 				closeOnSelect: false, // Close upon selecting a date,
 				format: "mm/dd/yyyy",
-				formatSubmit: "yyyy/mm/dd"
-				
-				
+				formatSubmit: "yyyy/mm/dd",
+
+				//editable:true
 				})
+				
 				$('.timepicker').pickatime({
 				default: 'now',
 				twelvehour: true, // change to 12 hour AM/PM clock from 24 hour
 				donetext: 'OK',
-				autoclose: false
+				autoclose: false,
+				editable: true
 				})
+				
 				$(document).ready(function() {
 				$('select').material_select();
 				});
 				
 				});
 				
-				
+			
 				
 				</script>																

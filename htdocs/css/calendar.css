@@ -249,6 +249,8 @@ clear: both;
 
 	background: #fff;
 	border: 1px solid #000;
+	margin-left: 5% !important;
+margin-right: 5% !important;
 }
 
 div.cal_top {

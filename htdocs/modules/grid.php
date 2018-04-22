@@ -16,20 +16,26 @@
 			}
 			// if teacher
 			} elseif (!$session->isAdmin() & $session->isInstructor()) {
-			
+			$sem = $_GET['sem'];
+			$rm = $_GET['rm'];
 			if (isset($sem) && ($sem != 0) && ($sem != NULL)){
 				$q = sprintf("select  ".TBL_EVENTS.".* from ".TBL_EVENTS." join ".TBL_CRN." ON ".TBL_EVENTS.".crn = ".TBL_CRN.".crn join ".TBL_COURSE." on ".TBL_COURSE.".course_number = ".TBL_CRN.".course_number where CAST(dateStart AS DATE) = CAST('$dateNew' AS DATE) AND (semester = $sem OR semester=0 OR series=9100)");
+				} else if (isset($rm) && ($rm != 0) && ($rm != NULL)){
+				$q = sprintf("select  ".TBL_EVENTS.".* from ".TBL_EVENTS." join ".TBL_CRN." ON ".TBL_EVENTS.".crn = ".TBL_CRN.".crn join ".TBL_COURSE." on ".TBL_COURSE.".course_number = ".TBL_CRN.".course_number where CAST(dateStart AS DATE) = CAST('$dateNew' AS DATE) AND (room_number = $rm)");
 				} else {
 				$q = sprintf("select DISTINCT ".TBL_EVENTS.".* from ".TBL_EVENTS." join ".TBL_CRN." ON ".TBL_EVENTS.".crn = ".TBL_CRN.".crn join ".TBL_COURSE." on ".TBL_COURSE.".course_number = ".TBL_CRN.".course_number where (".TBL_CRN.".instructor = $CWID OR ".TBL_COURSE.".Lead_Instructor = $CWID OR series=9100) AND CAST(dateStart AS DATE) = CAST('$dateNew' AS DATE)");
 			}
 			//if admin
 			} else {
 			$sem = $_GET['sem'];
+			$rm = $_GET['rm'];
 			if (isset($sem) && ($sem != 0) && ($sem != NULL)){
 				// change to all of a semester's classes
 				$q = sprintf("select  ".TBL_EVENTS.".* from ".TBL_EVENTS." join ".TBL_CRN." ON ".TBL_EVENTS.".crn = ".TBL_CRN.".crn join ".TBL_COURSE." on ".TBL_COURSE.".course_number = ".TBL_CRN.".course_number where CAST(dateStart AS DATE) = CAST('$dateNew' AS DATE) AND (semester = $sem OR semester=0 OR series=9100)");	
 				//$myfile = fopen("error.txt", "a") or die(print_r($q));
-				} else {
+				} else if (isset($rm) && ($rm != 0) && ($rm != NULL)){
+				$q = sprintf("select  ".TBL_EVENTS.".* from ".TBL_EVENTS." join ".TBL_CRN." ON ".TBL_EVENTS.".crn = ".TBL_CRN.".crn join ".TBL_COURSE." on ".TBL_COURSE.".course_number = ".TBL_CRN.".course_number where CAST(dateStart AS DATE) = CAST('$dateNew' AS DATE) AND (room_number = $rm)");
+				}else {
 				$q = sprintf("SELECT DISTINCT ".TBL_EVENTS.".* FROM ".TBL_EVENTS." WHERE CAST(dateStart AS DATE) = CAST('$dateNew' AS DATE)");
 			}
 		}
@@ -40,10 +46,10 @@
 			// EVENTS
 			while($row = mysql_fetch_assoc($result)) {
 				if ($row['status'] != 'approved') {
-					$style = "style='color: #eedc82; text-shadow: 1px 1px 2px black, 0 0 25px gray; 0 0 5px black;'";
+					$style = "style='color: white; text-shadow: 1px 1px 2px black, 0 0 25px orange; 0 0 5px black;'";
 					$class = "class='notapproved'";
 					} else if ($row['series']==9100) {
-					$style = "style='color: #f08080; text-shadow: 1px 1px 2px black, 0 0 25px gray, 0 0 5px black;'";
+					$style = "style='color: white; text-shadow: 1px 1px 2px black, 0 0 25px gray, 0 0 5px black;'";
 					$class = "class='rss'";
 					} else {	
 					$style = "";
@@ -54,10 +60,16 @@
 					$stringCut = substr($row['title'], 0, 28);
 					$title = substr($stringCut, 0, strrpos($stringCut, ' '))."...";
 				}
+				$studentinfo = "";
+				if (isset($_GET['cwid'])){
+					$studentinfo = "&cwid=".$_GET['cwid'];
+					}
 				echo "<div ".$class.">";
-				echo "<a href='/showevent.php?e=".$row['event_id']."&s=".$row['series']."' $style>".$title."</a>";
+				echo "<a href='/showevent.php?e=".$row['event_id']."&s=".$row['series']."$studentinfo' $style>".$title."</a>";
+				if ($row['series'] != 9100){
 				echo "<br> ".date('g:i a',strtotime($row['dateStart']))."-".date('g:i a',strtotime($row['dateEnd']))."<br> Room:";
 				echo $row['room_number'];
+				}
 				echo "</div>";
 			}
 		}
@@ -66,7 +78,7 @@
 	
 	
 	function showMonth ($calmonth,$calyear) {
-		global $week_titles, $o, $m, $a, $y, $w, $c, $next, $prev,$ly, $lm, $le, $la, $sem, $cwid, $studentCWID;
+		global $week_titles, $o, $m, $a, $y, $w, $c, $next, $prev,$ly, $lm, $le, $la, $sem, $cwid, $studentCWID, $rm;
 		/* determine total number of days in a month */
 		
 		$calday = 0;
@@ -76,7 +88,7 @@
 		
 		/* build table */
 		echo '<table width="100%" class="grid""><tr>'; 
-		echo '<th colspan="7" class="cal_top"><a href="index.php?o=',$o,'&w=',$w,'&c=',$c,'&m=',$prev["month"]["m"],'&a=1&y=',$prev["month"]["y"],'&sem=',$sem,'&cwid=',$studentCWID,'">&lt;</a> ',date('F', mktime(0,0,0,$calmonth,1,$calyear)),'&nbsp;',date('Y', mktime(0,0,0,$calmonth,1,$calyear)),' <a href="index.php?o=',$o,'&w=',$w,'&c=',$c,'&m=',$next["month"]["m"],'&a=1&y=',$next["month"]["y"],'&sem=',$sem,'&cwid=',$studentCWID,'">&gt;</a></th></tr><tr>';
+		echo '<th colspan="7" class="cal_top"><a href="index.php?o=',$o,'&w=',$w,'&c=',$c,'&m=',$prev["month"]["m"],'&a=1&y=',$prev["month"]["y"],'&sem=',$sem,'&cwid=',$studentCWID,'&rm=',$rm,'">&lt;</a> ',date('F', mktime(0,0,0,$calmonth,1,$calyear)),'&nbsp;',date('Y', mktime(0,0,0,$calmonth,1,$calyear)),' <a href="index.php?o=',$o,'&w=',$w,'&c=',$c,'&m=',$next["month"]["m"],'&a=1&y=',$next["month"]["y"],'&sem=',$sem,'&cwid=',$studentCWID,'&rm=',$rm,'">&gt;</a></th></tr><tr>';
 		for ( $x = 0; $x < 7; $x++ ){
 		if ($week_titles[$x] == "Sunday" || $week_titles[$x] == "Saturday"){
 		echo '<th class="noshow">', $week_titles[ $x ], '</th>';
@@ -96,7 +108,7 @@
 			$offyear = date( "Y", mktime( 0, 0, 0, $calmonth, $calday-$off, $calyear ) );
 			$offmonth = date( "m", mktime( 0, 0, 0, $calmonth, $calday-$off, $calyear ) );
 			$offday = date( "d", mktime( 0, 0, 0, $calmonth, $calday-$off, $calyear ) );
-			echo '<td class="day noshow"><div class="week"><a href="index.php?o=',$le,'&w=',$w,'&c=',$c,'&m=',$offmonth,'&a=',$offday,'&y=',$offyear,'&sem=',$sem,'&cwid=',$studentCWID,'">week</a></div></td>';
+			echo '<td class="day noshow"><div class="week"><a href="index.php?o=',$le,'&w=',$w,'&c=',$c,'&m=',$offmonth,'&a=',$offday,'&y=',$offyear,'&sem=',$sem,'&cwid=',$studentCWID,'&rm=',$rm,'">week</a></div></td>';
 			} else {
 			if ($offset == 6 || $offset == 0){
 				echo '<td class="day noshow">&nbsp;</td>';
@@ -111,18 +123,18 @@
 	if (($d == date('j')) && ($calmonth == date('m')) && ($calyear == date('Y'))) {
 	
 	if ($offset == 0 || $offset == 6){
-	echo '<td class="day noshow" id="today"><div class="day_of_month"><a href="index.php?o=',$la,'&w=',$w,'&c=',$c,'&m=',$calmonth,'&a=',$d,'&y=',$calyear,'&sem=',$sem,'&cwid=',$studentCWID,'">', $d, '</a></div>';
+	echo '<td class="day noshow" id="today"><div class="day_of_month"><a href="index.php?o=',$la,'&w=',$w,'&c=',$c,'&m=',$calmonth,'&a=',$d,'&y=',$calyear,'&sem=',$sem,'&cwid=',$studentCWID,'&rm=',$rm,'">', $d, '</a></div>';
 	
 	} else {
-	echo '<td class="day" id="today"><div class="day_of_month"><a href="index.php?o=',$la,'&w=',$w,'&c=',$c,'&m=',$calmonth,'&a=',$d,'&y=',$calyear,'&sem=',$sem,'&cwid=',$studentCWID,'">', $d, '</a></div>';
+	echo '<td class="day" id="today"><div class="day_of_month"><a href="index.php?o=',$la,'&w=',$w,'&c=',$c,'&m=',$calmonth,'&a=',$d,'&y=',$calyear,'&sem=',$sem,'&cwid=',$studentCWID,'&rm=',$rm,'">', $d, '</a></div>';
 	}
 	} else {
 	if ($offset == 0 || $offset == 6){
-	echo '<td class="day noshow"><div class="day_of_month"><a href="index.php?o=',$la,'&w=',$w,'&c=',$c,'&m=',$calmonth,'&a=',$d,'&y=',$calyear,'&sem=',$sem,'&cwid=',$studentCWID,'">', $d, '</a></div>';
+	echo '<td class="day noshow"><div class="day_of_month"><a href="index.php?o=',$la,'&w=',$w,'&c=',$c,'&m=',$calmonth,'&a=',$d,'&y=',$calyear,'&sem=',$sem,'&cwid=',$studentCWID,'&rm=',$rm,'">', $d, '</a></div>';
 	} else {
-	echo '<td class="day"><div class="day_of_month"><a href="index.php?o=',$la,'&w=',$w,'&c=',$c,'&m=',$calmonth,'&a=',$d,'&y=',$calyear,'&sem=',$sem,'&cwid=',$studentCWID,'">', $d, '</a></div>';
+	echo '<td class="day"><div class="day_of_month"><a href="index.php?o=',$la,'&w=',$w,'&c=',$c,'&m=',$calmonth,'&a=',$d,'&y=',$calyear,'&sem=',$sem,'&cwid=',$studentCWID,'&rm=',$rm,'">', $d, '</a></div>';
 	}
-	if ($offset == 0) echo '<div class="week"><a href="index.php?o=',$le,'&w=',$w,'&c=',$c,'&m=',$calmonth,'&a=',$d,'&y=',$calyear,'&sem=',$sem,'&cwid=',$studentCWID,'">week</a></div>';
+	if ($offset == 0) echo '<div class="week"><a href="index.php?o=',$le,'&w=',$w,'&c=',$c,'&m=',$calmonth,'&a=',$d,'&y=',$calyear,'&sem=',$sem,'&cwid=',$studentCWID,'&rm=',$rm,'">week</a></div>';
 	
 	
 	}

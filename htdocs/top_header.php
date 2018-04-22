@@ -6,6 +6,7 @@
 <html>
 	
 	<head>
+	<title>ULM Nursing Scheduler</title>
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 		<link rel="stylesheet" type="text/css" href="/css/materialize.min.css">
@@ -15,7 +16,7 @@
 		<link rel="stylesheet" type="text/css" href="/css/calendar.css">
 		<?php 
 			//if ($session->url == "addevent.php" || $session->url == "editevent.php"){
-		?>
+			?>
 		<link rel="stylesheet" type="text/css" href="/css/addevent.css">
 		<?php
 			//}
@@ -51,9 +52,9 @@
 			$numUnreadMail = $database->query($q) or die(mysql_error());
 			$numUnreadMail = mysql_num_rows($numUnreadMail);
 		?>
-		<header><nav>
+		<nav>
 			<div class="nav-wrapper">
-				<a href="index.php" class="brand-logo"><img src="/img/ulmlogo.png" alt="logo" class="logo" ></a>
+				<a href="/index.php<?php if (isset($_GET['cwid'])){echo '?cwid='.$_GET['cwid'];} ?>" class="brand-logo"><img src="/img/ulmlogo.png" alt="logo" class="logo" ></a>
 				<a href="#" data-activates="mobile-demo" class="button-collapse"><i class="material-icons">menu</i></a>
 				<ul class="right hide-on-med-and-down">
 					<?php
@@ -77,7 +78,7 @@
 						<?php
 							} else {
 						?>
-						<li><a href="/login.php">Login</a></li>
+						<li><a href="/login.php">Faculty Login</a></li>
 					<?php } ?>
 				</ul>
 				<ul class="side-nav" id="mobile-demo">
@@ -103,27 +104,26 @@
 							} else {
 						?>
 						
-						<li><a href="/login.php">Login</a></li>
+						<li><a href="/login.php">Faculty Login</a></li>
 					<?php } ?>
 				</ul>
 				
 			</div>
-		</nav></header>
+		</nav>
 		<?php
 			/**
 				* User has already logged in, so display relavent links, including
 				* a link to the admin center if the user is an administrator.
 			*/
-			if($session->logged_in){ ?>
+			if($session->logged_in || isset($_GET['cwid'])){ ?>
 			<div class="card card-2">
-				Welcome <?php echo $session->username; ?>, you are logged in.
+				<h6><strong>Logged In.</strong></h6>
+				Welcome <strong><?php echo $session->username; ?></strong>, you are logged in.
 				<?php
-					if ($page == "index.php"){
 						echo '<a href="javascript:window.print()"><img src="/img/print.png" alt="Print" id="print-button" /></a>';
-					}
 				?>
 			</div>
-			<?php } 
+<?php } 
 			if ($page == "index.php"){
 			?>
 			<div class="card card-3" style="
@@ -141,6 +141,7 @@
 				<?php
 					$sem = $_GET['sem'];
 					$studentCWID = $_GET['cwid'];
+					$rm = $_GET['rm'];
 					$q = "SELECT module_id, link_name from modules where active = 1 order by sequence";
 					$query = mysql_query($q);
 					if (!$query) $msg .= "Database Error : ".$q;
@@ -148,7 +149,7 @@
 						$i = false;
 						while($row = mysql_fetch_row($query)) {
 							if ($i == true) echo " | ";
-							echo "<a href=\"index.php?o=".$row[0]."&c=".$c."&m=".$m."&a=".$a."&y=".$y."&w=".$w."&sem=".$sem."&cwid=".$studentCWID."\"";
+							echo "<a href=\"index.php?o=".$row[0]."&c=".$c."&m=".$m."&a=".$a."&y=".$y."&w=".$w."&sem=".$sem."&cwid=".$studentCWID."&rm=".$rm."\"";
 							if ($o == $row[0]) echo " class=\"selected\"";
 							echo ">".$row[1]."</a>";
 							$i = true;
@@ -158,21 +159,24 @@
 				if ($session->isAdmin()){
 					echo '
 					<div class="input-field col s12">
-					<select name="option" class="drop">
-					<option value="index.php?o='.$o.'&c='.$c.'&m='.$m.'&a='.$a.'&y='.$y.'&w='.$w.'&sem=0">(default) View My Courses</option>
+					<select name="option" class="drop wid">
+					<option value="" disabled selected>Filter by Professional Semester</option>
+					<option value="index.php?o='.$o.'&c='.$c.'&m='.$m.'&a='.$a.'&y='.$y.'&w='.$w.'&sem=0">View My Courses</option>
 					<option value="index.php?o='.$o.'&c='.$c.'&m='.$m.'&a='.$a.'&y='.$y.'&w='.$w.'&sem=1">View Semester 1 </option>
 					<option value="index.php?o='.$o.'&c='.$c.'&m='.$m.'&a='.$a.'&y='.$y.'&w='.$w.'&sem=2">View Semester 2 </option>
 					<option value="index.php?o='.$o.'&c='.$c.'&m='.$m.'&a='.$a.'&y='.$y.'&w='.$w.'&sem=3">View Semester 3 </option>
 					<option value="index.php?o='.$o.'&c='.$c.'&m='.$m.'&a='.$a.'&y='.$y.'&w='.$w.'&sem=4">View Semester 4 </option>
 					<option value="index.php?o='.$o.'&c='.$c.'&m='.$m.'&a='.$a.'&y='.$y.'&w='.$w.'&sem=5">View Semester 5 </option>
+					<option value="/roomview.php">View by Room</option>
 					</select>
 					</div>
 					';
 					} else if ($session->isInstructor()){
 					echo '
 					<div class="input-field col s12">
-					<select name="option" class="drop">
-					<option value="index.php?o='.$o.'&c='.$c.'&m='.$m.'&a='.$a.'&y='.$y.'&w='.$w.'&sem=0">(default) View My Courses</option>';
+					<select name="option" class="drop wid">
+					<option value="" disabled selected>Filter by Professional Semester</option>
+					<option value="index.php?o='.$o.'&c='.$c.'&m='.$m.'&a='.$a.'&y='.$y.'&w='.$w.'&sem=0">View My Courses</option>';
 					$q = "select semester, course_number, CRN from ".TBL_COURSE." natural join ".TBL_CRN." where Lead_Instructor = $session->CWID or instructor = $session->CWID GROUP BY semester ORDER BY semester ASC";
 					$result = mysql_query($q);
 					
@@ -180,7 +184,7 @@
 						$num = mysql_result($result,$i,"semester");
 						echo '<option value="index.php?o='.$o.'&c='.$c.'&m='.$m.'&a='.$a.'&y='.$y.'&w='.$w.'&sem='.$num.'">View Semester '.$num.'</option>';
 					}
-					echo '</select></div>';	
+					echo '<option value="/roomview.php">View by Room</option></select></div>';	
 				}
 				if (!$session->isAdmin() && !$session->isInstructor()){
 					echo "<a href='/class_select.php?cwid=".$_GET['cwid']."'>Change your courses</a>";
@@ -189,12 +193,11 @@
 			}
 			?>
 		</div>
-
 		<script>
 			$( document ).ready(function(){
 				$(".button-collapse").sideNav();
 				
 			})
 		</script>
-		<main>
 		
+		<main>

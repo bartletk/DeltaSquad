@@ -126,4 +126,7 @@ $include_child_categories = true;
 
 // display events in parent category along with events in selected category
 $include_parent_categories = true;
+
+//timezone to use
+date_default_timezone_set('America/Chicago');
 ?>
