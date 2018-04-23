@@ -17,6 +17,7 @@
 		
 		
 		?>
+		<div class="card card-3" style="margin:-11px;">
 			<form action="process.php" method='post'>
 			<?php
 			if (isset($mailTo) && $mailTo != NULL && $mailTo != ''){
@@ -42,6 +43,7 @@
 					<i class="material-icons right">send</i>
 				</button>
 			</form>
+			</div>
 		<?php
 	include "footer.php";
 ?>

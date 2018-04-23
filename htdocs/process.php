@@ -225,10 +225,23 @@
 		
 		function procAddA(){
 			global $session, $form;
+			//$myfile = fopen("error.txt", "a") or die(print_r($_POST));
 			$timeStart = date('H:i', strtotime($_POST['starttime']));
 			$timeEnd = date('H:i', strtotime($_POST['endtime']));
-			if (isset($_POST['repeat']) && $_POST['repeat']==1){
-				$retval = $session->addEventAA($_POST['title'], $_POST['type'], $_POST['course'], $_POST['seats'], $_POST['notes'], $_POST['date_submit'], $timeStart, $timeEnd, $_POST['repeat'], $_POST['repeatm'], $_POST['repeatt'], $_POST['repeatw'], $_POST['repeatth'], $_POST['repeatf'], $_POST['re_submit']);
+			
+			if (
+			(isset($_POST['repeatm']) && $_POST['repeatm']==1) || 
+			(isset($_POST['repeatt']) && $_POST['repeatt']==1) || 
+			(isset($_POST['repeatw']) && $_POST['repeatw']==1) || 
+			(isset($_POST['repeatth']) && $_POST['repeatth']==1) || 
+			(isset($_POST['repeatf']) && $_POST['repeatf']==1)){
+				$repeat = 1;
+				} else {
+				$repeat = 0;
+			}
+			
+			if (isset($repeat) && $repeat==1){
+				$retval = $session->addEventAA($_POST['title'], $_POST['type'], $_POST['course'], $_POST['seats'], $_POST['notes'], $_POST['date_submit'], $timeStart, $timeEnd, $repeat, $_POST['repeatm'], $_POST['repeatt'], $_POST['repeatw'], $_POST['repeatth'], $_POST['repeatf'], $_POST['re_submit']);
 				} else {
 				$retval = $session->addEventA($_POST['title'], $_POST['type'], $_POST['course'], $_POST['seats'], $_POST['notes'], $_POST['date_submit'], $timeStart, $timeEnd);
 			}
@@ -250,12 +263,15 @@
 			$explode = explode('#', $_POST['room']);
 			$room = $explode[0];
 			$conflict = $explode[1];
+			if ($_POST['tail'] == 0){
+				$conflict++;
+			}
 			if (isset($_POST['repeat']) && $_POST['repeat']==1){
 				$retval = $session->addEventCA($_POST['title'], $_POST['type'], $_POST['course'], $_POST['crn'], $_POST['seats'], $_POST['notes'],  $_POST['dateStart'], $_POST['dateEnd'], $room, $_POST['series'], $_POST['repeat'], $_POST['repeatm'], $_POST['repeatt'], $_POST['repeatw'], $_POST['repeatth'], $_POST['repeatf'], $_POST['re'], $conflict);
 				} else {
 				$retval = $session->addEventC($_POST['title'], $_POST['type'], $_POST['course'], $_POST['crn'], $_POST['seats'], $_POST['notes'],  $_POST['dateStart'], $_POST['dateEnd'], $room, $_POST['series'], $conflict);			
 			}
-			header("Location: ./success.php?ref=".$session->referrer);
+			header("Location: ./success.php?ref=/index.php");
 			
 			
 		}
@@ -276,7 +292,7 @@
 			global $session, $form;
 			$retval = $session->studentLogin($_POST['CWID']);
 		}			
-
+		
 		function procEditA(){
 			global $session, $form;
 			$timeStart = date('H:i', strtotime($_POST['starttime']));
@@ -285,73 +301,77 @@
 		}
 		
 		function procEditB(){
-			global $session, $form;
-			$room = 0;
-			$conflict = 0;
-			$explode = explode('#', $_POST['room']);
-			$room = $explode[0];
-			$conflict = $explode[1];
-			$retval = $session->editEventB($_POST['title'], $_POST['type'], $_POST['seats'], $_POST['notes'], $_POST['dateStart'], $_POST['dateEnd'], $room, $conflict, $_POST['eventid']);
-			header("Location: ./success.php?ref=".$session->referrer);
+		global $session, $form;
+		$room = 0;
+		$conflict = 0;
+		$explode = explode('#', $_POST['room']);
+		$room = $explode[0];
+		$conflict = $explode[1];
+		if ($_POST['tail'] == 0){
+		$conflict++;
+		}
+		$retval = $session->editEventB($_POST['title'], $_POST['type'], $_POST['seats'], $_POST['notes'], $_POST['dateStart'], $_POST['dateEnd'], $room, $conflict, $_POST['eventid']);
+		header("Location: ./success.php?ref=/index.php");
 		}
 		
 		
 		function procEditC(){
-			global $session, $form;
-			$retval = $session->editEventC($_POST['eventid'], $_POST['notes']);
-			header("Location: ./success.php?ref=".$session->referrer);
+		global $session, $form;
+		$retval = $session->editEventC($_POST['eventid'], $_POST['notes']);
+		header("Location: ./success.php?ref=/index.php");
 		}
 		
 		function procDeleteEvent(){
-			global $session, $form;
-			$retval = $session->deleteEvent($_POST['eventid']);
-			header("Location: ./success.php?ref=".$session->referrer);
+		global $session, $form;
+		$retval = $session->deleteEvent($_POST['eventid']);
+		header("Location: ./success.php?ref=".$session->referrer);
 		}
 		
 		function procApprove(){
-			global $session, $form;
-			$retval = $session->approve($_POST['eventid']);
-			header("Location: ./success.php?ref=index.php");
+		global $session, $form;
+		$retval = $session->approve($_POST['eventid']);
+		header("Location: ./success.php?ref=index.php");
 		}
 		
 		function procApproveAll(){
-			global $session, $form;
-			$retval = $session->approveAll($_POST['seriesid']);
-			header("Location: ./success.php?ref=".$session->referrer);
+		global $session, $form;
+		$retval = $session->approveAll($_POST['seriesid']);
+		header("Location: ./success.php?ref=".$session->referrer);
 		}
 		
 		function procReject(){
-			global $session, $form;
-			$retval = $session->reject($_POST['eventid']);
-			header("Location: ./success.php?ref=index.php");
+		global $session, $form;
+		$retval = $session->reject($_POST['eventid']);
+		header("Location: ./success.php?ref=index.php");
 		}
 		
 		
 		
-				
+		
 		function procReadMail(){
-			global $session, $form;
-			$retval = $session->readMail($_POST['mail_id']);
+		global $session, $form;
+		$retval = $session->readMail($_POST['mail_id']);
 		}
 		
 		function procDeleteMail(){
-			global $session, $form;
-			$retval = $session->deleteMail($_POST['mail_id']);
-			header("Location: ./success.php?ref=messages.php");
+		global $session, $form;
+		$retval = $session->deleteMail($_POST['mail_id']);
+		header("Location: ./success.php?ref=messages.php");
 		}
 		function procReply(){
-			global $session, $form;
-			$retval = $session->reply($_POST['mailFrom'],$_POST['mailSubject']);
+		global $session, $form;
+		$retval = $session->reply($_POST['mailFrom'],$_POST['mailSubject']);
 		}
 		function procSendReply(){
-			global $session, $form;
-			$retval = $session->sendReply($_POST['mailTo'],$_POST['mailSubject'],$_POST['mailBody']);
-			header("Location: ./success.php?ref=messages.php");
+		global $session, $form;
+		$retval = $session->sendReply($_POST['mailTo'],$_POST['mailSubject'],$_POST['mailBody']);
+		header("Location: ./success.php?ref=messages.php");
 		}
-	};
-	
-	
-	/* Initialize process */
-	$process = new Process;
-	
-?>
+		};
+		
+		
+		/* Initialize process */
+		$process = new Process;
+		
+		?>
+				

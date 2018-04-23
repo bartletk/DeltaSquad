@@ -19,6 +19,7 @@
 		echo "<p>This isn't your message to read!!</p><br /><br />";
 		} else {	
 	?>
+			<div class="card card-3" style="margin:-11px;">
 			<form method="post" action="process.php" name="reply">
 				<div id="single">
 					<p>From: <?php echo $row['UserFrom']; ?><input type="hidden" name="mailFrom" value="<?php echo $row['UserFrom']; ?>" /></p>
@@ -30,6 +31,7 @@
 				</button>
 				</div>
 			</form>
+			</div>
 	<?php
 		}
 	} else {

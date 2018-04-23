@@ -11,7 +11,7 @@
 	$result = $database->query($q);
 	$num_rows = mysql_numrows($result);
 	
-	echo "<div id='inbox'>";
+	echo "<div id='inbox' class='card card-2'>";
 	if($num_rows == 0){
 	?>
 	<a href="/reply.php">

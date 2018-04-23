@@ -156,7 +156,7 @@
             mysql_real_escape_string($username),
             mysql_real_escape_string($password),
             mysql_real_escape_string($user_id),
-            mysql_real_escape_string($ulevel),
+            mysql_real_escape_string(5),
             mysql_real_escape_string($email),
             mysql_real_escape_string($name),
 			mysql_real_escape_string($CWID));
@@ -216,7 +216,7 @@
 		}
 		
 		/**
-			GET FUNCTIONS - gets crap from the database - mostly used in forms
+			GET FUNCTIONS - Gets courses and rooms.
 		*/
 		function getCourses(){
 			$q = sprintf("SELECT prefix,course_number,crn FROM ".TBL_COURSE."");
@@ -237,7 +237,11 @@
 			$dbarray = mysql_fetch_array($result);
 			return $dbarray;
 		}
-		
+		/**
+			Add Event Functions
+			Handles all three pages of add event.
+			If the name has "A" after it, it handles the events with repetition options.
+		*/
         function addEvent2($title, $type, $course, $crn, $seats, $notes, $dateStart, $dateEnd, $room, $user, $series, $time, $conflict){
 			if ($type == 0){
 				$type = "Class";
@@ -253,11 +257,11 @@
 			$crn = substr($crn, 1);
 			$crns = explode(" ",$crn);
 			if ($conflict < 1){
-				$approval = "accepted";
+				$approval = "approved";
 				} else {
 				$approval = "pending"; 
 				$date = date('m/d/Y')." at ".date('g:i.s')." ".date('a');
-				$message = "Conflict created at <a href=\'./editevent.php?e=$eventid\'>$eventid - $title</a>";
+				$message = "An event was created that needs your attention. Either the event conflicts with another, the room does not have sufficient capacity, or the event was created outside of the scheduled deadline. The event is ".$eventid." - ".$title.". <a href=\'./viewconflict.php?e=".$eventid."\'>Please click here for more information and to approve or reject the event.</a>.";
 				$this->mailIt($message);
 			}
 			foreach ($crns as $c){
@@ -277,6 +281,7 @@
 		}
 		
 		function addEvent2A($title, $type, $course, $crn, $seats, $notes, $dateStart, $dateEnd, $room, $user, $series, $time, $repeat, $repeatm, $repeatt, $repeatw, $repeatth, $repeatf, $re, $conflict){
+		//	$myfile = fopen("error.txt", "a") or die(print_r($conflict));
 			$title = str_replace ( "'" , "\'" , $title );
 			$notes = str_replace ( "'" , "\'" , $notes );
 			$crn = substr($crn, 1);
@@ -291,14 +296,14 @@
 				$type = "Event";
 			}
 			if ($conflict < 1){
-				$approval = "accepted";
+				$approval = "approved";
 				$log = "Event created with no conflicts:".$title."";
 				$this->logIt($log);
 				} else {
 				$approval = "pending"; 
 				$date = date('m/d/Y')." at ".date('g:i.s')." ".date('a');
-				$message = "Conflict created at <a href=\'./editevent.php?e=$eventid\'>$eventid - $title</a>.";
-				$log = "Event created with conflicts:".$title."";
+				$message = "An event was created that needs your attention. Either the event conflicts with another, the room does not have sufficient capacity, or the event was created outside of the scheduled deadline. The event is ".$eventid." - ".$title.". <a href=\'./viewconflict.php?e=".$eventid."\'>Please click here for more information and to approve or reject the event.</a>.";
+				$log = "Event created with conflicts: ".$title."";
 				$this->logIt($log);
 				$this->mailIt($message);
 			}
@@ -309,9 +314,9 @@
 				$dateStartOriginal = new DateTime($dateStart,new \DateTimeZone('UTC'));
 				$dateEndOriginal = new DateTime($dateEnd,new \DateTimeZone('UTC'));
 				$re1 = new DateTime($re,new \DateTimeZone('UTC'));
-				$dateStartOriginalHours = $dateStartOriginal->format('h');
+				$dateStartOriginalHours = $dateStartOriginal->format('H');
 				$dateStartOriginalMinutes = $dateStartOriginal->format('i');
-				$dateEndOriginalHours = $dateEndOriginal->format('h');
+				$dateEndOriginalHours = $dateEndOriginal->format('H');
 				$dateEndOriginalMinutes = $dateEndOriginal->format('i');
 				if ($repeatm == 1) {
 					$dateStartA = clone $dateStartOriginal;
@@ -404,6 +409,9 @@
 			return TRUE;
 			
 		}
+				/**
+			StudentCourses - Checks to see if a given student's CWID is in the personal schedule table.
+		*/
 		function studentCourses($CWID){
 			$q = sprintf("SELECT * FROM ".TBL_SCHED." WHERE CWID=$CWID");
 			$result = mysql_query($q, $this->connection);
@@ -414,6 +422,7 @@
 				return $dbarray;
 			}
 		}
+		
 		function clearStudentSched($CWID){
 			$q = sprintf("DELETE FROM ".TBL_SCHED." WHERE CWID=$CWID");
 			$result = mysql_query($q, $this->connection);
@@ -452,11 +461,10 @@
 				$approval = "accepted";
 				} else {
 				$approval = "pending"; 
-				$message = "Conflict created at <a href=\'./editevent.php?e=$eventid\'>$eventid - $title</a>.";
+				$message = "An event was created that needs your attention. Either the event conflicts with another, the room does not have sufficient capacity, or the event was created outside of the scheduled deadline. The event is ".$eventid." - ".$title.". <a href=\'./viewconflict.php?e=".$eventid."\'>Please click here for more information and to approve or reject the event.</a>.";
 				$this->mailIt($message);
 			}
 			$q = sprintf("Update ".TBL_EVENTS." set title = '$title', type = '$type', attendees = $seats, room_number = '$room', notes = '$notes', dateStart = '$dateStart', dateEnd = '$dateEnd', timeCreated = ".time().", status = '$approval'  where event_id = $eventid");
-			//$myfile = fopen("error.txt", "a") or die(print_r($q));
 			$result = mysql_query($q);
 			$log = "Event updated: ".$title."";
 			$this->logIt($log);
@@ -469,7 +477,6 @@
 		function editEventC($eventid, $notes){
 			$notes = str_replace ( "'" , "\'" , $notes );
 			$q = sprintf("Update ".TBL_EVENTS." set notes = '$notes' where event_id = $eventid");
-			//$myfile = fopen("error.txt", "a") or die(print_r($q));
 			$result = mysql_query($q, $this->connection);
 			$log = "Event updated notes in event: ".$eventid."";
 			$this->logIt($log);
@@ -493,9 +500,20 @@
 		}
 		
 		function reject($eventid){
-			$q = sprintf("UPDATE ".TBL_EVENTS." SET status = 'rejected' WHERE event_id = $eventid");
+			$info = mysql_query("SELECT * FROM ".TBL_EVENTS." e JOIN ".TBL_USERS." u ON e.CWID = u.CWID WHERE e.event_id=$eventid",$this->connection);
+			$to = mysql_result($info,0,"username");
+			$title = mysql_result($info,0,"title");
+			$type = mysql_result($info,0,"type");
+			$crn = mysql_result($info,0,"crn");
+			$room_number = mysql_result($info,0,"room_number");
+			$notes = mysql_result($info,0,"notes");
+			$dateStart = mysql_result($info,0,"dateStart");
+			$dateEnd = mysql_result($info,0,"dateEnd");
+			$body = "The following event was rejected: <br> Title: $title <br> Type: $type <br> CRN: $crn <br> Room: $room_number <br> Notes: $notes <br> Start date/time: $dateStart <br> Ending date/time: $dateEnd <br><br>";
+			$this->sendReply($to,'Your event has been rejected.',$body,'admin');
+			$q = sprintf("DELETE FROM ".TBL_EVENTS." WHERE event_id = $eventid");
 			$result = mysql_query($q, $this->connection);
-			$log = "Event rejected: ".$eventid."";
+			$log = "Event rejected & removed: ".$eventid."";
 			$test = $this->logIt($log);
 		}
 		function approveAll($eventid){
@@ -504,14 +522,12 @@
 			$log = "Event series approved: ".$eventid."";
 			$test = $this->logIt($log);
 		}
-		// WORKS
 		function approve($eventid){
 			$q = sprintf("UPDATE ".TBL_EVENTS." SET status = 'approved' WHERE event_id = $eventid");
 			$result = mysql_query($q, $this->connection);
 			$log = "Event approved: ".$eventid."";
 			$test = $this->logIt($log);
 		}
-		// WORKS
 		function logIt($msg){
 			global $session;
 			$logQ = sprintf("INSERT INTO ".TBL_LOG." VALUES (NULL,".$session->CWID.",'$msg',NULL,'".$session->referrer."')");
@@ -522,7 +538,7 @@
 		function mailIt($msg){
 			global $session;
 			$date = date('m/d/Y')." at ".date('g:i.s')." ".date('a');
-			$q2 = "INSERT INTO mail (UserTo, UserFrom, Subject, Message, SentDate, status) VALUES ('alyssa','admin','NOTICE! Conflict Created','$msg','$date','unread')";
+			$q2 = "INSERT INTO mail (UserTo, UserFrom, Subject, Message, SentDate, status) VALUES ('".SCHED_ADMIN."','admin','An event needs your attention.','$msg','$date','unread')";
 			$mail = mysql_query($q2, $this->mailCon);
 			return $mail;
 		}

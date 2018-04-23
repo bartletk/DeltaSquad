@@ -138,5 +138,5 @@ if (!$o) {
 	}
 
 }
-$common_get = "o=".$o."&c=".$c."&m=".$m."&a=".$a."&y=".$y."&w=".$w."&sem=".$sem."&cwid=".$studentCWID."&rm=".$rm;
+$common_get = "o=".$o."&c=".$c."&m=".$m."&a=".$a."&y=".$y."&w=".$w."&sem=".$sem."&cwid=".$studentCWID."&rm=".$rm."&cm=".$cm;
 ?>

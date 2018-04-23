@@ -5,7 +5,7 @@
 	<body>
 	<head>
 	<script type="text/javascript">
-    var timeleft = 3;
+    var timeleft = 1;
     var downloadTimer = setInterval(function(){
     timeleft--;
     document.getElementById("countdowntimer").textContent = timeleft;
@@ -19,11 +19,11 @@
 		</style>
 	</head>
 			<div id= "text">Success</div> 
-			<div id="text2"><br>Returning in <span id="countdowntimer">3</span> seconds.</div>
+			<div id="text2"><br>Returning in <span id="countdowntimer">1</span> seconds.</div>
 
 	
 	
 	</body>
 	<?php
-	header( "refresh:3;url=$referrer" );
+	header( "refresh:1;url=$referrer" );
 	?>

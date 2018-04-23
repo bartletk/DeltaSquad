@@ -14,7 +14,7 @@
 		if(!$session->isInstructor() & !$session->isAdmin()){
 			if (isset($_GET['cwid'])&&$_GET['cwid']!=0&&$_GET['cwid']!=NULL){
 				$studentCWID = $_GET['cwid'];
-				$q = sprintf("SELECT DISTINCT ".TBL_EVENTS.".* from ".TBL_EVENTS." join ".TBL_SCHED." on ".TBL_SCHED.".crn = ".TBL_EVENTS.".crn where (".TBL_SCHED.".cwid = $studentCWID OR series=9100) AND CAST(dateStart AS DATE) = CAST('$dateNew' AS DATE) AND status='approved'");
+				$q = sprintf("SELECT DISTINCT ".TBL_EVENTS.".*, ".TBL_CRN.".course_number AS cnum from ".TBL_EVENTS." join ".TBL_CRN." ON ".TBL_EVENTS.".crn = ".TBL_CRN.".crn join ".TBL_SCHED." on ".TBL_SCHED.".crn = ".TBL_EVENTS.".crn where (".TBL_SCHED.".cwid = $studentCWID OR series=9100) AND CAST(dateStart AS DATE) = CAST('$dateNew' AS DATE) AND status='approved'");
 				} else {
 				header ("Location: class_select.php");
 			}
@@ -23,24 +23,27 @@
 			$sem = $_GET['sem'];
 			$rm = $_GET['rm'];
 			if (isset($sem) && ($sem != 0) && ($sem != NULL)){
-				$q = sprintf("select  ".TBL_EVENTS.".* from ".TBL_EVENTS." join ".TBL_CRN." ON ".TBL_EVENTS.".crn = ".TBL_CRN.".crn join ".TBL_COURSE." on ".TBL_COURSE.".course_number = ".TBL_CRN.".course_number where CAST(dateStart AS DATE) = CAST('$dateNew' AS DATE) AND (semester = $sem OR semester=0 OR series=9100)");
+				$q = sprintf("select  ".TBL_EVENTS.".*, ".TBL_COURSE.".course_number AS cnum from ".TBL_EVENTS." join ".TBL_CRN." ON ".TBL_EVENTS.".crn = ".TBL_CRN.".crn join ".TBL_COURSE." on ".TBL_COURSE.".course_number = ".TBL_CRN.".course_number where CAST(dateStart AS DATE) = CAST('$dateNew' AS DATE) AND (semester = $sem OR semester=0 OR series=9100)");
 				} else if (isset($rm) && ($rm != 0) && ($rm != NULL)){
-				$q = sprintf("select  ".TBL_EVENTS.".* from ".TBL_EVENTS." join ".TBL_CRN." ON ".TBL_EVENTS.".crn = ".TBL_CRN.".crn join ".TBL_COURSE." on ".TBL_COURSE.".course_number = ".TBL_CRN.".course_number where CAST(dateStart AS DATE) = CAST('$dateNew' AS DATE) AND (room_number = $rm)");
+				$q = sprintf("select  ".TBL_EVENTS.".*, ".TBL_COURSE.".course_number AS cnum from ".TBL_EVENTS." join ".TBL_CRN." ON ".TBL_EVENTS.".crn = ".TBL_CRN.".crn join ".TBL_COURSE." on ".TBL_COURSE.".course_number = ".TBL_CRN.".course_number where CAST(dateStart AS DATE) = CAST('$dateNew' AS DATE) AND (room_number = $rm)");
 				} else {
-				$q = sprintf("select DISTINCT ".TBL_EVENTS.".* from ".TBL_EVENTS." join ".TBL_CRN." ON ".TBL_EVENTS.".crn = ".TBL_CRN.".crn join ".TBL_COURSE." on ".TBL_COURSE.".course_number = ".TBL_CRN.".course_number where (".TBL_CRN.".instructor = $CWID OR ".TBL_COURSE.".Lead_Instructor = $CWID OR series=9100) AND CAST(dateStart AS DATE) = CAST('$dateNew' AS DATE)");
+				$q = sprintf("select DISTINCT ".TBL_EVENTS.".*, ".TBL_COURSE.".course_number AS cnum from ".TBL_EVENTS." join ".TBL_CRN." ON ".TBL_EVENTS.".crn = ".TBL_CRN.".crn join ".TBL_COURSE." on ".TBL_COURSE.".course_number = ".TBL_CRN.".course_number where (".TBL_CRN.".instructor = $CWID OR ".TBL_COURSE.".Lead_Instructor = $CWID OR series=9100) AND CAST(dateStart AS DATE) = CAST('$dateNew' AS DATE)");
 			}
 			//if admin
 			} else {
 			$sem = $_GET['sem'];
 			$rm = $_GET['rm'];
-			if (isset($sem) && ($sem != 0) && ($sem != NULL)){
+			$cm = $_GET['cm'];
+			if (isset($cm) && ($cm != 0) && ($cm != NULL)){
+				$q = sprintf("SELECT DISTINCT ".TBL_EVENTS.".*, ".TBL_CRN.".course_number AS cnum from ".TBL_EVENTS." join ".TBL_CRN." ON ".TBL_EVENTS.".crn = ".TBL_CRN.".crn WHERE CAST(dateStart AS DATE) = CAST('$dateNew' AS DATE) AND status != 'approved'");	
+				} else if (isset($sem) && ($sem != 0) && ($sem != NULL)){
 				// change to all of a semester's classes
-				$q = sprintf("select  ".TBL_EVENTS.".* from ".TBL_EVENTS." join ".TBL_CRN." ON ".TBL_EVENTS.".crn = ".TBL_CRN.".crn join ".TBL_COURSE." on ".TBL_COURSE.".course_number = ".TBL_CRN.".course_number where CAST(dateStart AS DATE) = CAST('$dateNew' AS DATE) AND (semester = $sem OR semester=0 OR series=9100)");	
-				//$myfile = fopen("error.txt", "a") or die(print_r($q));
+				$q = sprintf("select  ".TBL_EVENTS.".*, ".TBL_COURSE.".course_number AS cnum from ".TBL_EVENTS." join ".TBL_CRN." ON ".TBL_EVENTS.".crn = ".TBL_CRN.".crn join ".TBL_COURSE." on ".TBL_COURSE.".course_number = ".TBL_CRN.".course_number where CAST(dateStart AS DATE) = CAST('$dateNew' AS DATE) AND (semester = $sem OR semester=0 OR series=9100)");	
+				
 				} else if (isset($rm) && ($rm != 0) && ($rm != NULL)){
-				$q = sprintf("select  ".TBL_EVENTS.".* from ".TBL_EVENTS." join ".TBL_CRN." ON ".TBL_EVENTS.".crn = ".TBL_CRN.".crn join ".TBL_COURSE." on ".TBL_COURSE.".course_number = ".TBL_CRN.".course_number where CAST(dateStart AS DATE) = CAST('$dateNew' AS DATE) AND (room_number = $rm)");
+				$q = sprintf("select  ".TBL_EVENTS.".*, ".TBL_COURSE.".course_number AS cnum from ".TBL_EVENTS." join ".TBL_CRN." ON ".TBL_EVENTS.".crn = ".TBL_CRN.".crn join ".TBL_COURSE." on ".TBL_COURSE.".course_number = ".TBL_CRN.".course_number where CAST(dateStart AS DATE) = CAST('$dateNew' AS DATE) AND (room_number = $rm)");
 				}else {
-				$q = sprintf("SELECT DISTINCT ".TBL_EVENTS.".* FROM ".TBL_EVENTS." WHERE CAST(dateStart AS DATE) = CAST('$dateNew' AS DATE)");
+				$q = sprintf("SELECT DISTINCT ".TBL_EVENTS.".*, ".TBL_CRN.".course_number AS cnum FROM ".TBL_EVENTS." join ".TBL_CRN." ON ".TBL_EVENTS.".crn = ".TBL_CRN.".crn WHERE CAST(dateStart AS DATE) = CAST('$dateNew' AS DATE)");
 			}
 		}
 		$result = mysql_query($q, $link);
@@ -63,6 +66,7 @@
 				$title = mysql_result($result,$i,"title");
 				$room = mysql_result($result,$i,"room_number");
 				$crn = mysql_result($result,$i,"crn");
+				$cnum = mysql_result($result,$i,"cnum");
 				$fromTop = ((($start_timeH) + ($start_timeM / 60)) * (28*2))+24;
 				$length = ((strtotime($end_time) - strtotime($start_time))/(60*60))*(28*2);
 				if (mysql_result($result,$i,"status") != 'approved') {
@@ -84,6 +88,7 @@
 				$current[8] = $series;
 				$current[9] = $crn;
 				$current[10] = $style;
+				$current[11] = $cnum;
 				$previousEvents[$i]=$current;
 			}
 			
@@ -91,52 +96,53 @@
 			
 		}
 		if ($previousEvents[0] != ""){
-			for($z = 0; $z < sizeof($previousEvents); $z++){
-				$i = 1;
-				for($y = 1; $y < sizeof($previousEvents); $y++){
-					if ($previousEvents[$z][6] <= $previousEvents[$y][6]){
-						// start time falls within previous time's range	
-						$i++;
-						} else {
-						// start time is outside of previous time's range
-						for ($j = 0; $j <= $i; $j++){
-							$removed = array_shift($previousEvents);
-							if ($removed[8] = 9100){
-						
-						} else {
-							echo "<div class=\"wrap\"><div class=\"date\" style=\"";
-							echo "height: ".$removed[5]."px; top: ".$removed[4]."px; width: ".(100 / $i)."%; left:".((100/$i)*$j)."%;";
-							echo "\"><div class=\"inner\">";
-							echo "<div class=\"title\"><a href='/showevent.php?e=".$removed[7]."&s=".$removed[8]."' ".$removed[10].">";
-							echo $removed[2]."</a><br>".$removed[9]."<br>".$removed[3]."</div>\n";
-							echo "<span class=\"time\">".$removed[0];
-							echo " - ".$removed[1];
-							echo "</span>\n";
-						echo "</div></div></div>\n";
+				for($z = 0; $z < sizeof($previousEvents); $z++){
+					$i = 1;
+					for($y = 1; $y < sizeof($previousEvents); $y++){
+						if ($previousEvents[$z][6] <= $previousEvents[$y][6]){
+							// start time falls within previous time's range	
+							$i++;
+							} else {
+							// start time is outside of previous time's range
+							for ($j = 0; $j <= $i; $j++){
+								$removed = array_shift($previousEvents);
+								if ($removed[8] != 9100 && $removed[0] != ""){
+								echo "<div class=\"wrap\"><div class=\"date\" style=\"";
+								echo "height: ".$removed[5]."px; top: ".$removed[4]."px; width: ".(100 / $i)."%; left:".((100/$i)*($j-1))."%;";
+								echo "\"><div class=\"inner\">";
+								echo "<div class=\"title\"><a href='/showevent.php?e=".$removed[7]."&s=".$removed[8]."' ".$removed[10].">".$removed[11];
+								echo ": ".$removed[2]."</a><br>".$removed[9]."<br>".$removed[3]."</div>\n";
+								echo "<span class=\"time\">".$removed[0];
+								echo " - ".$removed[1];
+								echo "</span>\n";
+														if ($session->isAdmin() && $cm == 1){
+						echo "<br><a href='./viewconflict.php?e=".$removed[7]."'>Conflict Manager</a>";
 						}
+								echo "</div></div></div>\n";
+								}
+							}
 						}
 					}
-				}
-				for ($f = 0; $f <= sizeof($previousEvents); $f++){
-					$removed = array_shift($previousEvents);
-					if ($removed[8] = 9100){
-						
-						} else {
+					for ($f = 0; $f <= sizeof($previousEvents); $f++){
+						$removed = array_shift($previousEvents);
+						if ($removed[8] != 9100 && $removed[0] != ""){
 						echo "<div class=\"wrap\"><div class=\"date\" style=\"";
 						echo "height: ".$removed[5]."px; top: ".$removed[4]."px; width: ".(100 / $i)."%; left:".(100/$i)*$f."%;";
 						echo "\"><div class=\"inner\">";
-						echo "<div class=\"title\"><a href='/showevent.php?e=".$removed[7]."&s=".$removed[8]."' ".$removed[10].">";
-						echo $removed[2]."</a><br>".$removed[9]."<br>".$removed[3]."</div>\n";
+						echo "<div class=\"title\"><a href='/showevent.php?e=".$removed[7]."&s=".$removed[8]."' ".$removed[10].">".$removed[11];
+						echo " - ".$removed[2]."</a><br>".$removed[9]."<br>".$removed[3]."</div>\n";
 						echo "<span class=\"time\">".$removed[0];
 						echo " - ".$removed[1];
 						echo "</span>\n";
+						if ($session->isAdmin() && $cm == 1){
+						echo "<br><a href='./viewconflict.php?e=".$removed[7]."'>Conflict Manager</a>";
+						}
 						echo "</div></div></div>\n";
+						}
 					}
 				}
 			}
 		}
-	}
-	
 	
 	
 	
@@ -146,24 +152,24 @@
 		// build day
 		echo "<td class=\"timex\"><table class=\"day\"><tr><td width=\"100%\"><div class=\"time_frame\">\n";
 		echo "<div class=\"cell_top\">Time</div>\n";
-	$i = $day_week_start_hour ? $day_week_start_hour : 0;
-	$j = $day_week_start_hour ? 0 : 30;
-	$max = $day_week_end_hour ? $day_week_end_hour : 24;
-	//echo "<div class=\"cell\">".$h.":".$j." ".$ap."</div>\n";
-	echo '		<tr data-time="00:00:00">
-	<td class="cell"><span>12am</span></td>
-	<td></td>
-	</tr>
-	<tr data-time="00:30:00" >
-	<td class="cell"></td>
-	<td ></td>
-	</tr>
-	
-	<tr data-time="01:00:00">
-	<td class="cell"><span>1am</span></td>
-	<td></td>
-	</tr>
-	<tr data-time="01:30:00" >
+		$i = $day_week_start_hour ? $day_week_start_hour : 0;
+		$j = $day_week_start_hour ? 0 : 30;
+		$max = $day_week_end_hour ? $day_week_end_hour : 24;
+		//echo "<div class=\"cell\">".$h.":".$j." ".$ap."</div>\n";
+		echo '		<tr data-time="00:00:00">
+		<td class="cell"><span>12am</span></td>
+		<td></td>
+		</tr>
+		<tr data-time="00:30:00" >
+		<td class="cell"></td>
+		<td ></td>
+		</tr>
+		
+		<tr data-time="01:00:00">
+		<td class="cell"><span>1am</span></td>
+		<td></td>
+		</tr>
+		<tr data-time="01:30:00" >
 	<td class="cell"></td>
 	<td ></td>
 	</tr>
@@ -370,13 +376,13 @@
 	}
 	
 	function showDay($dy,$dm,$da,$caption="") {
-		global $la, $w, $c, $day_week_start_hour, $day_week_end_hour, $studentCWID, $sem, $rm;
+		global $la, $w, $c, $day_week_start_hour, $day_week_end_hour, $studentCWID, $sem, $rm, $cm;
 		// build day
 		echo "<div class=\"single_day_frame\">";
 		echo "<div class=\"cell_top\">";
 		if($caption) echo $caption;
 		else {
-			echo '<a href="index.php?o=',$la,'&w=',$w,'&c=',$c,'&m=',$dm,'&a=',$da,'&y=',$dy,'&sem=',$sem,'&cwid=',$studentCWID,'&rm=',$rm,'">';
+			echo '<a href="index.php?o=',$la,'&w=',$w,'&c=',$c,'&m=',$dm,'&a=',$da,'&y=',$dy,'&sem=',$sem,'&cwid=',$studentCWID,'&rm=',$rm,'&cm=',$cm,'">';
 			echo date('l, F j', mktime(0,0,0,$dm,$da,$dy));
 			echo '</a>';
 		}

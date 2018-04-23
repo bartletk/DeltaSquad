@@ -6,7 +6,7 @@
 <html>
 	
 	<head>
-	<title>ULM Nursing Scheduler</title>
+		<title>ULM Nursing Scheduler</title>
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 		<link rel="stylesheet" type="text/css" href="/css/materialize.min.css">
@@ -14,28 +14,12 @@
 		<link rel="stylesheet" href="css/print.css" type="text/css" media="print" />
 		<link href="https://fonts.googleapis.com/css?family=Lobster" rel="stylesheet">
 		<link rel="stylesheet" type="text/css" href="/css/calendar.css">
-		<?php 
-			//if ($session->url == "addevent.php" || $session->url == "editevent.php"){
-			?>
 		<link rel="stylesheet" type="text/css" href="/css/addevent.css">
-		<?php
-			//}
-		?>
 		<link rel="stylesheet" type="text/css" href="/css/navbar.css">
-		<?php 
-			//if ($session->url == "login.php"){
-		?>
 		<link rel="stylesheet" type="text/css" href="/css/loginAndRegister.css">
-		<?php 
-			//}
-			//if ($session->url == "mycourse.php"){
-		?>
 		<link rel="stylesheet" type="text/css" href="/css/mycourse.css">
 		<?php 
-			//}
-		?>
-		<link rel="stylesheet" type="text/css" href="/css/form.css">
-		<?php 
+	
 			if ($session->url == "roomview.php"){
 			?>
 			<link rel="stylesheet" type="text/css" href="/css/roomview.css">
@@ -44,7 +28,7 @@
 		?>
 		<script src="https://code.jquery.com/jquery-2.2.4.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
 		<script src="/js/materialize.js"></script>
-		<script src="/js/hash.js"></script>
+		<!--<script src="/js/hash.js"></script>-->
 	</head>
 	<body>
 		<?php
@@ -120,21 +104,21 @@
 				<h6><strong>Logged In.</strong></h6>
 				Welcome <strong><?php echo $session->username; ?></strong>, you are logged in.
 				<?php
-						echo '<a href="javascript:window.print()"><img src="/img/print.png" alt="Print" id="print-button" /></a>';
+					echo '<a href="javascript:window.print()"><img src="/img/print.png" alt="Print" id="print-button" /></a>';
 				?>
 			</div>
-<?php } 
+			<?php } 
 			if ($page == "index.php"){
 			?>
 			<div class="card card-3" style="
-    margin-left: 5%;
-    margin-right: 5%;
-    padding: 1em 3em;
-    text-align: center;
-    font-size: 18px;
-    bottom: -28px;
-    background-color: gainsboro;
-">
+			margin-left: 5%;
+			margin-right: 5%;
+			padding: 1em 3em;
+			text-align: center;
+			font-size: 18px;
+			bottom: -28px;
+			background-color: gainsboro;
+			">
 				<?php
 					echo "<div id='viewsleft'>";
 				echo "Calendar Views"; ?>:<br>&nbsp;&nbsp;&nbsp;
@@ -142,6 +126,7 @@
 					$sem = $_GET['sem'];
 					$studentCWID = $_GET['cwid'];
 					$rm = $_GET['rm'];
+					$cm = $_GET['cm'];
 					$q = "SELECT module_id, link_name from modules where active = 1 order by sequence";
 					$query = mysql_query($q);
 					if (!$query) $msg .= "Database Error : ".$q;
@@ -149,18 +134,27 @@
 						$i = false;
 						while($row = mysql_fetch_row($query)) {
 							if ($i == true) echo " | ";
-							echo "<a href=\"index.php?o=".$row[0]."&c=".$c."&m=".$m."&a=".$a."&y=".$y."&w=".$w."&sem=".$sem."&cwid=".$studentCWID."&rm=".$rm."\"";
+							echo "<a href=\"index.php?o=".$row[0]."&c=".$c."&m=".$m."&a=".$a."&y=".$y."&w=".$w."&sem=".$sem."&cwid=".$studentCWID."&rm=".$rm."&cm=".$cm."\"";
 							if ($o == $row[0]) echo " class=\"selected\"";
 							echo ">".$row[1]."</a>";
 							$i = true;
 						}
 					}	
 					echo "</div><div id='viewsright'>";
-				if ($session->isAdmin()){
+					if ($session->isAdmin()){
+						if (isset($cm) && $cm != NULL && $cm != 0){
+							$filter = "Viewing Pending Mode";
+						} else if (isset($rm) && $rm != NULL && $rm != 0){
+						$filter = "Viewing Room: ".$rm;
+						} else if (isset($sem) && $sem != NULL && $sem != 0){
+						$filter = "Viewing Semester: ".$sem;
+					} else {
+						$filter = "Filter";
+					}
 					echo '
 					<div class="input-field col s12">
 					<select name="option" class="drop wid">
-					<option value="" disabled selected>Filter by Professional Semester</option>
+					<option value="" disabled selected>'.$filter.'</option>
 					<option value="index.php?o='.$o.'&c='.$c.'&m='.$m.'&a='.$a.'&y='.$y.'&w='.$w.'&sem=0">View My Courses</option>
 					<option value="index.php?o='.$o.'&c='.$c.'&m='.$m.'&a='.$a.'&y='.$y.'&w='.$w.'&sem=1">View Semester 1 </option>
 					<option value="index.php?o='.$o.'&c='.$c.'&m='.$m.'&a='.$a.'&y='.$y.'&w='.$w.'&sem=2">View Semester 2 </option>
@@ -168,6 +162,7 @@
 					<option value="index.php?o='.$o.'&c='.$c.'&m='.$m.'&a='.$a.'&y='.$y.'&w='.$w.'&sem=4">View Semester 4 </option>
 					<option value="index.php?o='.$o.'&c='.$c.'&m='.$m.'&a='.$a.'&y='.$y.'&w='.$w.'&sem=5">View Semester 5 </option>
 					<option value="/roomview.php">View by Room</option>
+					<option value="index.php?o='.$o.'&c='.$c.'&m='.$m.'&a='.$a.'&y='.$y.'&w='.$w.'&cm=1">View Pending Only</option>
 					</select>
 					</div>
 					';
@@ -175,7 +170,7 @@
 					echo '
 					<div class="input-field col s12">
 					<select name="option" class="drop wid">
-					<option value="" disabled selected>Filter by Professional Semester</option>
+					<option value="" disabled selected>Filter</option>
 					<option value="index.php?o='.$o.'&c='.$c.'&m='.$m.'&a='.$a.'&y='.$y.'&w='.$w.'&sem=0">View My Courses</option>';
 					$q = "select semester, course_number, CRN from ".TBL_COURSE." natural join ".TBL_CRN." where Lead_Instructor = $session->CWID or instructor = $session->CWID GROUP BY semester ORDER BY semester ASC";
 					$result = mysql_query($q);
@@ -185,12 +180,12 @@
 						echo '<option value="index.php?o='.$o.'&c='.$c.'&m='.$m.'&a='.$a.'&y='.$y.'&w='.$w.'&sem='.$num.'">View Semester '.$num.'</option>';
 					}
 					echo '<option value="/roomview.php">View by Room</option></select></div>';	
-				}
-				if (!$session->isAdmin() && !$session->isInstructor()){
-					echo "<a href='/class_select.php?cwid=".$_GET['cwid']."'>Change your courses</a>";
+					}
+					if (!$session->isAdmin() && !$session->isInstructor()){
+						echo "<a href='/class_select.php?cwid=".$_GET['cwid']."'>Change your courses</a>";
 					}
 					echo "</div>";
-			}
+				}
 			?>
 		</div>
 		<script>
@@ -200,4 +195,4 @@
 			})
 		</script>
 		
-		<main>
+	<main>	

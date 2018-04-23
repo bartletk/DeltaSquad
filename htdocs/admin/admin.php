@@ -53,7 +53,7 @@
 							<div class="input-field col s12">
 								<select form="update" name="upduser">
 									<?php
-										$q = "SELECT * FROM ".TBL_USERS;
+										$q = "SELECT * FROM ".TBL_USERS." ORDER BY username";
 										$result = $database->query($q);
 										$num_rows = mysql_numrows($result);
 										for($i=0; $i<$num_rows; $i++){
@@ -68,7 +68,6 @@
 							<!Select a Level dropdown>
 							<div class="input-field col s12">
 								<select form='update' name='updlevel'>
-									<option value="1">Student</option>
 									<option value="5">Instructor</option>
 									<option value="9">Administrator</option>
 								</select>
@@ -101,7 +100,7 @@
 							<div class="input-field col s12">
 								<select form="delete" name="deluser">
 									<?php
-										$q = "SELECT * FROM ".TBL_USERS;
+										$q = "SELECT * FROM ".TBL_USERS." ORDER BY username";
 										$result = $database->query($q);
 										$num_rows = mysql_numrows($result);
 										for($i=0; $i<$num_rows; $i++){
@@ -287,7 +286,7 @@
 								<div class="input-field col s12">
 									<select form="deleterm" name="rmnumber">
 										<?php
-											$q = "SELECT * FROM ".TBL_ROOMS;
+											$q = "SELECT * FROM ".TBL_ROOMS." ORDER BY room_number";
 											$result = $database->query($q);
 											$num_rows = mysql_numrows($result);
 											for($i=0; $i<$num_rows; $i++){
@@ -301,7 +300,9 @@
 									<button class="btn waves-effect waves-light" type="submit" name="action" value="Delete Room">Delete room
 										<i class="material-icons right">send</i>
 									</button>
+									<br>
 								</form>
+								<br>
 							</div>
 							
 						</div>
@@ -312,16 +313,16 @@
 					
 					
 					<!course tab>
-					<div id="test5" class="col s12">
+					<div id="test5" class="col s12 paddi">
 						<form action="adminprocess.php" method="POST" id="addcourse">
 							<h5>Add Course</h5>
 							<div class="input-field col s12">
 								<select form="addcourse" name="sem">
-									<option value='1'>1</option>
-									<option value='2'>2</option>
-									<option value='3'>3</option>
-									<option value='4'>4</option>
-									<option value='5'>5</option>
+									<option value='1'>Semester 1</option>
+									<option value='2'>Semester 2</option>
+									<option value='3'>Semester 3</option>
+									<option value='4'>Semester 4</option>
+									<option value='5'>Semester 5</option>
 								</select>
 								<label>Semester</label>
 							</div>
@@ -344,7 +345,7 @@
 							<div class="input-field col s12">
 								<select form="deletecourse" name="course_number">
 									<?php
-										$q = "SELECT * FROM ".TBL_COURSE;
+										$q = "SELECT * FROM ".TBL_COURSE." WHERE course_number !=0 ORDER BY course_number";
 										$result = $database->query($q);
 										$num_rows = mysql_numrows($result);
 										for($i=0; $i<$num_rows; $i++){
@@ -364,69 +365,69 @@
 							<div class="input-field col s12">
 								<h5>Add Section/CRN</h5>
 								<br>
-								<form action="adminprocess.php" method="POST" id="addsection"">
-								<div class="input-field col s12">
-									<select class="drop" form="lead" name="course">
-										<?php
-											$q = "SELECT * FROM ".TBL_COURSE."";
-											$result = $database->query($q);
-											$num_rows = mysql_numrows($result);
-											for($i=0; $i<$num_rows; $i++){
-												$num = mysql_result($result,$i,"course_number");
-												$title = mysql_result($result,$i,"title");
-												echo "<option value='".$num."'>".$num." - ".$title."</option>";
-											}
-										?>	
-									</select>
-									<label>Select a course</label>
-								</div>
-								<div class="input-field col s12">
-									<input id="coursename" type="text" class="validate" name="crn" maxlength="30">
-									<label for="coursename">CRN</label>
-								</div>
-								<input type="hidden" name="subaddsection" value="1">
-								<button class="btn waves-effect waves-light" type="submit" >Add Section
-									<i class="material-icons right">send</i>
-								</button>
-							</form>
-							
-							<form action="adminprocess.php" method="POST" id="deletesection">
-								<h5>Delete Section</h5>
-								<div class="input-field col s12">
-									<select form="delete" name="section">
-										<?php
-											$q = "SELECT * FROM ".TBL_COURSE." NATURAL JOIN ".TBL_CRN;
-											$result = $database->query($q);
-											$num_rows = mysql_numrows($result);
-											for($i=0; $i<$num_rows; $i++){
-												$number  = mysql_result($result,$i,"crn");
-												$course = mysql_result($result,$i,"course_number");
-												$title = mysql_result($result,$i,"title");
-												echo "<option value='".$number."'>".$course." - ".$title." - ".$number."</option>";
-											}
-										?>  
-										<label>Section</label>
+								<form action="adminprocess.php" method="POST" id="addsection">
+									<div class="input-field col s12">
+										<select class="drop" form="addsection" name="courseSecAdd">
+											<?php
+												$q = "SELECT * FROM ".TBL_COURSE." WHERE course_number !=0 ORDER BY course_number";
+												$result = $database->query($q);
+												$num_rows = mysql_numrows($result);
+												for($i=0; $i<$num_rows; $i++){
+													$num = mysql_result($result,$i,"course_number");
+													$title = mysql_result($result,$i,"title");
+													echo "<option value='".$num."'>".$num." - ".$title."</option>";
+												}
+											?>	
+										</select>
+										<label>Select a course</label>
 									</div>
-									<input type="hidden" name="subdelsection" value="1">
-									<button class="btn waves-effect waves-light" type="submit" name="action" value="Delete Section">Delete Section
+									<div class="input-field col s12">
+										<input id="crnSecAdd" type="text" class="validate" name="crnSecAdd" maxlength="30">
+										<label for="srnSecAdd">CRN</label>
+									</div>
+									<input type="hidden" name="subaddsection" value="1">
+									<button class="btn waves-effect waves-light" type="submit" >Add Section
 										<i class="material-icons right">send</i>
 									</button>
 								</form>
+								
+								<form action="adminprocess.php" method="POST" id="deletesection" name="deletesection">
+									<h5>Delete Section</h5>
+									<div class="input-field col s12">
+										<select form="deletesection" name="section">
+											<?php
+												$q = "SELECT * FROM ".TBL_COURSE." NATURAL JOIN ".TBL_CRN." WHERE course_number !=0 ORDER BY course_number";
+												$result = $database->query($q);
+												$num_rows = mysql_numrows($result);
+												for($i=0; $i<$num_rows; $i++){
+													$number  = mysql_result($result,$i,"crn");
+													$course = mysql_result($result,$i,"course_number");
+													$title = mysql_result($result,$i,"title");
+													echo "<option value='".$number."'>".$course." - ".$title." - ".$number."</option>";
+												}
+											?>  
+											<label>Section</label>
+										</div>
+										<input type="hidden" name="subdelsection" value="1">
+										<button class="btn waves-effect waves-light" type="submit" name="action" value="Delete Section">Delete Section
+											<i class="material-icons right">send</i>
+										</button>
+									</form>
+								</div>
 							</div>
-						</div>
-						
-						<!front end code starts>
-						
-						<h5>Assign Lead Instructor Role:</h5>
-						<br>
-						<form class="col s12" action="adminprocess.php" method="POST" id="lead">
 							
+							<!front end code starts>
+							
+							<h5>Assign Lead Instructor Role:</h5>
+							<br>
+							<form class="col s12" action="adminprocess.php" method="POST" id="lead">
+								
 							<!select a instructor name dropdown>
 							<div class="input-field col s12">
 								<select class="drop" form="lead" name="user">
 									
 									<?php
-										$q = "SELECT * FROM ".TBL_USERS." WHERE userlevel >=5";
+										$q = "SELECT * FROM ".TBL_USERS." WHERE userlevel >=5 ORDER BY username";
 										$result = $database->query($q);
 										$num_rows = mysql_numrows($result);
 										for($i=0; $i<$num_rows; $i++){
@@ -479,7 +480,7 @@
 								<select class="drop" form="instruct" name="user">
 									
 									<?php
-										$q = "SELECT * FROM ".TBL_USERS." WHERE userlevel >=5";
+										$q = "SELECT * FROM ".TBL_USERS." WHERE userlevel >=5 ORDER BY username";
 										$result = $database->query($q);
 										$num_rows = mysql_numrows($result);
 										for($i=0; $i<$num_rows; $i++){
@@ -503,7 +504,7 @@
 										for ($p=0; $p<$num_rows2; $p++){
 											$c1 = mysql_result($result2,$p,"course_number");
 											if ($c1 != 0){
-												echo "<optgroup label=\"".$c1."\">";
+												echo '<option value="" disabled selected>'.$c1.'</option>';
 												$q3 = "SELECT * FROM ".TBL_CRN." WHERE course_number = $c1";
 												$result3 = $database->query($q3);
 												$num_rows3 = mysql_numrows($result3);
@@ -529,31 +530,20 @@
 						</form>
 						<!front end code end>
 					</div>
-					
+				</div></div>
+				<div>
 					<div class="card1 card">
 						<h5>User Log</h5>
 						<form action="adminprocess.php" method="POST" id="log">
 							<input type="hidden" name="subclearlog" value="1">
 							<input type="submit" value="Clear Log">
 						</form>
-						
-						<textarea style="height:200px;padding:20px;">
-							<?php
-								$q = "SELECT user.name, log.* FROM ".TBL_LOG." join ".TBL_USERS." WHERE user.CWID = log.CWID ORDER BY timestamp DESC";
-								$result = $database->query($q);
-								$num_rows = mysql_numrows($result);
-								for($i=0; $i<$num_rows; $i++){
-									$CWID = mysql_result($result,$i,"CWID");
-									$msg = mysql_result($result,$i,"message");
-									$timestamp = mysql_result($result,$i,"timestamp");
-									$referrer = mysql_result($result,$i,"referred_page");
-									$person = mysql_result($result,$i,"name");
-									echo "$msg - by $person at $timestamp. Referrer: $referrer \n";
-								}
-								
-							?>
-							
-						</textarea>
+						<?php
+							$q = "SELECT ".TBL_USERS.".name, ".TBL_LOG.".*, CONVERT_TZ(".TBL_LOG.".timestamp, @@session.time_zone, '-05:00') as timez FROM ".TBL_LOG." join ".TBL_USERS." WHERE ".TBL_USERS.".CWID = ".TBL_LOG.".CWID ORDER BY timestamp DESC";
+							$result = $database->query($q);
+							$num_rows = mysql_numrows($result);
+						?>
+						<textarea style="height:200px;padding:20px;"><?php for($i=0; $i<$num_rows; $i++){$CWID = mysql_result($result,$i,"CWID");$msg = mysql_result($result,$i,"message");$timestamp = mysql_result($result,$i,"timez");$referrer = mysql_result($result,$i,"referred_page");$person = mysql_result($result,$i,"name");echo "$msg - by $person at $timestamp. Referrer: $referrer \n";}?></textarea>
 						
 						<hr>
 						<form action="adminprocess.php" method="POST" id="backup">
@@ -570,67 +560,68 @@
 							</button>
 						</form>
 					</div>
-					<!--Import jQuery before materialize.js-->
-					<script src="https://code.jquery.com/jquery-2.2.4.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
-					
-					<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.8/js/materialize.js"></script>
-					<script>
-						$( document ).ready(function(){
-							$(".button-collapse").sideNav();
+				</div>
+				<!--Import jQuery before materialize.js-->
+				<script src="https://code.jquery.com/jquery-2.2.4.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
+				
+				<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.8/js/materialize.js"></script>
+				<script>
+					$( document ).ready(function(){
+						$(".button-collapse").sideNav();
+						
+						$(document).ready(function(){
+							$('ul.tabs').tabs();
 							
-							$(document).ready(function(){
-								$('ul.tabs').tabs();
+							$(document).ready(function() {
+								$('select').material_select();
 								
+								
+								$('.datepicker').pickadate({
+									selectMonths: true, // Creates a dropdown to control month
+									selectYears: 15, // Creates a dropdown of 15 years to control year,
+									today: 'Today',
+									clear: 'Clear',
+									close: 'Ok',
+									closeOnSelect: false, // Close upon selecting a date,
+									format: "mm/dd/yyyy",
+									formatSubmit: "yyyy/mm/dd"
+									
+									
+								})
 								$(document).ready(function() {
 									$('select').material_select();
-									
-									
-									$('.datepicker').pickadate({
-										selectMonths: true, // Creates a dropdown to control month
-										selectYears: 15, // Creates a dropdown of 15 years to control year,
-										today: 'Today',
-										clear: 'Clear',
-										close: 'Ok',
-										closeOnSelect: false, // Close upon selecting a date,
-										format: "mm/dd/yyyy",
-										formatSubmit: "yyyy/mm/dd"
-										
-										
-									})
-									$(document).ready(function() {
-										$('select').material_select();
-									});
 								});
-								
-								
 							});
 							
 							
 						});
 						
 						
-					</script>
-					<script type = "text/javascript">
-						<!--https://www.w3schools.com/jsref/met_win_confirm.asp-->
-						function confirmButton() 
+					});
+					
+					
+				</script>
+				<script type = "text/javascript">
+					<!--https://www.w3schools.com/jsref/met_win_confirm.asp-->
+					function confirmButton() 
+					{
+						var txt;
+						var r = confirm("Are you sure you wish to archive and reset?");
+						if (r == true) 
 						{
-							var txt;
-							var r = confirm("Are you sure you wish to archive and reset?");
-							if (r == true) 
-							{
-								txt = "You pressed OK!";
-							} else 
-							{
-								txt = "You pressed Cancel!";
-							}
-							<!--	document.getElementsByClassName("demo").innerHTML = txt;	-->
-							<!--		can use this to add text to the screen at somepoint -->
-							<!--		or here is where you will put some functionality to the cancel/confirm button-->
-							
+							txt = "You pressed OK!";
+						} else 
+						{
+							txt = "You pressed Cancel!";
 						}
-					</script>
-				</body>
-			</html>
+						<!--	document.getElementsByClassName("demo").innerHTML = txt;	-->
+						<!--		can use this to add text to the screen at somepoint -->
+						<!--		or here is where you will put some functionality to the cancel/confirm button-->
+						
+					}
+				</script>
+			</body>
+		</html>
 		<?php
 		}
 		include "../footer.php";
@@ -641,19 +632,18 @@
 		$clearRSS = sprintf("DELETE FROM ".TBL_EVENTS." WHERE series = 9100");
 		$database->query($clearRSS);
 		foreach ($rss->items as $item) {
-		$title = $item['title'];
-		$desc = $item['description'];
-		$author = $item['author'];
-		$pub = $item['pubdate'];
-		$link = $item['link'];
-		$notes = "Title: ".$title."<br>Description: ".$desc."<br>Author: ".$author."<br>Published Date: ".$pub."<br><a href=\'".$link."\'>More information on ULM</a>";
-		$date = date('Y-m-d H:i:s', $item['date_timestamp']);
-		$time = time();
-		$fillRSS = "INSERT INTO ".TBL_EVENTS." VALUES (NULL, '$title', 0, 'event', 0, 86753091, 'offsite', '$notes', 9100, '$date', '$date', '$time', 'approved')";
-		$result = $database->query($fillRSS);
-		
-		
+			$title = $item['title'];
+			$desc = $item['description'];
+			$author = $item['author'];
+			$pub = $item['pubdate'];
+			$link = $item['link'];
+			$notes = "Title: ".$title."<br>Description: ".$desc."<br>Author: ".$author."<br>Published Date: ".$pub."<br><a href=\'".$link."\'>More information on ULM</a>";
+			$date = date('Y-m-d H:i:s', $item['date_timestamp']);
+			$time = time();
+			$fillRSS = "INSERT INTO ".TBL_EVENTS." VALUES (NULL, '$title', 0, 'event', 0, 86753091, 'offsite', '$notes', 9100, '$date', '$date', '$time', 'approved')";
+			$result = $database->query($fillRSS);
+			
+			
 		}
-		?>
-		
-				
+	?>
+	

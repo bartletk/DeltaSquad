@@ -1,4 +1,5 @@
 		<link rel="stylesheet" type="text/css" href="admin.css">
+		<link rel="stylesheet" type="text/css" href="wizard.css">
 <?php
 	include("../top_header.php");
 	
@@ -15,17 +16,20 @@
 			* forms.
 		*/
 	?>
+	<div class="card" "card1">
+				<h3>Semester Creation Wizard</h3>
+			</div>
 	<div class="card card1">
 	<div class="col s12 box">
-	1. Archive previous semester & remove data from previous semester <br>
+	<h1 style="text-align:center;">1. Archive previous semester & remove data from previous semester <br></h1>
 							<form action="adminprocess.php" method="POST" id="archive">
 							<input type="hidden" name="subarchive" value="1">
 							<button class="btn waves-effect waves-light" type="submit" onclick= "confirmButton()">Archive & Reset
 								<i class="material-icons right">send</i>
 							</button>
 						</form>
-						<hr>
-	2. Create semester deadline and schedule deadline <br>
+						<hr class="style13">
+	<h1 style="text-align:center;">2. Create semester deadline and schedule deadline <br></h1>
 	
 								<h5>Set Deadlines</h5>
 							<form id="deadlines" action="adminprocess.php" method="POST">
@@ -47,7 +51,7 @@
 								<br>
 								<hr class="style13">
 							</form>
-	3. Add in new semester's sections & their instructors <br>
+	<h1 style="text-align:center;">3. Add in new semester's sections & their instructors <br><h1>
 	<h5>Add Section/CRN</h5>
 										<br>
 										<form action="adminprocess.php" method="POST" id="addsection"">
@@ -100,7 +104,7 @@
 							
 							<!Select a course name dropdown>
 							<div class="input-field col s12">
-								<select name="crn[]" size=5 multiple>
+								<select multiple name="crn[]" size=5>
 									<option value="" disabled selected>Select sections to assign</option>
 									<?php
 										$q2 = "SELECT * FROM ".TBL_COURSE;
@@ -133,7 +137,7 @@
 							<hr class="style13">
 							
 						</form>
-	4. Assign lead instructors <br>
+	<h1 style="text-align:center;">4. Assign lead instructors <br></h1>
 	
 	<h5>Assign Lead Instructor Role:</h5>
 								<br>
@@ -184,8 +188,13 @@
 								
 							</form>
 							
-	5. Finally, delete any unused professors, rooms, and courses, and add any additional new ones. <br>
+	<h1 style="text-align:center;">5. Finally, delete any unused professors, rooms, and courses, and add any additional new ones. <br></h1>
 	</div>
+	<script>
+		$(document).ready(function() {
+    $('select').material_select();
+});
+	</script>
 	</div>
 	<?php
 	}

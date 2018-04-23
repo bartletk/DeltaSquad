@@ -239,7 +239,8 @@
 			$num = $_POST['num'];
 			$title = $_POST['title'];
 			$sem = $_POST['sem'];
-			$q = "INSERT INTO ".TBL_COURSE." VALUES ('".$num."', NURS, '".$title."', NULL,".$sem.");";
+			$q = "INSERT INTO ".TBL_COURSE." VALUES ('".$num."', 'NURS', '".$title."', NULL,".$sem.");";
+					//$myfile = fopen("error.txt", "a") or die(print_r($q));
 			$database->query($q);
 			$log = "New course created:".$num."";
 			$database->logIt($log);
@@ -256,10 +257,9 @@
 		}
 		function procAddSection(){
 		global $database, $form, $session;
-		$crn = $_POST['crn'];
-		$course = $_POST['course'];
-		$instructor = $_POST['instructor'];
-		$q = "INSERT INTO ".TBL_CRN." VALUES ('".$crn."','".$course."','".$instructor."');";
+		$crn = $_POST['crnSecAdd'];
+		$course = $_POST['courseSecAdd'];
+		$q = "INSERT INTO ".TBL_CRN." VALUES ('".$crn."','".$course."',NULL);";
 		$database->query($q);
 		$log = "Section Added:".$crn."";
 		$database->logIt($log);
@@ -269,6 +269,7 @@
 		global $session, $database, $form;
 		$number = $_POST['section'];
 		$q = "DELETE FROM ".TBL_CRN." WHERE crn = '$number'";
+		//$myfile = fopen("error.txt", "a") or die(print_r($q));
 		$database->query($q);
 		$log = "Section deleted:".$number."";
 		$database->logIt($log);
@@ -292,16 +293,29 @@
 		$this->procBackup2();
 		$this->clearLeads();
 		$this->clearInstructors();
-		$q = "DELETE FROM ".TBL_SCHED.",".TBL_EVENT.",".TBL_MAIL.",".TBL_LOG;
+		$this->deleteTbl(TBL_SCHED);
+		$this->deleteTbl(TBL_EVENTS);
+		$this->deleteTbl(TBL_MAIL);
+		$this->deleteTbl(TBL_LOG);
+		$this->deleteTbl(TBL_DEADLINES);
+		//$q = "DELETE FROM ".TBL_SCHED.",".TBL_EVENTS.",".TBL_MAIL.",".TBL_LOG;
+		//$myfile = fopen("error.txt", "a") or die(print_r($q));
 		$database->query($q);
 		header("Location: ./success.php?ref=".$session->referrer);
 		}
 		function clearLeads(){
+		global $session, $database, $form;
 			$q = "UPDATE ".TBL_COURSE." SET Lead_Instructor = NULL";
 			$database->query($q);			
 		}
 		function clearInstructors(){
+		global $session, $database, $form;
 			$q = "UPDATE ".TBL_CRN." SET Instructor = NULL";
+			$database->query($q);			
+		}
+		function deleteTbl($tbl){
+		global $session, $database, $form;
+			$q = "DELETE FROM $tbl";
 			$database->query($q);			
 		}
 		function procClearLog(){

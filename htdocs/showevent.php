@@ -31,12 +31,13 @@
 		}
 		if ($session->isInstructor() || $session->isAdmin()){
 	?> 
-	
-	<a href="<?php echo "./editevent.php?e=$event";  ?>">Edit Event</a><br>
+	<div class="card">
+	<a href="<?php echo "./editevent.php?e=$event";  ?>">Edit Event</a> | <a href="<?php echo "./editevent.php?e=$event&nm=1";  ?>">Edit Notes</a><br>
 	
 	<?php
 		}
 		$q3 = "select count(*) conflicts from ".TBL_EVENTS." where series = $series AND status != 'approved' group by status";
+
 		$result3 = $database->query($q3);
 		if (mysql_numrows($result3)){
 		$conflictsInSeries = mysql_result($result3,0,"conflicts");
@@ -45,6 +46,8 @@
 		}
 		if($session->isAdmin() && $status != 'approved'){
 		?>
+		<div id="out" class="card card-2">
+			<div class="in">
 		<form action="process.php" method="POST" id="approve" class="col s12">
 			<input type="hidden" name="approve" value="1">
 			<input type="hidden" name="eventid" value="<?php echo $event; ?>">
@@ -52,9 +55,12 @@
 				<i class="material-icons right">send</i>
 			</button>
 		</form>
+	</div>
 		<?php
-		} else if ($session->isAdmin() && $conflictsInSeries > 0){
+		}
+		if ($session->isAdmin() && $conflictsInSeries > 0){
 		?>
+		<div class="in">
 		<form action="process.php" method="POST" id="approveall" class="col s12">
 			<input type="hidden" name="approveall" value="1">
 			<input type="hidden" name="seriesid" value="<?php echo $series; ?>">
@@ -62,12 +68,24 @@
 				<i class="material-icons right">send</i>
 			</button>
 		</form>
+	</div>
+	<div class="in">
+			<form action="process.php" method="POST" id="reject" class="col s12">
+				<input type="hidden" name="reject" value="1">
+				<input type="hidden" name="eventid" value="<?php echo $event; ?>">
+				<button class="btn waves-effect waves-light" type="submit" name="action">Reject
+					<i class="material-icons right">send</i>
+				</button>
+			</form>
+		</div>
+	</div>
 		<?php
 		}
 	?>
 	
 	Title: <?php echo $title; ?> <br>
 	Type: <?php echo $type; ?> <br>
+	Status: <?php echo $status; ?><br>
 	Course: <?php echo $coursenum." - ".$coursetit;  ?><br>
 	Date: <?php echo $date; ?><br>
 	Start time: <?php echo $timeStart; ?><br>
@@ -76,7 +94,7 @@
 	Attendees: <?php echo $seats; ?><br>
 	Event Creator: <?php echo $creator; ?><br>
 	Notes: <?php echo $notes; ?><br>
-	<div class="noprint">
+	<div class="noprint card card-2">
 	Other events in this series:
 	<table style="width:100%">
 		<tr>
@@ -113,7 +131,8 @@
 			}
 			}
 		?>
-	</table>					
+	</table>	
+	</div>				
 	</div>
 	<?php
 	}

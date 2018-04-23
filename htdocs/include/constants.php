@@ -42,7 +42,7 @@ define("ADMIN_LEVEL", 9);
 define("INSTRUCTOR_LEVEL", 5); // instructor
 define("USER_LEVEL",  1); // student
 define("GUEST_LEVEL", 0); 
-
+define("SCHED_ADMIN", "peveto"); 
 
 /**
  * Cookie Constants - these are the parameters
@@ -127,6 +127,4 @@ $include_child_categories = true;
 // display events in parent category along with events in selected category
 $include_parent_categories = true;
 
-//timezone to use
-date_default_timezone_set('America/Chicago');
 ?>

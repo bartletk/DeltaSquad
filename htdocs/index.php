@@ -12,6 +12,9 @@
 	if (!isset($rm)){
 	$rm=0;
 	}
+	if (!isset($cm) || !$session->isAdmin()){
+	$cm=0;
+	}
 	include "include/start.php";
 	$canview = true;
 	//if no access, then kick them out!
@@ -32,6 +35,6 @@ $('select[name="option"]').change(function() {
 <?php
 	include('footer.php');
 ?>
-
+<meta http-equiv="refresh" content="60">
 </body>
 </html>
