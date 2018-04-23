@@ -148,7 +148,7 @@
 				<form action="process.php" method="POST" id="editevent" class="col s12">
 					<div class="row">
 						<div class="row col s12">
-							<label for="title">Title</label><p><input type="text" name="title" maxlength="30" readonly value="<?php echo $title; ?>"></p>
+							<label for="title">Title (Not editable)</label><p><input type="text" name="title" maxlength="30" required value="<?php echo $title; ?>"></p>
 							
 							<label for="event_type">Event Type:<label><p>			
 								<input type="radio" name="type" value="0" required <?php if ($type == 0){echo "checked";} ?>> <label for="class1">Class</label>
@@ -162,7 +162,7 @@
 							
 							<div class="row col s12">
 								<div class="input-field col s12">
-									<p>Seats Needed: </p><p><input placeholder="seats needed" id="seats" type="number"  name="seats" maxlength="30" required value="<?php echo $seats; ?>"></p>
+									<p>Seats Needed: </p><p><input placeholder="seats needed" id="seats" type="number"  name="seats" min="0" max="999" required value="<?php echo $seats; ?>"></p>
 								</div>
 							</div>
 							<div class="row col s12">
@@ -171,7 +171,7 @@
 								</div>
 							</div>
 							<div class="row col s12" >
-								<p>Date: </p><p><input name="date" type="date" class = "datepicker" data-value="<?php echo $date; ?>"></p>
+								<p>Date: </p><p><input name="date" type="date" class = "datepicker" required data-value="<?php echo $date; ?>"></p>
 							</div>
 							
 							<div class="row col s12">

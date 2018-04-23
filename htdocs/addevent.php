@@ -1,4 +1,4 @@
-<?php
+ <?php
 	include("top_header.php");
 	$page = "addevent.php";
 	echo "<main>";
@@ -59,7 +59,7 @@
 					<div class="row" >
 						<div id = "seatsmessage" hidden = "true" style = "margin-left: 10px; font-family: Times, serif; font-size: 18px;">For an event with no seating requirements, please enter 0</div>
 						<div class="input-field col s12"  onClick="displayMessage()">
-							<input placeholder="Seats Needed" id="seats" type="number" name="seats"  required value="<?php if (isset($_GET['s'])) echo $_GET['s']; ?>" >
+							<input placeholder="Seats Needed" id="seats" type="number" name="seats"  maxlength="3" required value="<?php if (isset($_GET['s'])) echo $_GET['s']; ?>" >
 							
 						</div>
 						
@@ -91,7 +91,9 @@
 						
 						<div id="modal1" class="modal">
     						<div class="modal-content">
-								
+								<p style="text-align:center;">
+								Notice: When you choose a room for your event, we will immediately show you if there are conflicts for the first day of your event. However, if there are conflicts when you use the repeat function, we will message you and let you know what events have caused a conflict. If you would like to prevent a conflict, please utilize the filter by room option on the main calendar.
+								</p>
 								<p>
 									<input type="checkbox" name="repeatm" maxlength="30" value="1" <?php if (isset($_GET['repeatm']) && $_GET['repeatm'] == 1){echo "checked";}?> id="repeatm" />
 									<label for="repeatm">Monday</label>
@@ -162,16 +164,16 @@
 					</div>
 					
 					<input type="hidden" name="addeventA" value="1">
-					<button class="btn waves-effect waves-light" onclick = "validateSeats()" type="submit" name="action">Next
+					<button class="btn waves-effect waves-light"  type="submit" name="action" >Next
 						<i class="material-icons right">send</i>
 					</button>
 					<hr>
 					<hr>
 					
-					<!--dropdown to select crn-->	
+				
 					</form>
 					
-					
+						<!--dropdown to select crn-->	
 					<?php
 					}
 					if (isset($_GET['c']) & !isset($_GET['crn'])){
@@ -200,7 +202,7 @@
 					<div class="row col s12" >
 						Course: NURS <?php echo $_GET['c']; ?><br>
 					</div>
-					<form action="process.php" onclick="testTime()" method="POST" id="addeventB">
+					<form action="process.php"  method="POST" id="addeventB">
 						<div class="input-field col s12">
 							<select name="crn[]" size=5  multiple> 
 								<option value="" disabled selected>Select sections</option>
@@ -768,14 +770,17 @@
 			<script>
 				
 				function validateSeats(){
-					var seats;
-					seats = document.getElementById("seats").value;
-					
-				if (seats < 0 ){
-						alert("Please enter a valid value for \"Seats Needed\" field.\nValid inputs are integers >= 0.");
-						returnToPreviousPage();	
+					var text;
+					var seats = document.getElementById("seats").value;
+					if (isNaN(seats) || seats < 0 || seats > 999) {
+						text = "Input not valid";
+						alert(text);
+						window.history.back();
 						return false;
-					}
+					} 
+					
+					
+					
 				}
 				
 				
@@ -787,10 +792,7 @@
 						alert("go back and check times");
 						return false;
 					}
-					
-					
-					
-					
+
 				}
 				
 				
