@@ -1,40 +1,40 @@
 /*nav bar css*/
 .nav-wrapper{
-		  background-color: #660000;
-      height:80px;
-		  }
-		
+	background-color: #660000;
+	height:80px;
+}
+
 .logo{
+	
+	width:57px;
+}
 
-width:57px;
-   }
-
-   h5{
+h5{
    	color:white !important; 
    	background-color:#A39058 !important ;
-   }
+}
 
 
-   	hr { 
-  border : 0;
-  height: 1px; 
-  background-image: linear-gradient(to right, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0)); 
+hr { 
+	border : 0;
+	height: 1px; 
+	background-image: linear-gradient(to right, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0)); 
 }
 
 
 .card1{
-   margin:40px !important;
-   margin-top:40px !important;
+	margin:40px !important;
+	margin-top:40px !important;
 } 
 
 .btn, .picker__date-display {
-  background-color: #600 !important;
+	background-color: #600 !important;
 }
 
 
 
 .picker__close, .picker__today, .clockpicker-tick{
-  color:#600 !important;
+	color:#600 !important;
 }
 
 .drop{
@@ -49,15 +49,30 @@ hr.style13 {
 
 .tabs .tab a  {
 	color:#600 !important;
-
+	
 }
 
 .heading{
 	color:white !important; 
    	background-color:#A39058 !important ;
 }
-
 h3{
-  text-align:center !important;
-  color:#600 !important;
+	text-align:center !important;
+	color:#600 !important;
+	padding: 20px !important;
+	font-weight: 1000 !important;
+}
+
+.card1{
+	margin:40px !important;
+	margin-top:40px !important;
+} 
+
+.box{
+	padding:20px !important;
+}
+
+.paddi{
+	margin-left:2% !important;
+	margin-right:2% !important;
 }
