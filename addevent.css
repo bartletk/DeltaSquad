@@ -7,7 +7,7 @@
 .logo{
 
 width:57px;
-   }
+}
 
    h5{
    	color:#600 !important; 
@@ -53,7 +53,29 @@ h3{
 img {
     max-width: 100%;
     height: auto;
+}
 
+.pad{
+  padding-top: 10px !important;
+}
 
+.sty{
+  margin: 2% !important;
+    width: 96% !important;
 
+}
+
+#out
+{
+    width:100%;
+    text-align: center;
     
+}
+.in
+{
+    display: inline-block;
+}
+.hei
+{
+  height:1px !important;
+}

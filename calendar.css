@@ -249,6 +249,8 @@ clear: both;
 
 	background: #fff;
 	border: 1px solid #000;
+	margin-left: 5% !important;
+margin-right: 5% !important;
 }
 
 div.cal_top {
@@ -333,7 +335,7 @@ td.single_day {
 
 .cal_top{
 	text-align:center !important;
-	padding:50px !important;
+	padding:50px;
 	color:white !important;
 	font-family: 'Orbitron', sans-serif !important;
 	text-transform: uppercase;
@@ -343,3 +345,6 @@ table{
 	width:90% ;
 }
 
+.notapproved{
+	color:red !important;
+}
